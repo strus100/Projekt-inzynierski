@@ -1,0 +1,139 @@
+/* GENERAL */
+
+html, body {
+  height: 100%;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Roboto Condensed', sans-serif;
+  line-height: 1.7;
+  background: #c31432;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #240b36, #c31432);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #240b36, #c31432); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */    
+}
+
+/* MENU */
+
+nav {
+  transition: transform 150ms ease-out;
+}
+
+nav {
+  z-index: 100;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: calc(100vh - 60px);
+  width: 16em;
+  background-color: #353441;
+  transform: translateX(-16em);
+}
+
+nav.menu-active {
+  transform: translateX(0);
+}
+
+nav.menu-hover {
+  transform: translateX(-15em);
+}
+
+nav ul {
+  margin: 0;
+  padding: 0;
+    list-style-type: none;
+}
+
+nav ul a {
+  display: inline-block;
+  padding: 0em 1em;
+  width: 100%;
+  height: 60px;
+  color: #fff;
+  line-height: 60px;
+  background-color: #353441;
+  transition: all 0.5s ease-in;
+  text-decoration: none;
+}
+
+nav ul a:nth-of-type(2n) {
+  background-color: #3a3947;
+}
+
+nav ul a:hover {
+  background: ORANGERED;
+    color: white;
+}
+
+/* CHAT */
+
+.chat-activea {
+  transition: transform 150ms ease-out;
+}
+
+.chat-activea {
+  z-index: 100;
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: calc(100vh - 60px);
+  width: 16em;
+  background-color: #353441;
+  transform: translateX(+16em);
+}
+
+.chat-active {
+  transform: translateX(0);
+}
+
+.chat-hover {
+  transform: translateX(15em);
+}
+
+/* FOOTER */
+
+.footer {
+  position: fixed;
+  z-index: 200;
+  left: 0;
+  bottom: 0;
+  height: 60px;
+  width: 100%;
+  background-color: #353441;
+  color: white;
+  text-align: center;
+  border-top: 1px solid white;
+}
+
+label {
+  z-index: 100;
+  display: block;
+  display: inline-block;
+  height: 60px;
+  width: 65px;
+  line-height: 60px;
+  font-size: 0.8em;
+  font-weight: 300;
+  letter-spacing: 1px;
+  color: #fff;
+  text-transform: uppercase;
+  text-align: center;
+  background-color: #353441;
+  cursor: pointer;
+}
+
+label:hover {
+  color: #353441;
+  background: #fff;
+}
+
+input[type=checkbox]{
+  position: absolute;
+  left: -100vw;
+}
