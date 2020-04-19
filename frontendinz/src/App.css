@@ -19,6 +19,11 @@ body {
   background: linear-gradient(to right, #240b36, #c31432); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */    
 }
 
+::selection{
+  background: #ffe600;
+  color: black;
+}
+
 /* MENU */
 
 nav {
@@ -83,9 +88,9 @@ nav ul a:hover {
   top: 0;
   right: 0;
   height: calc(100vh - 60px);
-  width: 16em;
+  width: 20em;
   background-color: #353441;
-  transform: translateX(+16em);
+  transform: translateX(20em);
 }
 
 .chat-active {
@@ -94,6 +99,129 @@ nav ul a:hover {
 
 .chat-hover {
   transform: translateX(15em);
+}
+
+#chat-wrap{ 
+  margin: 0 0 15px 0; 
+}
+
+#chat-area{ 
+  height: calc(100vh - 100px - 60px - 100px); 
+  overflow: auto; 
+  border-top: 2px solid #fff; 
+  padding: 20px; 
+  background: #fff; 
+}
+
+#chat-area .chat-line{
+  color: #000; 
+  margin: 0 5px 0 0; 
+  word-break: break-all;
+}
+
+#chat-area p{ 
+  padding: 8px 0; 
+  border-bottom: 1px solid #ccc; 
+}
+
+#chat-area .nickname{
+  font-weight: bold;
+}
+
+#name-area{ 
+  text-align: center; 
+  color: #fff; 
+  margin: 20px 0px;
+}
+
+#send-message-area p{ 
+  float: left; 
+  color: white; 
+  padding-top: 27px; 
+  font-size: 14px; 
+}
+#sendie{ 
+  position: absolute; 
+  width: 100%; 
+  padding: 10px; 
+  font: 12px "Lucida Grande", Sans-Serif; 
+  float: right; 
+  resize: vertical; 
+  bottom: 0;
+}
+
+.chat-tabs {
+  text-align: center;
+}
+
+.chat-tabs{
+    display: flex;
+    align-items: center;
+}
+
+.chat-tabs ul{
+  width: 100%;
+}
+
+.chat-tabs ul li{
+  height: 60px;
+  width: 60px;
+  line-height: 60px;
+  z-index: 100;
+  display: inline-block;
+  height: 60px;
+  width: calc(100% / 3);
+  line-height: 60px;
+  font-size: 1.3em;
+  font-weight: 300;
+  letter-spacing: 1px;
+  color: #fff;
+  text-transform: uppercase;
+  text-align: center;
+  background-color: #353441;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.chat-tabs ul li i{
+  height: 60px;
+  line-height: 60px;
+  vertical-align: bottom;
+}
+
+.chat-tabs ul li  + .chat-tabs ul li  {
+  margin-left: 2%;
+}
+
+.chat-tabs ul li:hover {
+  color: #353441;
+  background: orangered;
+}
+
+.chat-tabs ul li.react-tabs__tab.react-tabs__tab--selected:hover {
+  color: #353441;
+  background: #fff;
+}
+
+.react-tabs__tab.react-tabs__tab--selected{
+  color: #353441;
+  background: #fff;
+}
+
+#wrap-users-area{ 
+  height: calc(100vh - 100px - 60px - 100px); 
+  overflow: auto; 
+  border-top: 2px solid #fff; 
+  padding: 20px; 
+  background: #fff; 
+}
+
+#wrap-additional-area{ 
+  height: calc(100vh - 100px - 60px - 100px); 
+  overflow: auto; 
+  border-top: 2px solid #fff; 
+  padding: 20px; 
+  background: #fff; 
 }
 
 /* FOOTER */
@@ -118,7 +246,7 @@ label {
   height: 60px;
   width: 65px;
   line-height: 60px;
-  font-size: 0.8em;
+  font-size: 1.3em;
   font-weight: 300;
   letter-spacing: 1px;
   color: #fff;
@@ -135,5 +263,5 @@ label:hover {
 
 input[type=checkbox]{
   position: absolute;
-  left: -100vw;
+  left: -600vw;
 }

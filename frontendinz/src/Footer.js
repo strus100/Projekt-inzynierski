@@ -19,14 +19,14 @@ class Footer extends Component{
                             id="tooglemenu"
                             checked={ this.props.state.checkedMenu } 
                             onChange={ this.props.handleChangeMenu } 
-                            onclick={console.log( this.props.state.checkedMenu )}/>    
+                            onClick={console.log( this.props.state.checkedMenu )}/>    
                 <label for="tooglechat">&#128172;</label>
                         <input 
                             type="checkbox" 
                             id="tooglechat"
                             checked={ this.props.state.checkedChat } 
                             onChange={ this.props.handleChangeChat } 
-                            onclick={console.log( this.props.state.checkedChat )}/>
+                            onClick={console.log( this.props.state.checkedChat )}/>
             </div>
         </div>
         )
