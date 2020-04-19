@@ -36,7 +36,7 @@ class Chat extends Component{
 
     createChat = () => {
         let chat = []
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 100; i++) {
             chat.push(<span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span><br></br></span>)
           }
         return chat

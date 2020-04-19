@@ -181,6 +181,7 @@ nav ul a:hover {
   background-color: #353441;
   cursor: pointer;
   text-decoration: none;
+  user-select: none;
 }
 
 .chat-tabs ul li i{
@@ -254,14 +255,36 @@ label {
   text-align: center;
   background-color: #353441;
   cursor: pointer;
+  user-select: none;
 }
 
 label:hover {
   color: #353441;
-  background: #fff;
+  background: orangered;
 }
 
 input[type=checkbox]{
   position: absolute;
   left: -600vw;
+}
+
+input:checked + label{
+  background-color: #fff;
+  color: #000;
+}
+
+/* 600px */
+
+@media only screen and (max-width: 600px) {
+  .menu-active, .chat-active{
+    width: 100%;
+  }
+}
+
+/* MOBILE */
+
+@media (hover: none) and (pointer: coarse) {
+  .menu-active, .chat-active{
+    width: 100%;
+  }
 }

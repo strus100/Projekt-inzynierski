@@ -6,9 +6,6 @@ class Menu extends Component{
         super(props);
       }
     
-      
-
-
     render(){
         let className = 'menu-activea';
 
