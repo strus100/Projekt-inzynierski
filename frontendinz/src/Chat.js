@@ -8,6 +8,7 @@ class Chat extends Component{
         super(props);
         this.state = {chat: ''};
         this.nickname = "";
+        this.getDataAxios = this.getDataAxios.bind(this);
       }
     
       
@@ -26,11 +27,20 @@ class Chat extends Component{
         const user = response.data.results[0];
         console.log(user);
         this.nickname = user.name.first;
+        this.setState({chat: this.nickname});
       }
 
     loadData(){
         console.log(1);
     }
+
+    createChat = () => {
+        let chat = []
+        for (let i = 0; i < 10; i++) {
+            chat.push(<span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span><br></br></span>)
+          }
+        return chat
+      }
 
     render(){
         let className = 'chat-activea';
@@ -56,41 +66,7 @@ class Chat extends Component{
                 <div id="chat-wrap">
                     <div id="chat-area">
                         <span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</span></span><br></br>
-                        <span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span></span><br></br>
-                        <span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span></span><br></br>
-                        <span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span></span><br></br>
-                        <span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span></span><br></br>
-                        <span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span></span><br></br>
-                        <span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span></span><br></br>
-                        <span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span></span><br></br>
-                        <span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span></span><br></br>
-                        <span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span></span><br></br>
-                        <span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span></span><br></br>
-                        <span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span></span><br></br>
-                        <span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span></span><br></br>
-                        <span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span></span><br></br>
-                        <span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span></span><br></br>
-                        <span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span></span><br></br>
-                        <span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span></span><br></br>
-                        <span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span></span><br></br>
-                        <span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span></span><br></br>
-                        <span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span></span><br></br>
-                        <span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span></span><br></br>
-                        <span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span></span><br></br>
-                        <span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span></span><br></br>
-                        <span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span></span><br></br>
-                        <span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span></span><br></br>
-                        <span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span></span><br></br>
-                        <span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span></span><br></br>
-                        <span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span></span><br></br>
-                        <span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span></span><br></br>
-                        <span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span></span><br></br>
-                        <span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span></span><br></br>
-                        <span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span></span><br></br>
-                        <span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span></span><br></br>
-                        <span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span></span><br></br>
-                        <span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span></span><br></br>
-                        <span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span></span><br></br>
+                        {this.createChat()}
                     </div>
                 </div>
                 </TabPanel>
