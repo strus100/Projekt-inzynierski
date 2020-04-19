@@ -9,9 +9,9 @@
     if(PHP_SAPI !== 'cli') die("Run only using CLI");
 
     define("DEFAULT_IP", "127.0.0.1");
-    define("DEFAULT_PORT", 6969);
+    define("DEFAULT_PORT", 1111);
     define("MAX_BUFFER", 1024);
-    
+
     if($argc>1 && $argv[1]=="start"){
         $argumentArray = $argv;
         array_splice($argumentArray, 0, 2);
@@ -26,6 +26,7 @@
         die("Usage: start [,-a=<ip>] [,-p=<port>]\r\n\tDefault: ip:".DEFAULT_IP." port:".DEFAULT_PORT);
     }
 
+    // First octet -> flags with OPCODE
     abstract class OPCODE{
         const TEXT = 129;   //1000 0001 (FIN RSV1 RSV2 RSV3 4*opcode) TEXT frame opcode-%x1
         const CLOSE = 136;  //1000 1000 (FIN RSV1 RSV2 RSV3 4*opcode) PING opcode-%x8
@@ -39,7 +40,7 @@
         private $socket;
         private $clients = array();
         private $sleepCounter = 1;
-        private $sleepInterval = 0.5*1000000;   //Seconds * 1.000.000 (microseconds 1/mil)
+        private $sleepInterval = 0.25*1000000;   //Seconds * 1.000.000 (microseconds 1/mil)
         private $pingInterval = 5;  //Seconds
         
         function __construct($args){
@@ -99,20 +100,79 @@
                 echo "ERROR encoding message";
             }
             $parsedArray = array_map("chr", $datagramBytes);
+            // print_r($datagramBytes);
             return implode($parsedArray).$message;
+        }
+
+        private function decode($message){
+            $splitted = str_split($message);    //split every character
+            $octets = array_map("ord", $splitted);  //octets
+            // print_r($octets);
+
+            // First octet determines type of connection
+            switch ($octets[0]) {
+                case OPCODE::PONG:
+                    return "PONG";
+                    break;
+                case OPCODE::TEXT:
+                    break;
+                default:
+                    echo "Undefined OPCODE in decode function!\r\n\r\n";
+                    break;
+            }
+
+            // According to RFC 6455 section 5.2 all client->server frames are masked
+            // $isMasked = boolval($octets[1] >> 7);
+            $length = $octets[1] & 127;
+            $index = null;
+
+            if($length <= 125){
+                // Length is within octet
+                $index = 2;
+            }
+            else if($length == 126){
+                $length = ($octets[2] << 8) | $octets[3];
+                $index = 4;
+            }
+            else if($length == 127){
+                echo("payload length=127 - To implement LATER\r\n\r\n");
+                return false;
+            }
+            else{
+                return false;
+            }
+            // echo "Length: $length\r\n";
+
+            // RFC 6455 section 5.3
+            // Mask length is 32-bit value (4 octets)
+            $mask = array_slice($octets, $index, 4);
+            $data = "";
+            for($i = $index+4, $j=0; $i < count($octets); $i++, $j++){
+                $data .= chr($octets[$i] ^ $mask[$j%4]);
+            }
+            
+            return $data;
         }
 
         private function ping($client){
             echo "ping $client\r\n";
             $request = $this->encode("", OPCODE::PING);
+            /*if(@socket_write($client, $request, strlen($request)) === false){
+                return false;
+            }
+            else{
+                return true;
+            }*/
             return @socket_write($client, $request, strlen($request));
         }
 
+        // Main Server function/loop
         private function main(){
             while($this->running==true){
                 $read = array_merge([$this->socket], $this->clients);
-                @socket_select($read, $write, $except, 0, 1);
+                @socket_select($read, $write, $except, 0, 1);   //Select sockets that status has changed
 
+                // If main server socket is in selected sockets array, then there is a new connection incoming
                 if(in_array($this->socket, $read)){
                     $client = socket_accept($this->socket);
                     socket_set_nonblock($client);
@@ -120,17 +180,20 @@
                     echo "New connection: $address:$port\r\n";
 
                     $msg = @socket_read($client, MAX_BUFFER);
-                    echo $msg;
+                    // echo $msg;
                     $this->handshake($client, $msg);
                     $this->clients[] = $client;
                 }
 
+                // Reads incoming messages
                 foreach ($read as $id => $client) {
                     if($msg = @socket_read($client, MAX_BUFFER)){
-                        echo "$msg\r\n";
+                        $decodedMSG = $this->decode($msg);
+                        echo "Message from $client:\t$decodedMSG\r\n";
                     }
                 }
-                // Ping every x seconds
+
+                // Ping every x seconds and disconnect outdated sockets
                 if($this->sleepCounter > $this->pingInterval/$this->sleepInterval*1000000){
                     $toDelete = array();
                     
