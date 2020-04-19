@@ -58,6 +58,7 @@
             echo "Socket closed\r\n";
         }
 
+        // WebSocket Handshake
         private function handshake($client, $message){
             $GUID = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
             $HTTPdata = array();
@@ -83,7 +84,8 @@
             socket_write($client, $response, strlen($response));
         }
 
-        private function encode($message, $opcode){
+        // Websocket frame encoding
+        private function encode($message, $opcode=OPCODE::TEXT){
             $length = strlen($message);
             $datagramBytes = array();
             $datagramBytes[0] = $opcode;
@@ -104,6 +106,7 @@
             return implode($parsedArray).$message;
         }
 
+        // Websocket frame decoding
         private function decode($message){
             $splitted = str_split($message);    //split every character
             $octets = array_map("ord", $splitted);  //octets
@@ -136,6 +139,7 @@
             }
             else if($length == 127){
                 echo("payload length=127 - To implement LATER\r\n\r\n");
+                $index = 10;
                 return false;
             }
             else{
@@ -156,14 +160,58 @@
 
         private function ping($client){
             echo "ping $client\r\n";
-            $request = $this->encode("", OPCODE::PING);
+            $request = $this->encode("send BASS", OPCODE::PING);
             /*if(@socket_write($client, $request, strlen($request)) === false){
                 return false;
             }
             else{
                 return true;
             }*/
-            return @socket_write($client, $request, strlen($request));
+            // return @socket_write($client, $request, strlen($request));
+            return $this->send_encoded($client, $request);
+        }
+
+        // Send message to client
+        private function send($client, $message){
+            return $this->send_encoded($client, $this->encode($message));
+        }
+
+        // Send encoded frame message to client
+        private function send_encoded($client, $encoded_message){
+            return @socket_write($client, $encoded_message, strlen($encoded_message));
+        }
+
+        // Send message to all clients except
+        private function send_to_all($message, $except = false){
+            $encoded_message = $this->encode($message);
+
+            foreach ($this->clients as $client) {
+                if(!in_array($client, $except)){
+                    $this->send_encoded($client, $encoded_message);
+                }
+            }
+        }
+
+        private function parse_message_from($client, $message){
+            if($message === "PONG"){
+                echo "$client:\t$message\r\n";
+            }
+            else{
+                $decoded_JSON_array = json_decode($message, true);
+                $type = $decoded_JSON_array['type'];
+                
+                switch ($type) {
+                    case 'chat':
+                        $this->send_to_all($decoded_JSON_array[$type], [$client]);
+                        break;
+                    case 'event':
+                        echo "$client: event: $decoded_JSON_array[$type]\r\n";
+                        break;
+                    default:
+                        echo "Undefined JSON type received: $type\r\n";
+                        break;
+                }
+            }
         }
 
         // Main Server function/loop
@@ -188,8 +236,8 @@
                 // Reads incoming messages
                 foreach ($read as $id => $client) {
                     if($msg = @socket_read($client, MAX_BUFFER)){
-                        $decodedMSG = $this->decode($msg);
-                        echo "Message from $client:\t$decodedMSG\r\n";
+                        $this->parse_message_from($client, $this->decode($msg));
+                        // echo "Message from $client:\t$decodedMSG\r\n";
                     }
                 }
 
