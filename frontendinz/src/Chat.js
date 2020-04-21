@@ -2,19 +2,40 @@ import React, { Component } from 'react';
 import './App.css'
 import axios from 'axios'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import ChatMessage from "./ChatMessage";
+import ChatInput from "./ChatInput";
+
+const URL = 'ws://localhost:1111';
 
 class Chat extends Component{
     constructor(props) {
         super(props);
-        this.state = {chat: ''};
-        this.nickname = "";
+        this.state = {
+            name: 'Bob',
+            messages: [],
+        }
         this.getDataAxios = this.getDataAxios.bind(this);
+        this.ws = new WebSocket(URL);
       }
     
-      
-    componentDidMount() {
-        this.getDataAxios()
-        //this.timerID = setInterval(this.getDataAxios, 1000);
+      componentDidMount() {
+        this.ws.onopen = () => {
+          console.log('connected')
+        }
+    
+        this.ws.onmessage = evt => {
+          const message = { type: "chat", chat: evt.data }
+          this.addMessage(message)
+        }
+    
+        this.ws.onclose = () => {
+          console.log('disconnected')
+          this.setState({
+            ws: new WebSocket(URL),
+          })
+        }
+
+        this.getDataAxios();
       }
 
     componentWillUnmount() {
@@ -26,13 +47,17 @@ class Chat extends Component{
           await axios.get("https://randomuser.me/api");
         const user = response.data.results[0];
         console.log(user);
-        this.nickname = user.name.first;
-        this.setState({chat: this.nickname});
+        this.setState({name: user.name.first});
       }
 
-    loadData(){
-        console.log(1);
-    }
+    addMessage = message =>
+      this.setState(state => ({ messages: [message, ...state.messages] }))
+  
+    submitMessage = messageString => {
+        const message = { type: "chat", chat: messageString }
+        this.ws.send(JSON.stringify(message))
+        this.addMessage(message)
+        }
 
     createChat = () => {
         let chat = []
@@ -45,28 +70,34 @@ class Chat extends Component{
     render(){
         let className = 'chat-activea';
 
-        if(this.props.state.checkedChat){
+        if(this.props.checkedChat){
             className += ' chat-active';
         }
 
         return(
         <div className={className}>            
             <div className="chat">
-                <p id="name-area">Witaj {this.nickname}</p>
+                <p id="name-area">Witaj {this.state.name}</p>
                 
                 <Tabs>
                 <div className="chat-tabs">
                     <TabList>
                         <Tab>&#9776;</Tab>
-                        <Tab><i class="material-icons">person</i></Tab>
+                        <Tab><i className="material-icons">person</i></Tab>
                         <Tab>&#9851;</Tab>
                     </TabList>
                 </div>
                 <TabPanel>
                 <div id="chat-wrap">
                     <div id="chat-area">
-                        <span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</span></span><br></br>
-                        {this.createChat()}
+                    {this.state.messages.map((message, index) =>
+                        <ChatMessage
+                            key={index}
+                            message={message.chat}
+                            //name={message.name} //dodane będzie jak będzie fix do jsona
+                            name={this.state.name}
+                        />,
+                        )}
                     </div>
                 </div>
                 </TabPanel>
@@ -81,9 +112,12 @@ class Chat extends Component{
                 </div>
                 </TabPanel>
                 </Tabs>
-                <form id="send-message-area">
-                    <textarea id="sendie" maxLength = '100' placeholder="Wyślij wiadomość"></textarea>
-                </form>
+                <div id="send-message-area">
+                <ChatInput
+                    ws={this.ws}
+                    onSubmitMessage={messageString => this.submitMessage(messageString)}
+                    />
+                </div>
             </div>
         </div>
         )

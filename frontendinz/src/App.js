@@ -1,39 +1,27 @@
-import React, {Component} from "react";
+import React, { useState } from 'react';
 import Menu from "./Menu"
 import Chat from "./Chat"
 import Footer from "./Footer"
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.handleChangeMenu = this.handleChangeMenu.bind(this);
-    this.handleChangeChat = this.handleChangeChat.bind(this);
-    this.state = { checkedMenu: false, checkedChat: false };
+function App() {
+  const [checkedMenu, setChangeMenu] = useState(false);
+  const [checkedChat, setChangeChat] = useState(false);
+
+  function handleChangeMenu(checkedMenu){
+    setChangeMenu(checkedMenu => !checkedMenu);
   }
 
-  handleChangeMenu() {
-    this.setState({
-      checkedMenu: !this.state.checkedMenu,
-      checkedChat: this.state.checkedChat
-    })
+  function handleChangeChat(checkedChat){
+    setChangeChat(checkedChat => !checkedChat);
   }
 
-  handleChangeChat() {
-    this.setState({
-      checkedMenu: this.state.checkedMenu,
-      checkedChat: !this.state.checkedChat
-    })
-  }
-
-  render(){
     return (
         <div>
-          <Menu {...this.props} state={this.state}/>
-          <Chat {...this.props} state={this.state}/>
-          <Footer {...this.props} state={this.state} handleChangeMenu={this.handleChangeMenu} handleChangeChat={this.handleChangeChat}/>
+          <Menu checkedMenu={checkedMenu}/>
+          <Chat checkedChat={checkedChat}/>
+          <Footer checkedMenu={checkedMenu} checkedChat={checkedChat} handleChangeChat={handleChangeChat} handleChangeMenu={handleChangeMenu}/>
         </div>
     );
-  }
 }
 
 export default App;

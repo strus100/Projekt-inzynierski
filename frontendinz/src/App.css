@@ -39,6 +39,9 @@ nav {
   width: 16em;
   background-color: #353441;
   transform: translateX(-16em);
+  -webkit-box-shadow: 0 5px 15px 0 rgba(0, 0, 0, .5);
+  -moz-box-shadow: 0 5px 15px 0 rgba(0, 0, 0, .5);
+  box-shadow: 0 5px 15px 0 rgba(0, 0, 0, .5);
 }
 
 nav.menu-active {
@@ -91,6 +94,9 @@ nav ul a:hover {
   width: 20em;
   background-color: #353441;
   transform: translateX(20em);
+  -webkit-box-shadow: 0 5px 15px 0 rgba(0, 0, 0, .5);
+  -moz-box-shadow: 0 5px 15px 0 rgba(0, 0, 0, .5);
+  box-shadow: 0 5px 15px 0 rgba(0, 0, 0, .5);
 }
 
 .chat-active {
@@ -132,6 +138,7 @@ nav ul a:hover {
   text-align: center; 
   color: #fff; 
   margin: 20px 0px;
+  text-shadow: 1px 1px 15px black;
 }
 
 #send-message-area p{ 
@@ -142,12 +149,28 @@ nav ul a:hover {
 }
 #sendie{ 
   position: absolute; 
-  width: 100%; 
+  width: 80%; 
+  height: 50px;
   padding: 10px; 
   font: 12px "Lucida Grande", Sans-Serif; 
   float: right; 
-  resize: vertical; 
+  resize: none; 
   bottom: 0;
+}
+
+#chat-button{
+  width: 20%;
+  height: 50px;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: orangered;
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
 }
 
 .chat-tabs {
@@ -238,6 +261,9 @@ nav ul a:hover {
   color: white;
   text-align: center;
   border-top: 1px solid white;
+  -webkit-box-shadow: 0 5px 15px 0 rgba(0, 0, 0, .5);
+  -moz-box-shadow: 0 5px 15px 0 rgba(0, 0, 0, .5);
+  box-shadow: 0 5px 15px 0 rgba(0, 0, 0, .5);
 }
 
 label {
