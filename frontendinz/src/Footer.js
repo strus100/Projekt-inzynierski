@@ -1,36 +1,28 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './App.css'
 
-class Footer extends Component{
-    constructor(props) {
-        super(props);
-      }
+function Footer(props){
+    return(
+    <div className="footer">
+        <div>        
+            <input 
+                type="checkbox" 
+                id="tooglemenu"
+                checked={ props.checkedMenu } 
+                onChange={ props.handleChangeMenu } 
+                onClick={console.log( props.checkedMenu )}/>    
+            <label htmlFor="tooglemenu">&#9776;</label>
     
-      
-
-
-    render(){
-        return(
-        <div className="footer">
-            <div>
-                <label for="tooglemenu">&#9776;</label>
-                        <input 
-                            type="checkbox" 
-                            id="tooglemenu"
-                            checked={ this.props.state.checkedMenu } 
-                            onChange={ this.props.handleChangeMenu } 
-                            onclick={console.log( this.props.state.checkedMenu )}/>    
-                <label for="tooglechat">&#128172;</label>
-                        <input 
-                            type="checkbox" 
-                            id="tooglechat"
-                            checked={ this.props.state.checkedChat } 
-                            onChange={ this.props.handleChangeChat } 
-                            onclick={console.log( this.props.state.checkedChat )}/>
-            </div>
+            <input 
+                type="checkbox" 
+                id="tooglechat"
+                checked={ props.checkedChat } 
+                onChange={ props.handleChangeChat } 
+                onClick={console.log( props.checkedChat )}/>
+            <label htmlFor="tooglechat">&#128172;</label>
         </div>
-        )
-    }
+    </div>
+    )
 } 
 
 export default Footer;

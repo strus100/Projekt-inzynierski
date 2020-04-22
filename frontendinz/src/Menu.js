@@ -1,18 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './App.css'
 
-class Menu extends Component{
-    constructor(props) {
-        super(props);
-      }
-    
-      
+function Menu(props){   
+        var className = 'menu-activea';
 
-
-    render(){
-        let className = 'menu-activea';
-
-        if(this.props.state.checkedMenu){
+        if(props.checkedMenu){
             className += ' menu-active';
         }
 
@@ -27,7 +19,6 @@ class Menu extends Component{
             </nav>
         </div>
         )
-    }
 } 
 
 export default Menu;
