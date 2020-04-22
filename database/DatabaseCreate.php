@@ -15,7 +15,7 @@
 			
 			
 			// Create database
-			$sql = "CREATE DATABASE bazaInz";
+			$sql = "CREATE DATABASE bazaInz IF NOT EXISTS";
 			if ($conn->query($sql) === TRUE) {
 			echo "Database created successfully";
 			} else {
@@ -26,11 +26,12 @@
 		function createTable($conn){
 			
 			// sql to create table
-			$sql = "CREATE TABLE userTable (
+			$sql = "CREATE TABLE userTable IF NOT EXISTS(
 			id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 			login VARCHAR(30) NOT NULL,
 			pass VARCHAR(30) NOT NULL,
-			role VARCHAR(30)
+			role VARCHAR(30),
+			token VARCHAR(30)
 			) ";
 
 			if ($conn->query($sql) === TRUE) {
