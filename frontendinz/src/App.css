@@ -112,6 +112,8 @@ nav ul a:hover {
 }
 
 #chat-area{ 
+  display: flex;
+  flex-direction: column-reverse;
   height: calc(100vh - 100px - 60px - 100px); 
   overflow: auto; 
   border-top: 2px solid #fff; 

@@ -13,34 +13,67 @@ class Chat extends Component{
         this.state = {
             name: 'Bob',
             messages: [],
+            ws: null,
         }
         this.getDataAxios = this.getDataAxios.bind(this);
-        this.ws = new WebSocket(URL);
+
+        this.timeout = 1000;
       }
     
-      componentDidMount() {
-        this.ws.onopen = () => {
-          console.log('connected')
-        }
-    
-        this.ws.onmessage = evt => {
-          const message = { type: "chat", chat: evt.data }
-          this.addMessage(message)
-        }
-    
-        this.ws.onclose = () => {
-          console.log('disconnected')
-          this.setState({
-            ws: new WebSocket(URL),
-          })
-        }
-
+    componentDidMount() {       
+        this.connect();
         this.getDataAxios();
+        
       }
 
     componentWillUnmount() {
-        clearInterval(this.timerID);
+        //clearInterval(this.timerID);
       }
+
+    connect = () => {
+      var ws = new WebSocket(URL);
+      var connectInterval;
+
+      ws.onopen = () => {
+        console.log('connected');
+        ws.send("1");
+        this.setState({ws: ws});
+        clearTimeout(connectInterval);
+      };
+
+      ws.onmessage = evt => {
+        const message = evt.data
+        this.addMessage(JSON.parse(message))
+      };
+  
+      ws.onclose = e => {
+        console.log(
+            `Socket is closed. Reconnect will be attempted in ${Math.min(
+                10000 / 1000,
+                (this.timeout + this.timeout) / 1000
+            )} second.`,
+            e.reason
+        );
+
+        this.timeout = this.timeout + this.timeout;
+        connectInterval = setTimeout(this.check, Math.min(10000, this.timeout));
+      };
+
+      ws.onerror = err => {
+        console.error(
+            "Socket encountered error: ",
+            err.message,
+            "Closing socket"
+        );
+
+        ws.close();
+      };
+    }
+
+    check = () => {
+      const { ws } = this.state;
+      if (!ws || ws.readyState == WebSocket.CLOSED) this.connect();
+    };
 
     async getDataAxios(){
         const response =
@@ -50,16 +83,31 @@ class Chat extends Component{
         this.setState({name: user.name.first});
       }
 
-    addMessage = message =>
-      this.setState(state => ({ messages: [message, ...state.messages] }))
+    addMessage = message => {
+        this.setState(state => ({ messages: [message, ...state.messages] }))
+        }
   
     submitMessage = messageString => {
-        const message = { type: "chat", chat: messageString }
-        this.ws.send(JSON.stringify(message))
-        this.addMessage(message)
+          if(this.state.ws != null){
+            if(this.state.ws.readyState === 1){
+              if( messageString !== ""){
+                const message = { type: "chat", chat: messageString, name: this.state.name }
+                this.state.ws.send(JSON.stringify(message))
+                this.addMessage(message)
+                console.log(this.state.ws.readyState)
+                console.log(this.state.user)
+              }
+            }
+            else{
+              this.addMessage({ type: "chat", chat: "Nie połączono z chatem", name: "SERVER" })
+            }
+          }
+          else{
+            this.addMessage({ type: "chat", chat: "Nie połączono z chatem", name: "SERVER"  })
+          }
         }
 
-    createChat = () => {
+    createChat = () => { //chwilowo niepotrzebne
         let chat = []
         for (let i = 0; i < 100; i++) {
             chat.push(<span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span><br></br></span>)
@@ -94,8 +142,8 @@ class Chat extends Component{
                         <ChatMessage
                             key={index}
                             message={message.chat}
-                            //name={message.name} //dodane będzie jak będzie fix do jsona
-                            name={this.state.name}
+                            name={message.name} //dodane
+                            //name={this.state.name}
                         />,
                         )}
                     </div>
