@@ -62,7 +62,7 @@
 			die("Connection failed: " . $conn->connect_error);
 		}
 
-		$sql = "SELECT * FROM $table WHERE token = $token";
+		$sql = "SELECT * FROM $table WHERE token = '$token'";
 		$result = $conn->query($sql);
 		
 		$row = $result -> fetch_assoc();
@@ -82,7 +82,8 @@ createTable($conn);
 $colNames = ["id", "login", "pass","role","token" ];
 $data = [[1,"Daniel","Matuszewski","Admin","token"],[2,"Wojtek", "Jaskowiak","User","token"]];
 //$db->insertData($conn,"userTable",$data,$colNames);
-echo $db->getRow("userTable",$conn);	
+//echo $db->getRow("userTable",$conn);
+//echo $db->getRowByToken("userTable",$conn,"token");
 $db->closeConnection($conn);
 
 ?>
