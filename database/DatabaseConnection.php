@@ -24,7 +24,6 @@
 			return $this->name;
 		}
 	
-		
 		function insertData($conn,$table,$data,$colNames){
 				$colNamesS = join(', ', $colNames);
 				
@@ -42,8 +41,7 @@
 				
 		}
 		
-		function getRow($table){
-			
+		function getRow($table,$conn){
 			
 		if ($conn->connect_error) {
 			die("Connection failed: " . $conn->connect_error);
@@ -52,13 +50,14 @@
 		$sql = "SELECT * FROM $table";
 		$result = $conn->query($sql);
 		
-		return $sql;
+		$row = $result -> fetch_assoc();
+		
+		return $row;
 		}
 		
 		
-		function getRowByToken($table,$token){
-			
-			
+		function getRowByToken($table,$conn,$token){
+						
 		if ($conn->connect_error) {
 			die("Connection failed: " . $conn->connect_error);
 		}
@@ -68,10 +67,8 @@
 		
 		$row = $result -> fetch_assoc();
 		
-		
 		return $row;
 		}
-		
 		
 		function closeConnection($conn){
 			$conn->close();
@@ -82,8 +79,10 @@ $db = new DatabaseConnection();
 createDatabase();
 $conn = $db->connect();
 createTable($conn);
-$colNames = ["id", "login", "pass","role" ];
-$data = [[1,"Daniel","Matuszewski","Admin"],[2,"Wojtek", "Jaskowiak","User"]];
-$db->insertData($conn,"userTable",$data,$colNames);
+$colNames = ["id", "login", "pass","role","token" ];
+$data = [[1,"Daniel","Matuszewski","Admin","token"],[2,"Wojtek", "Jaskowiak","User","token"]];
+//$db->insertData($conn,"userTable",$data,$colNames);
+echo $db->getRow("userTable",$conn);	
 $db->closeConnection($conn);
-	?>
+
+?>

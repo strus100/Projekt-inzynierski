@@ -5,21 +5,21 @@
 			$username = "root";
 			$password = "";
 			// Create connection
-			$conn = new mysqli($servername, $username, $password);
+			$connOnce = new mysqli($servername, $username, $password);
 
 			// Check connection
-			if ($conn->connect_error) {
-				die("Connection failed: " . $conn->connect_error);
+			if ($connOnce->connect_error) {
+				die("Connection failed: " . $connOnce->connect_error);
 			}
 			echo "Connected successfully\n";
 			
 			
 			// Create database
 			$sql = "CREATE DATABASE IF NOT EXISTS bazaInz";
-			if ($conn->query($sql) === TRUE) {
+			if ($connOnce->query($sql) === TRUE) {
 			echo "Database created successfully";
 			} else {
-			echo "Error creating database: " . $conn->error;
+			echo "Error creating database: " . $connOnce->error;
 			}
 			}
 		
