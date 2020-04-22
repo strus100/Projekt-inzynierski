@@ -8,10 +8,13 @@
     error_reporting(E_ALL);
     if(PHP_SAPI !== 'cli') die("Run only using CLI");
 
+    require_once "Client.php";
+
     define("DEFAULT_IP", "127.0.0.1");
     define("DEFAULT_PORT", 1111);
-    define("MAX_BUFFER", 1024);
+    define("MAX_BUFFER", 100000);
 
+    // Arguments parsing
     if($argc>1 && $argv[1]=="start"){
         $argumentArray = $argv;
         array_splice($argumentArray, 0, 2);
@@ -29,9 +32,9 @@
     // First octet -> flags with OPCODE
     abstract class OPCODE{
         const TEXT = 129;   //1000 0001 (FIN RSV1 RSV2 RSV3 4*opcode) TEXT frame opcode-%x1
-        const CLOSE = 136;  //1000 1000 (FIN RSV1 RSV2 RSV3 4*opcode) PING opcode-%x8
+        const CLOSE = 136;  //1000 1000 (FIN RSV1 RSV2 RSV3 4*opcode) CLOSE opcode-%x8
         const PING = 137;   //1000 1001 (FIN RSV1 RSV2 RSV3 4*opcode) PING opcode-%x9
-        const PONG = 138;   //1000 1010 (FIN RSV1 RSV2 RSV3 4*opcode) PING opcode-%xA
+        const PONG = 138;   //1000 1010 (FIN RSV1 RSV2 RSV3 4*opcode) PONG opcode-%xA
     }
 
     class WebSocketServer{
@@ -47,7 +50,6 @@
             $this->socket = socket_create(AF_INET, SOCK_STREAM, 0);
             socket_bind($this->socket, (isset($args['-a']) ? $args['-a'] : DEFAULT_IP), (isset($args['-p']) ? $args['-p'] : DEFAULT_PORT));
             socket_listen($this->socket);
-            socket_set_nonblock($this->socket);
             socket_getsockname($this->socket, $address, $port);
             echo "Socket listening on $address:$port\r\n";
             $this->main();
@@ -58,8 +60,8 @@
             echo "Socket closed\r\n";
         }
 
-        // WebSocket Handshake
-        private function handshake($client, $message){
+        // WebSocket Handshake returns TOKEN
+        private function handshake($socket, $message){
             $GUID = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
             $HTTPdata = array();
             $HTTPlines = explode("\r\n", trim($message));
@@ -81,7 +83,8 @@
                         ."Upgrade: websocket\r\n"
                         ."Connection: Upgrade\r\n"
                         ."Sec-Websocket-Accept: $keyHash\r\n\r\n";
-            socket_write($client, $response, strlen($response));
+            socket_write($socket, $response, strlen($response));
+            return $this->decode(socket_read($socket, MAX_BUFFER));
         }
 
         // Websocket frame encoding
@@ -158,8 +161,8 @@
             return $data;
         }
 
-        private function ping($client){
-            echo "ping $client\r\n";
+        private function ping_socket($socket){
+            echo "ping $socket\r\n";
             $request = $this->encode("send BASS", OPCODE::PING);
             /*if(@socket_write($client, $request, strlen($request)) === false){
                 return false;
@@ -168,17 +171,17 @@
                 return true;
             }*/
             // return @socket_write($client, $request, strlen($request));
-            return $this->send_encoded($client, $request);
+            return $this->send_encoded($socket, $request);
         }
 
-        // Send message to client
-        private function send($client, $message){
-            return $this->send_encoded($client, $this->encode($message));
+        // Send message to socket
+        private function send($socket, $message){
+            return $this->send_encoded($socket, $this->encode($message));
         }
 
-        // Send encoded frame message to client
-        private function send_encoded($client, $encoded_message){
-            return @socket_write($client, $encoded_message, strlen($encoded_message));
+        // Send encoded frame message to socket
+        private function send_encoded($socket, $encoded_message){
+            return @socket_write($socket, $encoded_message, strlen($encoded_message));
         }
 
         // Send message to all clients except
@@ -186,26 +189,40 @@
             $encoded_message = $this->encode($message);
 
             foreach ($this->clients as $client) {
-                if(!in_array($client, $except)){
-                    $this->send_encoded($client, $encoded_message);
+                if(!in_array($client->get_socket(), $except)){
+                    $this->send_encoded($client->get_socket(), $encoded_message);
                 }
             }
         }
 
         private function parse_message_from($client, $message){
+            $clientSocket = $client->get_socket();
+            echo "$clientSocket:\t$message\r\n";
             if($message === "PONG"){
-                echo "$client:\t$message\r\n";
+                // echo "$client:\t$message\r\n";
             }
             else{
                 $decoded_JSON_array = json_decode($message, true);
+                // $token = $decoded_JSON_array['token'];
+                // unset($decoded_JSON_array['token']);
+                // if(!$token){
+                //     echo "$clientSocket:\tTOKEN not present\r\n";
+                //     return false;
+                // }
+
                 $type = $decoded_JSON_array['type'];
-                
                 switch ($type) {
                     case 'chat':
-                        $this->send_to_all($decoded_JSON_array[$type], [$client]);
+                        $decoded_JSON_array['name'] = $client->get_nick();
+                        $encoded_JSON_array = json_encode($decoded_JSON_array);
+                        // echo $encoded_JSON_array."\r\n";
+                        $this->send_to_all($message, [$clientSocket]);
                         break;
                     case 'event':
-                        echo "$client: event: $decoded_JSON_array[$type]\r\n";
+                        if($client->isAdmin()){
+
+                        }
+                        echo "$clientSocket: event: $decoded_JSON_array[$type]\r\n";
                         break;
                     default:
                         echo "Undefined JSON type received: $type\r\n";
@@ -217,26 +234,31 @@
         // Main Server function/loop
         private function main(){
             while($this->running==true){
-                $read = array_merge([$this->socket], $this->clients);
+                $read = array_merge([$this->socket], array_map(function($client){ return $client->get_socket(); }, $this->clients));
                 @socket_select($read, $write, $except, 0, 1);   //Select sockets that status has changed
 
                 // If main server socket is in selected sockets array, then there is a new connection incoming
                 if(in_array($this->socket, $read)){
-                    $client = socket_accept($this->socket);
-                    socket_set_nonblock($client);
-                    socket_getpeername($client, $address, $port);
+                    $clientSocket = socket_accept($this->socket);
+                    // socket_set_nonblock($clientSocket);
+                    socket_getpeername($clientSocket, $address, $port);
                     echo "New connection: $address:$port\r\n";
 
-                    $msg = @socket_read($client, MAX_BUFFER);
-                    // echo $msg;
-                    $this->handshake($client, $msg);
-                    $this->clients[] = $client;
+                    $msg = @socket_read($clientSocket, MAX_BUFFER);
+                    $token = $this->handshake($clientSocket, $msg);
+                    $client = new Client($clientSocket, $token);
+                    if($client->authorize()){
+                        $this->clients[] = $client;
+                    }else{
+                        echo "ERROR token!\r\n";
+                        $this->send_encoded($clientSocket, $this->encode("CLOSE", OPCODE::CLOSE));
+                    }
                 }
 
                 // Reads incoming messages
-                foreach ($read as $id => $client) {
-                    if($msg = @socket_read($client, MAX_BUFFER)){
-                        $this->parse_message_from($client, $this->decode($msg));
+                foreach ($read as $id => $clientSocket) {
+                    if($msg = @socket_read($clientSocket, MAX_BUFFER)){
+                        $this->parse_message_from($this->clients[$id-1], $this->decode($msg));
                         // echo "Message from $client:\t$decodedMSG\r\n";
                     }
                 }
@@ -246,8 +268,8 @@
                     $toDelete = array();
                     
                     foreach ($this->clients as $id => $client) {
-                        if($this->ping($client) === false){
-                            socket_close($client);
+                        if($this->ping_socket($client->get_socket()) === false){
+                            unset($client);
                             $toDelete[] = $id;
                             echo "Connection timeout: $id\r\n";
                         }
