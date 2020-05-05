@@ -12,7 +12,7 @@
 
     define("DEFAULT_IP", "127.0.0.1");
     define("DEFAULT_PORT", 1111);
-    define("MAX_BUFFER", 100000);
+    define("MAX_BUFFER", 10000000);
 
     // Arguments parsing
     if($argc>1 && $argv[1]=="start"){
@@ -101,8 +101,19 @@
                 $datagramBytes[2] = ($length >> 8) & 255;
                 $datagramBytes[3] = $length & 255;
             }
+            else if($length > 65535){
+                $datagramBytes[1] = 127;
+                $datagramBytes[2] = ($length >> 56) & 255;
+                $datagramBytes[3] = ($length >> 48) & 255;
+                $datagramBytes[4] = ($length >> 40) & 255;
+                $datagramBytes[5] = ($length >> 32) & 255;
+                $datagramBytes[6] = ($length >> 24) & 255;
+                $datagramBytes[7] = ($length >> 16) & 255;
+                $datagramBytes[8] = ($length >> 8) & 255;
+                $datagramBytes = $length & 255;
+            }
             else{
-                echo "ERROR encoding message";
+                echo "ERROR encoding message - length";
             }
             $parsedArray = array_map("chr", $datagramBytes);
             // print_r($datagramBytes);
@@ -137,13 +148,12 @@
                 $index = 2;
             }
             else if($length == 126){
-                $length = ($octets[2] << 8) | $octets[3];
+                // $length = ($octets[2] << 8) | $octets[3];
                 $index = 4;
             }
             else if($length == 127){
-                echo("payload length=127 - To implement LATER\r\n\r\n");
                 $index = 10;
-                return false;
+                // return false;
             }
             else{
                 return false;
