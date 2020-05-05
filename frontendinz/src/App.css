@@ -255,6 +255,21 @@ nav ul a:hover {
   background: #fff; 
 }
 
+/* CHAT DISABLED */
+
+.chat-disabled div #react-tabs-1 #chat-wrap #chat-area{
+  ;
+}
+
+.chat-disabled div #react-tabs-1 #chat-wrap::after{
+  content: "no connection";
+  position: absolute;
+  height: 65%;
+  width: 100%;
+  text-align: center;
+  color: white;
+}
+
 /* FOOTER */
 
 .footer {

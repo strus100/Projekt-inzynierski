@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { Link } from "react-router-dom";
+import {AppContext} from "./context/AppContext"
 import './App.css'
 
 function Menu(props){   
@@ -8,14 +10,17 @@ function Menu(props){
             className += ' menu-active';
         }
 
+        const {user} = useContext(AppContext);
+
         return(
         <div className="menu">            
             <nav className={className}>
                 <ul>
-                    <a href="#"><li>HOME</li></a>
-                    <a href="#section1"><li>Section I</li></a>
-                    <a href="#section2"><li>Section II</li></a>
+                    <li><Link to="/">Home</Link></li>
+                    <li><Link to="/test">Test</Link></li>
+                    <li><Link to="/main">Main</Link></li>
                 </ul>
+                <h1>{user}</h1>
             </nav>
         </div>
         )
