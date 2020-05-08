@@ -288,7 +288,7 @@ nav ul a:hover {
   box-shadow: 0 5px 15px 0 rgba(0, 0, 0, .5);
 }
 
-label {
+.footer label {
   z-index: 100;
   display: block;
   display: inline-block;
@@ -306,7 +306,7 @@ label {
   user-select: none;
 }
 
-label:hover {
+.footer label:hover {
   color: #353441;
   background: orangered;
 }
@@ -319,6 +319,32 @@ input[type=checkbox]{
 input:checked + label{
   background-color: #fff;
   color: #000;
+}
+
+/* LOGIN */
+
+.login_form{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.login_form div{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.login--input {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
 }
 
 /* 600px */

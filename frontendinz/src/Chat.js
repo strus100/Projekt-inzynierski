@@ -15,19 +15,15 @@ class Chat extends Component{
             messages: [],
             ws: null,
         }
-        this.getDataAxios = this.getDataAxios.bind(this);
-
         this.timeout = 1000;
       }
     
     componentDidMount() {       
-        this.connect();
-        this.getDataAxios();
-        
+        this.connect();       
       }
 
     componentWillUnmount() {
-        //clearInterval(this.timerID);
+        clearInterval(this.timerID);
       }
 
     connect = () => {
@@ -74,14 +70,6 @@ class Chat extends Component{
       const { ws } = this.state;
       if (!ws || ws.readyState == WebSocket.CLOSED) this.connect();
     };
-
-    async getDataAxios(){
-        const response =
-          await axios.get("https://randomuser.me/api");
-        const user = response.data.results[0];
-        console.log(user);
-        this.setState({name: user.name.first});
-      }
 
     addMessage = message => {
         this.setState(state => ({ messages: [message, ...state.messages] }))
