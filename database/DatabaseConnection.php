@@ -25,8 +25,11 @@
 		}
 	
 		function insertData($conn,$table,$data,$colNames){
+				
 				$colNamesS = join(', ', $colNames);
 				
+				
+				//TODO stop
 				for($i = 0; $i < 2 ; $i++){
 				
 				$dataS = join('"," ', $data[$i]);
@@ -73,7 +76,27 @@
 		function closeConnection($conn){
 			$conn->close();
 		}
+	
+	
+		function getLastId($conn){
+			
+		if ($conn->connect_error) {
+			die("Connection failed: " . $conn->connect_error);
+		}
+
+		$sql = 'select last_insert_id();';
+		$result = $conn->query($sql);
+		
+		$row = $result -> fetch_assoc();
+		
+		return $row;
+		
+		}
+		
+	
 	}
+	
+	
 	
 //$db = new DatabaseConnection();
 //createDatabase();
