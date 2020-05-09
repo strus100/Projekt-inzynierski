@@ -16,7 +16,7 @@
 			if ($conn->connect_error) {
 				die("Connection failed: " . $conn->connect_error);
 			}
-			echo "Connected successfully<br>";
+		//	echo "Connected successfully<br>";
 			return $conn;
 		}
 		
@@ -75,15 +75,15 @@
 		}
 	}
 	
-$db = new DatabaseConnection();
-createDatabase();
-$conn = $db->connect();
-createTable($conn);
-$colNames = ["id", "login", "pass","role","token" ];
-$data = [[1,"Daniel","Matuszewski","Admin","token"],[2,"Wojtek", "Jaskowiak","User","token"]];
+//$db = new DatabaseConnection();
+//createDatabase();
+//$conn = $db->connect();
+//createTable($conn);
+//$colNames = ["id", "login", "pass","role","token" ];
+//$data = [[1,"Daniel","test","Admin","token"],[2,"Wojtek", "test","User","token"]];
 //$db->insertData($conn,"userTable",$data,$colNames);
 //echo $db->getRow("userTable",$conn);
 //echo $db->getRowByToken("userTable",$conn,"token");
-$db->closeConnection($conn);
+//$db->closeConnection($conn);
 
 ?>
