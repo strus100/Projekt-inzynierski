@@ -26,22 +26,19 @@
 	
 		function insertData($conn,$table,$data,$colNames){
 				
-				$colNamesS = join(', ', $colNames);
-				
-				
-				//TODO stop
-				for($i = 0; $i < 2 ; $i++){
-				
-				$dataS = join('"," ', $data[$i]);
-				$sql = "INSERT INTO $table ($colNamesS) VALUES (\"$dataS\")";
-				
-				if ($conn->query($sql) === TRUE) {
-					echo "Row $i added to $table successfully!<br>";
-				} else {
-					echo "Error inserting data: " . $conn->error ."<br>";
-				}
-				}
-				
+			$colNamesS = implode(', ', $colNames);
+			
+			$dataS = implode(', ', $data);
+			$dataS = str_replace(",","\",\"",$dataS);
+			$dataS =  str_replace(" ","",$dataS);
+			
+			$sql = "INSERT INTO $table ($colNamesS) VALUES (\"$dataS\")";
+			
+			if ($conn->query($sql) === TRUE) {
+				echo "Row added to $table successfully!<br>";
+			} else {
+				echo "Error inserting data: " . $conn->error ."<br>";
+			}	
 		}
 		
 		function getRow($table,$conn){
@@ -103,7 +100,9 @@
 //$conn = $db->connect();
 //createTable($conn);
 //$colNames = ["id", "login", "pass","role","token" ];
-//$data = [[1,"Daniel","test","Admin","token"],[2,"Wojtek", "test","User","token"]];
+//$data = [1,"Daniel","test","Admin","token"];
+//$db->insertData($conn,"userTable",$data,$colNames);
+//$data = [2,"Wojtek", "test","User","token"];
 //$db->insertData($conn,"userTable",$data,$colNames);
 //echo $db->getRow("userTable",$conn);
 //echo $db->getRowByToken("userTable",$conn,"token");
