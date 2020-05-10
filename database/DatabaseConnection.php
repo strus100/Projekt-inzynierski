@@ -41,14 +41,15 @@
 			}	
 		}
 		
-		function getRow($table,$conn){
+		function getRow($table,$conn,$id){
 			
 		if ($conn->connect_error) {
 			die("Connection failed: " . $conn->connect_error);
 		}
 
-		$sql = "SELECT * FROM $table";
+		$sql = "SELECT * FROM $table WHERE id = '$id'";
 		$result = $conn->query($sql);
+		print_r( $result);
 		
 		$row = $result -> fetch_assoc();
 		
@@ -95,17 +96,17 @@
 	
 	
 	
-//$db = new DatabaseConnection();
+$db = new DatabaseConnection();
 //createDatabase();
-//$conn = $db->connect();
+$conn = $db->connect();
 //createTable($conn);
 //$colNames = ["id", "login", "pass","role","token" ];
-//$data = [1,"Daniel","test","Admin","token"];
+//$data = [1,"Daniel","test","Admin","token1"];
 //$db->insertData($conn,"userTable",$data,$colNames);
-//$data = [2,"Wojtek", "test","User","token"];
+//$data = [2,"Wojtek", "test","User","token2"];
 //$db->insertData($conn,"userTable",$data,$colNames);
-//echo $db->getRow("userTable",$conn);
-//echo $db->getRowByToken("userTable",$conn,"token");
-//$db->closeConnection($conn);
+print_r( $db->getRow("userTable",$conn));
+//print_r( $db->getRowByToken("userTable",$conn,"token2"));
+$db->closeConnection($conn);
 
 ?>
