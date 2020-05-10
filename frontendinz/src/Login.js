@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useContext} from 'react';
-import { AppContext } from "./context/AppContext"
+import { AContext } from "./AContext"
 import './App.css'
 import { Redirect } from 'react-router-dom';
 
@@ -9,7 +9,7 @@ function Login(props){
     const [isButtonDisabled, setIsButtonDisabled] = useState(true);
     const [error, setError] = useState(false);
     const [redirect, setRedirect] = useState(false);
-    const {user, setUser} = useContext(AppContext);
+    const {authenticated, setAuthenticated} = useContext(AContext);
 
     useEffect(() => {
         if (username.trim() && password.trim()) {
@@ -22,9 +22,7 @@ function Login(props){
     const handleLogin = () => {
         if (username === 'admin' && password === '123') {
           setError(false);
-          setUser('admin');
-          console.log("logged", user)
-          setRedirect(true)
+          setAuthenticated(true);
         } else {
           setError(true);
           console.log("not logged")
@@ -37,50 +35,46 @@ function Login(props){
         }
       };
 
-    if(user !== null){
-        return <Redirect to="/main" />;
-    }
-    else{
-        return(
-        <div className="login_form">
-            <h1>{user}</h1>
-            <form action="">        
-                <div className="form-field">
-                    <label className="user" htmlFor="login-username"><span className="hidden">Username</span></label>
-                    <input 
-                        id="login-username" 
-                        type="text" 
-                        className="login--input" 
-                        placeholder="Username" 
-                        onChange={(e)=>setUsername(e.target.value)}
-                        onKeyPress={(e)=>handleKeyPress(e)}
-                        required></input>
-                </div>
+      return(
+      <div className="login_form">
+          <h1>{authenticated}</h1>
+          <h1>{window.localStorage.getItem("authenticated")}</h1>
+          <form>        
+              <div className="form-field">
+                  <label className="user" htmlFor="login-username"><span className="hidden">Username</span></label>
+                  <input 
+                      id="login-username" 
+                      type="text" 
+                      className="login--input" 
+                      placeholder="Username" 
+                      onChange={(e)=>setUsername(e.target.value)}
+                      onKeyPress={(e)=>handleKeyPress(e)}
+                      required></input>
+              </div>
 
-                <div className="form-field">
-                    <label className="lock" htmlFor="login-password"><span className="hidden">Password</span></label>
-                    <input 
-                        id="login-password" 
-                        type="password" 
-                        className="login--input" 
-                        placeholder="Password" 
-                        onChange={(e)=>setPassword(e.target.value)}
-                        onKeyPress={(e)=>handleKeyPress(e)}
-                        required></input>
-                </div>
+              <div className="form-field">
+                  <label className="lock" htmlFor="login-password"><span className="hidden">Password</span></label>
+                  <input 
+                      id="login-password" 
+                      type="password" 
+                      className="login--input" 
+                      placeholder="Password" 
+                      onChange={(e)=>setPassword(e.target.value)}
+                      onKeyPress={(e)=>handleKeyPress(e)}
+                      required></input>
+              </div>
 
-                <button 
-                    type="submit" 
-                    className="login--button"
-                    onClick={()=>handleLogin()}
-                    disabled={isButtonDisabled}
-                    >
-                    Zaloguj
-                </button>
-            </form>
-        </div>
-        )
-    }
+              <button 
+                  type="submit" 
+                  className="login--button"
+                  onClick={()=>handleLogin()}
+                  disabled={isButtonDisabled}
+                  >
+                  Zaloguj
+              </button>
+          </form>
+      </div>
+      )
 } 
 
 export default Login;

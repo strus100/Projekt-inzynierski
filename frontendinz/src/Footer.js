@@ -1,10 +1,7 @@
 import React, { useContext, useEffect } from 'react';
-import { AppContext } from "./context/AppContext"
 import './App.css'
 
 function Footer(props){
-    const {user, setUser} = useContext(AppContext);
-
     return(
     <div className="footer">
         <div>        
@@ -24,6 +21,7 @@ function Footer(props){
                 onClick={console.log( props.checkedChat )}/>
             <label htmlFor="tooglechat">&#128172;</label>
         </div>
+        
     </div>
     )
 } 

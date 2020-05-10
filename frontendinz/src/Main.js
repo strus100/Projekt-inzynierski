@@ -2,13 +2,12 @@ import React, { useState, useContext } from 'react';
 import Menu from "./Menu"
 import Chat from "./Chat"
 import Footer from "./Footer"
-import {AppContext} from "./context/AppContext"
-import { Redirect } from 'react-router-dom';
+import {AContext} from "./AContext"
 
 function Main() {
   const [checkedMenu, setChangeMenu] = useState(false);
   const [checkedChat, setChangeChat] = useState(false);
-  const {user} = useContext(AppContext);
+  const {authenticated, setAuthenticated} = useContext(AContext);
 
   function handleChangeMenu(checkedMenu){
     setChangeMenu(checkedMenu => !checkedMenu);
@@ -18,19 +17,15 @@ function Main() {
     setChangeChat(checkedChat => !checkedChat);
   }
 
-  if(user !== null){
-    return (
-        <div className="main">
-            <h1>{user}</h1>
-            <Menu checkedMenu={checkedMenu}/>
-            <Chat checkedChat={checkedChat}/>
-            <Footer checkedMenu={checkedMenu} checkedChat={checkedChat} handleChangeChat={handleChangeChat} handleChangeMenu={handleChangeMenu}/>
-        </div>
-    );
-  }
-  else{
-    return <Redirect to="/login" />;
-  }
+  return (
+      <div className="main">
+          <h1>{authenticated}</h1>
+          <button onClick={() => setAuthenticated("bbb")}>a</button>
+          <Menu checkedMenu={checkedMenu}/>
+          <Chat checkedChat={checkedChat}/>
+          <Footer checkedMenu={checkedMenu} checkedChat={checkedChat} handleChangeChat={handleChangeChat} handleChangeMenu={handleChangeMenu}/>
+      </div>
+  );
 }
 
 export default Main;

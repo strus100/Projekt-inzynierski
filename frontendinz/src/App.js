@@ -1,40 +1,41 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useContext } from 'react';
 import Main from "./Main"
 import Login from "./Login"
-import {AppContext} from "./context/AppContext"
+import {AContext} from "./AContext";
 import {
   BrowserRouter as Router,
   Switch,
   Route,
+  Redirect,
   Link,
   useRouteMatch,
   useParams
 } from "react-router-dom";
 
 function App() {
-    const [user, setUser] = useState(null);
+  const [authenticated, setAuthenticated] = useState(false);
 
-    const value = useMemo(() => ({ user, setUser }), [user, setUser]);
+  const value = useMemo(() => ({ authenticated, setAuthenticated }), [authenticated, setAuthenticated]);
 
     return (
+      
       <Router>
-        <AppContext.Provider value={value}>
+        <AContext.Provider value={value}>
           <Switch>
+          
             <Route exact path="/">
-              <h1>Index</h1>
+              <h1>a</h1>
             </Route>
-            <Route path="/main">
-              <Main/>
-            </Route>
-            <Route path="/login">
-              <Login/>
-            </Route>
+            <Route path="/main" render={() => (authenticated ? <Main/> : <Redirect to='/login' />)}></Route>
+            <Route path="/login" render={() => (!authenticated ? <Login/> : <Redirect to='/main' />)}></Route>
             <Route path="*">
               <h1>Not found</h1>
             </Route>
+            
           </Switch>
-        </AppContext.Provider>
+          </AContext.Provider>
       </Router>
+      
     );
 }
 
