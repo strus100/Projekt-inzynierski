@@ -96,17 +96,17 @@
 	
 	
 	
-$db = new DatabaseConnection();
+//$db = new DatabaseConnection();
 //createDatabase();
-$conn = $db->connect();
+//$conn = $db->connect();
 //createTable($conn);
 //$colNames = ["id", "login", "pass","role","token" ];
 //$data = [1,"Daniel","test","Admin","token1"];
 //$db->insertData($conn,"userTable",$data,$colNames);
 //$data = [2,"Wojtek", "test","User","token2"];
 //$db->insertData($conn,"userTable",$data,$colNames);
-print_r( $db->getRow("userTable",$conn));
+//print_r( $db->getRow("userTable",$conn,1));
 //print_r( $db->getRowByToken("userTable",$conn,"token2"));
-$db->closeConnection($conn);
+//$db->closeConnection($conn);
 
 ?>

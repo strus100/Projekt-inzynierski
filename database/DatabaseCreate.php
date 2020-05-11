@@ -29,7 +29,7 @@
 			$sql = "CREATE TABLE IF NOT EXISTS userTable (
 			id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 			login VARCHAR(30) NOT NULL,
-			pass VARCHAR(30) NOT NULL,
+			pass VARCHAR(255) NOT NULL,
 			role VARCHAR(30),
 			token VARCHAR(30)
 			) ";

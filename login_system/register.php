@@ -16,7 +16,7 @@ if ( !isset($_POST['username'], $_POST['password'],$_POST['passwordTwo']) ) {
 if ($_POST['password'] == $_POST['passwordTwo']) {
 
 $colNames = ["id", "login", "pass","role","token" ];
-$data = ["",$_POST['username'],$_POST['password'],"User",""];
+$data = ["",$_POST['username'],password_hash($_POST['password']),"User",""];
 $db->insertData($conn,"userTable",$data,$colNames);
 }else{
 	echo 'passwords do not match';
