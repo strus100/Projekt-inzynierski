@@ -17,10 +17,15 @@ function Main() {
     setChangeChat(checkedChat => !checkedChat);
   }
 
+  function handleLogout(){
+    setAuthenticated(false);
+    localStorage.removeItem('authenticated');
+  }
+
   return (
       <div className="main">
           <h1>{authenticated}</h1>
-          <button onClick={() => setAuthenticated("bbb")}>a</button>
+          <button onClick={() => handleLogout()}>WYLOGUJ</button>
           <Menu checkedMenu={checkedMenu}/>
           <Chat checkedChat={checkedChat}/>
           <Footer checkedMenu={checkedMenu} checkedChat={checkedChat} handleChangeChat={handleChangeChat} handleChangeMenu={handleChangeMenu}/>

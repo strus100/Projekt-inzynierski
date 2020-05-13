@@ -13,7 +13,7 @@ import {
 } from "react-router-dom";
 
 function App() {
-  const [authenticated, setAuthenticated] = useState(false);
+  const [authenticated, setAuthenticated] = useState(localStorage.getItem("authenticated") || false);
 
   const value = useMemo(() => ({ authenticated, setAuthenticated }), [authenticated, setAuthenticated]);
 
@@ -22,9 +22,8 @@ function App() {
       <Router>
         <AContext.Provider value={value}>
           <Switch>
-          
             <Route exact path="/">
-              <h1>a</h1>
+              <Redirect to='/login' />
             </Route>
             <Route path="/main" render={() => (authenticated ? <Main/> : <Redirect to='/login' />)}></Route>
             <Route path="/login" render={() => (!authenticated ? <Login/> : <Redirect to='/main' />)}></Route>

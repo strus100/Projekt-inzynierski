@@ -23,6 +23,7 @@ function Login(props){
         if (username === 'admin' && password === '123') {
           setError(false);
           setAuthenticated(true);
+          localStorage.setItem("authenticated", true);
         } else {
           setError(true);
           console.log("not logged")
