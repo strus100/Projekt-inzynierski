@@ -14,7 +14,7 @@ import {
 
 function App() {
   const [authenticated, setAuthenticated] = useState(localStorage.getItem("authenticated") || false);
-  const [admin, setAdmin] = useState(true);
+  const [admin, setAdmin] = useState(false);
 
   const providerValue = useMemo(() => ({
         authenticated, setAuthenticated,

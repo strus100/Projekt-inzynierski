@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import Menu from "./Menu"
 import Chat from "./Chat"
 import Footer from "./Footer"
+import Iframe from "./Iframe"
 import {AContext} from "./AContext"
 
 function Main() {
@@ -10,7 +11,7 @@ function Main() {
   const [messages, setMesseges] = useState([]);
   const [ws, setWebsocket] = useState(null); 
   const {authenticated, setAuthenticated} = useContext(AContext);
-  const {admin} = useContext(AContext);
+  const {admin, setAdmin} = useContext(AContext);
   const URL = 'ws://localhost:1111';
   var timeout = 1000;
 
@@ -26,8 +27,12 @@ function Main() {
     };
 
     webSocket.onmessage = (evt) => {
-      const message = evt.data
-      addMessage(JSON.parse(message))
+      const message = evt.data;
+      console.log(JSON.parse(message).type);
+      switch(JSON.parse(message)){
+        case "chat": return addMessage(JSON.parse(message));
+      }
+      
     };
 
     webSocket.onclose = e => {
@@ -106,7 +111,9 @@ function Main() {
       <div className="main">
           { admin ? <h1>admin</h1> : <h1>nie</h1> }
           <button onClick={() => handleLogout()}>WYLOGUJ</button>
+          <button onClick={() => setAdmin(!admin)}>Admin</button>
           <Menu checkedMenu={checkedMenu}/>
+          <Iframe/>
           <Chat checkedChat={checkedChat} ws={ws} messages={messages} submitMessage={submitMessage}/>
           <Footer checkedMenu={checkedMenu} checkedChat={checkedChat} handleChangeChat={handleChangeChat} handleChangeMenu={handleChangeMenu}/>
       </div>

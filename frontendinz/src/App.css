@@ -347,6 +347,37 @@ input:checked + label{
   box-sizing: border-box;
 }
 
+/* IFRAME */
+
+.iframediv {
+  width: 700px;
+  height: 700px;
+  position: relative;
+  margin: 0 auto;
+}
+
+#framearea,
+#framecover {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#framearea{
+  z-index: 1;
+}
+
+#framecover {
+  z-index: 10;
+}
+
+#scoreboard, #scoreboardx{
+  width: 100%;
+  height: 100%;
+}
+
 /* 600px */
 
 @media only screen and (max-width: 600px) {
