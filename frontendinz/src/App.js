@@ -14,13 +14,17 @@ import {
 
 function App() {
   const [authenticated, setAuthenticated] = useState(localStorage.getItem("authenticated") || false);
+  const [admin, setAdmin] = useState(true);
 
-  const value = useMemo(() => ({ authenticated, setAuthenticated }), [authenticated, setAuthenticated]);
+  const providerValue = useMemo(() => ({
+        authenticated, setAuthenticated,
+        admin, setAdmin,
+    }), [authenticated, admin]);
 
     return (
       
       <Router>
-        <AContext.Provider value={value}>
+        <AContext.Provider value={providerValue}>
           <Switch>
             <Route exact path="/">
               <Redirect to='/login' />

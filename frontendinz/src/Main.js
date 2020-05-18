@@ -10,6 +10,7 @@ function Main() {
   const [messages, setMesseges] = useState([]);
   const [ws, setWebsocket] = useState(null); 
   const {authenticated, setAuthenticated} = useContext(AContext);
+  const {admin} = useContext(AContext);
   const URL = 'ws://localhost:1111';
   var timeout = 1000;
 
@@ -71,8 +72,8 @@ function Main() {
   }
 
   function submitMessage(messageString){
-    if({ws} != null){
-      if(ws.readyState === 1){
+    if( ws != null ){
+      if( ws.readyState === 1 ){
         if( messageString !== ""){
           const message = { type: "chat", chat: messageString, name: "test" }
           ws.send(JSON.stringify(message))
@@ -103,7 +104,7 @@ function Main() {
 
   return (
       <div className="main">
-          <h1>{authenticated}</h1>
+          { admin ? <h1>admin</h1> : <h1>nie</h1> }
           <button onClick={() => handleLogout()}>WYLOGUJ</button>
           <Menu checkedMenu={checkedMenu}/>
           <Chat checkedChat={checkedChat} ws={ws} messages={messages} submitMessage={submitMessage}/>
