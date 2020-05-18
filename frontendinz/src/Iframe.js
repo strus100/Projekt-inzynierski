@@ -9,16 +9,11 @@ function Iframe(props){
         <div>
         { !admin ? 
             <div className="iframediv">
-                <div id="framearea">
-                    <iframe id="scoreboard" scrolling="no" src="https://www.wmi.amu.edu.pl/"></iframe>
-                </div>
-                <div id="framecover">
-                    <img src="dot.gif"/>
-                </div>
+                <iframe id="scoreboard" scrolling="no" src="https://www.wmi.amu.edu.pl/"></iframe>
             </div>
             :
             <div className="iframediv">
-                <iframe id="scoreboardx" src="https://www.wmi.amu.edu.pl/"></iframe>
+                <iframe id="scoreboardx" scrolling="yes" src="https://www.wmi.amu.edu.pl/"></iframe>
             </div>
         }
         </div>

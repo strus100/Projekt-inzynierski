@@ -29,7 +29,7 @@ function Main() {
     webSocket.onmessage = (evt) => {
       const message = evt.data;
       console.log(JSON.parse(message).type);
-      switch(JSON.parse(message)){
+      switch(JSON.parse(message).type){
         case "chat": return addMessage(JSON.parse(message));
       }
       
