@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React from 'react';
 import './App.css'
 
 function Footer(props){
@@ -11,7 +11,7 @@ function Footer(props){
                 checked={ props.checkedMenu } 
                 onChange={ props.handleChangeMenu } 
                 />    
-            <label htmlFor="tooglemenu">&#9776;</label>
+            <label htmlFor="tooglemenu"><span aria-labelledby="jsx-a11y/accessible-emoji" role="img">&#9776;</span></label>
     
             <input 
                 type="checkbox" 
@@ -19,7 +19,7 @@ function Footer(props){
                 checked={ props.checkedChat } 
                 onChange={ props.handleChangeChat } 
                 />
-            <label htmlFor="tooglechat">&#128172;</label>
+            <label htmlFor="tooglechat"><span aria-labelledby="jsx-a11y/accessible-emoji" role="img">&#128172;</span></label>
         </div>
         
     </div>

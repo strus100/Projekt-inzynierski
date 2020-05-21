@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useContext } from 'react';
+import React, { useState, useMemo } from 'react';
 import Main from "./Main"
 import Login from "./Login"
 import {AContext} from "./AContext";
@@ -6,10 +6,7 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Redirect,
-  Link,
-  useRouteMatch,
-  useParams
+  Redirect
 } from "react-router-dom";
 
 function App() {
@@ -34,9 +31,8 @@ function App() {
             <Route path="*">
               <h1>Not found</h1>
             </Route>
-            
           </Switch>
-          </AContext.Provider>
+        </AContext.Provider>
       </Router>
       
     );

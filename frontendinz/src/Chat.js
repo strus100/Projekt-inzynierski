@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './App.css'
-import axios from 'axios'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import ChatMessage from "./ChatMessage";
 import ChatInput from "./ChatInput";
@@ -16,7 +15,7 @@ function Chat(props){
         className += ' chat-disabled';
       }else{
         //console.log(this.state.ws.readyState)
-        if(props.ws.readyState != 1){
+        if(props.ws.readyState !== 1){
           className += ' chat-disabled';
       }
     }

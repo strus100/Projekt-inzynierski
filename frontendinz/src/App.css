@@ -10,6 +10,7 @@ html, body {
   padding: 0;
   scroll-behavior: smooth;
   outline: none;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
@@ -257,10 +258,6 @@ nav ul a:hover {
 
 /* CHAT DISABLED */
 
-.chat-disabled div #react-tabs-1 #chat-wrap #chat-area{
-  ;
-}
-
 .chat-disabled div #react-tabs-1 #chat-wrap::after{
   content: "no connection";
   position: absolute;
@@ -331,20 +328,79 @@ input:checked + label{
   min-height: 100vh;
 }
 
-.login_form div{
+.login_form div div{
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 }
 
+.login_form .form-div{
+  background-color: #fafafa;
+  padding: 50px 80px 50px 80px;
+  box-shadow: rgba(0, 0, 0, 0.16) 3px 6px 6px;
+}
+
+.form-field{
+  padding: 10px 0px;
+}
+
+.form-field label span{
+  font-size: 12px;
+}
+
+.form-div h1{
+  text-align: center;
+  margin-bottom: 50px;
+}
+
 .login--input {
   width: 100%;
-  padding: 12px 20px;
+  padding: 12px 5px;
   margin: 8px 0;
   display: inline-block;
-  border: 1px solid #ccc;
+  border: 0;
+  border-bottom: 1px solid black;
+  background-color: transparent;
   box-sizing: border-box;
+}
+
+.login--input:focus{
+  border-bottom: 1px solid red;
+}
+
+.login--button{
+  display: inline-block;
+  margin-top: 40px;
+  width: 100%;
+  padding: 10px;
+  color: #fff;
+  text-transform: uppercase;
+  box-shadow:inset 0 -0.6em 0 -0.35em rgba(0,0,0,0.17);
+  background-color: #3369ff;
+  text-align: center;
+  text-decoration: none;
+  outline: 0;
+  border: 0;
+  padding: 20px 0px;
+}
+
+.login--button:hover{
+  background-color: #0032bd;
+}
+
+.login--button:disabled{
+  background-color: #ccc;
+  color: #333;
+}
+
+.form-div form #error-msg{
+  display: inline-block;
+  font-size: 14px;
+  width: 100%;
+  padding: 20px 0;
+  border-radius: 5px;
+  color: #ff3434;
 }
 
 /* IFRAME */
@@ -371,6 +427,11 @@ input:checked + label{
   .menu-active, .chat-active{
     width: 100%;
   }
+
+  .form-div{
+    width: 100%;
+    height: 100vh;
+  }
 }
 
 /* MOBILE */
@@ -378,5 +439,10 @@ input:checked + label{
 @media (hover: none) and (pointer: coarse) {
   .menu-active, .chat-active{
     width: 100%;
+  }
+
+  .form-div{
+    width: 100%;
+    height: 100vh;
   }
 }

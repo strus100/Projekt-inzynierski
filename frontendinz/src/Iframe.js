@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import {AContext} from "./AContext"
 import './App.css'
 
@@ -9,11 +9,11 @@ function Iframe(props){
         <div>
         { !admin ? 
             <div className="iframediv">
-                <iframe id="scoreboard" scrolling="no" src="https://www.wmi.amu.edu.pl/"></iframe>
+                <iframe id="scoreboard" scrolling="no" src="" title="iframe-title"></iframe>
             </div>
             :
             <div className="iframediv">
-                <iframe id="scoreboardx" scrolling="yes" src="https://www.wmi.amu.edu.pl/"></iframe>
+                <iframe id="scoreboardx" scrolling="yes" src="" title="iframe-title"></iframe>
             </div>
         }
         </div>

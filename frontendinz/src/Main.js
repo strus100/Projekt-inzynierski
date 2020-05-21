@@ -13,64 +13,69 @@ function Main() {
   const {authenticated, setAuthenticated} = useContext(AContext);
   const {admin, setAdmin} = useContext(AContext);
   const URL = 'ws://localhost:1111';
-  var timeout = 1000;
-
-  function connect(){
-    var connectInterval;
-    var webSocket = new WebSocket(URL);
-    setWebsocket(webSocket);
-
-    webSocket.onopen = () => {
-      console.log('connected');
-      webSocket.send("1");
-      clearTimeout(connectInterval);
-    };
-
-    webSocket.onmessage = (evt) => {
-      const message = evt.data;
-      console.log(JSON.parse(message).type);
-      switch(JSON.parse(message).type){
-        case "chat": return addMessage(JSON.parse(message));
-      }
-      
-    };
-
-    webSocket.onclose = e => {
-      console.log(
-        `Socket is closed. Reconnect will be attempted in ${Math.min(
-            10000 / 1000,
-            (timeout + timeout) / 1000
-        )} second.`,
-        e.reason
-    );
-
-      timeout = timeout + timeout;
-      connectInterval = setTimeout(check, Math.min(10000, timeout));
-      
-    };
-
-    webSocket.onerror = (err) => {
-      console.error(
-          "Socket encountered error: ",
-          err.message,
-          "Closing socket"
-      );
-
-      webSocket.close();
-    };
-
-    return () => {
-      webSocket.close();
-    };
-  }
 
   useEffect(() => {
-    connect();
-  }, []);
+    var timeout = 1000;
+    var connectInterval;
 
-  function check(){
-    if (!ws || ws.readyState == WebSocket.CLOSED) connect();
-  };
+    function connect(){
+      var webSocket = new WebSocket(URL);
+      setWebsocket(webSocket);
+  
+      webSocket.onopen = () => {
+        console.log('connected');
+        webSocket.send("1");
+        clearTimeout(connectInterval);
+      };
+  
+      webSocket.onmessage = (evt) => {
+        const message = evt.data;
+        console.log(JSON.parse(message).type);
+        switch(JSON.parse(message).type){
+          case "chat": return addMessage(JSON.parse(message));
+        }
+        
+      };
+  
+      webSocket.onclose = e => {
+        console.log(
+          `Socket is closed. Reconnect will be attempted in ${Math.min(
+              10000 / 1000,
+              (timeout + timeout) / 1000
+          )} second.`,
+          e.reason
+      );
+  
+        timeout = timeout + timeout;
+        connectInterval = setTimeout(check, Math.min(10000, timeout));
+        
+      };
+  
+      webSocket.onerror = (err) => {
+        console.error(
+            "Socket encountered error: ",
+            err.message,
+            "Closing socket"
+        );
+  
+        webSocket.close();
+      };
+  
+      return () => {
+        webSocket.close();
+      };
+    }
+
+    function check(){
+      if (!ws || ws.readyState === WebSocket.CLOSED) connect();
+    };
+
+    connect();
+
+    return () => {
+      clearInterval(connectInterval);
+    };
+  }, []);
 
   function addMessage(message){
       setMesseges(x => [message, ...x] );
