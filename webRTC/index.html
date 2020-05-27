@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=1">
+</head>
+
+<body>
+<div id="container">
+    <div id="videos">
+        <video id="videoLocal" playsinline autoplay muted></video>
+        <video id="video2" playsinline autoplay></video>
+    </div>
+
+    <section><input type="checkbox" id="audio"><label for="audio">Include audio</label></section>
+
+    <div id="buttons">
+        <button id="start">Start</button>
+        <button id="call" disabled>Call</button>
+        <button id="hangup" disabled>Hang Up</button>
+    </div>
+	
+</div>
+
+<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+<!-- TODO real connection with ours server -->
+<script src="js/videopipe.js"></script>
+<script src="js/main.js" async></script>
+</body>
+</html>
