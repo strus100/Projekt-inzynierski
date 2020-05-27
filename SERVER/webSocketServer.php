@@ -230,7 +230,7 @@
                         break;
                     case 'event':
                         if($client->isAdmin()){
-
+                            $this->send_to_all($message, $clientSocket);
                         }
                         echo "$clientSocket: event: $decoded_JSON_array[$type]\r\n";
                         break;
