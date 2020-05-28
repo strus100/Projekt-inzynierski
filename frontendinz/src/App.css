@@ -126,7 +126,7 @@ nav ul a:hover {
 #chat-area .chat-line{
   color: #000; 
   margin: 0 5px 0 0; 
-  word-break: break-all;
+  word-break: break-word;
 }
 
 #chat-area p{ 
@@ -254,6 +254,31 @@ nav ul a:hover {
   border-top: 2px solid #fff; 
   padding: 20px; 
   background: #fff; 
+}
+
+.wrap-additional-area{ 
+
+  height: calc(100vh - 100px - 60px - 100px); 
+  overflow: auto; 
+  border-top: 2px solid #fff; 
+  padding: 20px; 
+  background: #fff; 
+}
+
+.wrap-additional-area .history-line{
+  color: #000; 
+  margin: 0 5px 0 0; 
+  word-break: break-word;
+}
+
+.wrap-additional-area p{ 
+  padding: 8px 0; 
+  border-bottom: 1px solid black;
+}
+
+.wrap-additional-area p span a{ 
+  text-decoration: none;
+  color: black;
 }
 
 /* CHAT DISABLED */

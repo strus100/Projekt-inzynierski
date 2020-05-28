@@ -11,6 +11,7 @@ function Main() {
   const [hoverChat, setHoverChat] = useState(false);
   const [checkedChat, setChangeChat] = useState(false);
   const [messages, setMesseges] = useState([]);
+  const [historyB, setHistoryB] = useState([{title: "test", link: "aaa"}, {title: "test2", link: "aaa2"}]);
   const [ws, setWebsocket] = useState(null); 
   const {authenticated, setAuthenticated} = useContext(AContext);
   const {admin, setAdmin} = useContext(AContext);
@@ -138,6 +139,7 @@ function Main() {
             hoverChat={hoverChat} 
             ws={ws} 
             messages={messages} 
+            historyB={historyB}
             submitMessage={submitMessage}
             />
           <Footer 

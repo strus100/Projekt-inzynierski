@@ -3,6 +3,7 @@ import './App.css'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import ChatMessage from "./ChatMessage";
 import ChatInput from "./ChatInput";
+import HistoryMessage from "./HistoryMessage"
 
 function Chat(props){
     let className = 'chat-activea';
@@ -57,7 +58,15 @@ function Chat(props){
                 </TabPanel>
                 <TabPanel>
                 <div className="wrap-additional">
-                    <div className="wrap-additional-area">wrap-additional-area</div>
+                    <div className="wrap-additional-area">
+                    {props.historyB.map((historyB, index) =>
+                        <HistoryMessage
+                            key={index}
+                            title={historyB.title}
+                            link={historyB.link}
+                        />,
+                        )}
+                    </div>
                 </div>
                 </TabPanel>
               </Tabs>
