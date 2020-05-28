@@ -9,6 +9,10 @@ function Menu(props){
             className += ' menu-active';
         }
 
+        if(props.hoverMenu && !props.checkedMenu){
+            className += ' menu-hover';
+        }
+
         return(
         <div className="menu">            
             <nav className={className}>

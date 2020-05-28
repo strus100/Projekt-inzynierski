@@ -11,6 +11,10 @@ function Chat(props){
         className += ' chat-active';
     }
 
+    if(props.hoverChat && !props.checkedChat){
+        className += ' chat-hover';
+    }
+
     if(props.ws === null){
         className += ' chat-disabled';
       }else{

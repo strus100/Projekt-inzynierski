@@ -11,7 +11,11 @@ function Footer(props){
                 checked={ props.checkedMenu } 
                 onChange={ props.handleChangeMenu } 
                 />    
-            <label htmlFor="tooglemenu"><span aria-labelledby="jsx-a11y/accessible-emoji" role="img">&#9776;</span></label>
+            <label 
+                htmlFor="tooglemenu"
+                onMouseEnter={() => props.handleHoverMenu(true)}
+                onMouseLeave={() => props.handleHoverMenu(false)}
+                ><span aria-labelledby="jsx-a11y/accessible-emoji" role="img">&#9776;</span></label>
     
             <input 
                 type="checkbox" 
@@ -19,7 +23,12 @@ function Footer(props){
                 checked={ props.checkedChat } 
                 onChange={ props.handleChangeChat } 
                 />
-            <label htmlFor="tooglechat"><span aria-labelledby="jsx-a11y/accessible-emoji" role="img">&#128172;</span></label>
+            <label 
+                htmlFor="tooglechat"
+                onMouseEnter={() => props.handleHoverChat(true)}
+                onMouseLeave={() => props.handleHoverChat(false)}
+            >
+                <span aria-labelledby="jsx-a11y/accessible-emoji" role="img">&#128172;</span></label>
         </div>
         
     </div>

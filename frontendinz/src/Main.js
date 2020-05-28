@@ -6,7 +6,9 @@ import Iframe from "./Iframe"
 import {AContext} from "./AContext"
 
 function Main() {
+  const [hoverMenu, setHoverMenu] = useState(false);
   const [checkedMenu, setChangeMenu] = useState(false);
+  const [hoverChat, setHoverChat] = useState(false);
   const [checkedChat, setChangeChat] = useState(false);
   const [messages, setMesseges] = useState([]);
   const [ws, setWebsocket] = useState(null); 
@@ -45,7 +47,8 @@ function Main() {
           )} second.`,
           e.reason
       );
-  
+        const message = { type: "chat", chat: `Nie połączono z chatem, ponowna próba połączenia za ${Math.min(10000 / 1000, (timeout + timeout) / 1000)} sekund.`, name: "SERVER" }
+        addMessage(message);
         timeout = timeout + timeout;
         connectInterval = setTimeout(check, Math.min(10000, timeout));
         
@@ -107,6 +110,14 @@ function Main() {
     setChangeChat(checkedChat => !checkedChat);
   }
 
+  function handleHoverChat(x){
+    setHoverChat(x);
+  }
+
+  function handleHoverMenu(x){
+    setHoverMenu(x);
+  }
+
   function handleLogout(){
     setAuthenticated(false);
     localStorage.removeItem('authenticated');
@@ -117,10 +128,26 @@ function Main() {
           { admin ? <h1>admin</h1> : <h1>nie</h1> }
           <button onClick={() => handleLogout()}>WYLOGUJ</button>
           <button onClick={() => setAdmin(!admin)}>Admin</button>
-          <Menu checkedMenu={checkedMenu}/>
+          <Menu 
+            checkedMenu={checkedMenu} 
+            hoverMenu={hoverMenu}
+            />
           <Iframe/>
-          <Chat checkedChat={checkedChat} ws={ws} messages={messages} submitMessage={submitMessage}/>
-          <Footer checkedMenu={checkedMenu} checkedChat={checkedChat} handleChangeChat={handleChangeChat} handleChangeMenu={handleChangeMenu}/>
+          <Chat 
+            checkedChat={checkedChat} 
+            hoverChat={hoverChat} 
+            ws={ws} 
+            messages={messages} 
+            submitMessage={submitMessage}
+            />
+          <Footer 
+            checkedMenu={checkedMenu} 
+            checkedChat={checkedChat} 
+            handleChangeChat={handleChangeChat} 
+            handleChangeMenu={handleChangeMenu} 
+            handleHoverChat={handleHoverChat}
+            handleHoverMenu={handleHoverMenu}
+            />
       </div>
   );
 }

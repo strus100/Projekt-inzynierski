@@ -17,7 +17,7 @@ function Login(props){
         }
       }, [username, password]);
 
-    const handleLogin = (e) => {
+    const handleLogin = e => {
       e.preventDefault();
         if (username === 'admin' && password === '123') {
           setError(false);
@@ -31,7 +31,7 @@ function Login(props){
     
     const handleKeyPress = e => {
         if (e.keyCode === 13 || e.which === 13) {
-          isButtonDisabled || handleLogin();
+          isButtonDisabled || handleLogin(e);
         }
       };
 
