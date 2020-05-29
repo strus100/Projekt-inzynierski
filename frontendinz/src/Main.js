@@ -12,7 +12,6 @@ function Main() {
   const [checkedChat, setChangeChat] = useState(false);
   const [messages, setMesseges] = useState([]);
   const [historyB, setHistoryB] = useState([{title: "test", link: "aaa"}, {title: "test2", link: "aaa2"}]);
-  const [ws, setWebsocket] = useState(null); 
   const {authenticated, setAuthenticated} = useContext(AContext);
   const {admin, setAdmin} = useContext(AContext);
   const URL = 'ws://localhost:1111';
@@ -20,6 +19,7 @@ function Main() {
   useEffect(() => {
     var timeout = 1000;
     var connectInterval;
+    const [ws, setWebsocket] = useState(null); 
 
     function connect(){
       var webSocket = new WebSocket(URL);
