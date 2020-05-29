@@ -8,7 +8,7 @@
     error_reporting(E_ALL);
     if(PHP_SAPI !== 'cli') die("Run only using CLI");
 
-    require_once "Client.php";
+    require_once __DIR__."/Client.php";
 
     define("DEFAULT_IP", "127.0.0.1");
     define("DEFAULT_PORT", 1111);
@@ -96,7 +96,7 @@
             if($length <= 125){
                 $datagramBytes[1] = $length;
             }
-            else if($length >= 126 && length <= 65535){
+            else if($length >= 126 && $length <= 65535){
                 $datagramBytes[1] = 126;
                 $datagramBytes[2] = ($length >> 8) & 255;
                 $datagramBytes[3] = $length & 255;
@@ -213,24 +213,18 @@
             }
             else{
                 $decoded_JSON_array = json_decode($message, true);
-                // $token = $decoded_JSON_array['token'];
-                // unset($decoded_JSON_array['token']);
-                // if(!$token){
-                //     echo "$clientSocket:\tTOKEN not present\r\n";
-                //     return false;
-                // }
-
                 $type = $decoded_JSON_array['type'];
+                
                 switch ($type) {
                     case 'chat':
                         $decoded_JSON_array['name'] = $client->get_nick();
                         $encoded_JSON_array = json_encode($decoded_JSON_array);
                         // echo $encoded_JSON_array."\r\n";
-                        $this->send_to_all($message, [$clientSocket]);
+                        $this->send_to_all($encoded_JSON_array, [$clientSocket]);
                         break;
                     case 'event':
                         if($client->isAdmin()){
-                            $this->send_to_all($message, $clientSocket);
+                            $this->send_to_all($message, [$clientSocket]);
                         }
                         echo "$clientSocket: event: $decoded_JSON_array[$type]\r\n";
                         break;
