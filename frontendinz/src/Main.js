@@ -11,7 +11,8 @@ function Main() {
   const [hoverChat, setHoverChat] = useState(false);
   const [checkedChat, setChangeChat] = useState(false);
   const [messages, setMesseges] = useState([]);
-  const [historyB, setHistoryB] = useState([{title: "test", link: "aaa"}, {title: "test2", link: "aaa2"}]);
+  const [historyB, setHistoryB] = useState([{title: "strus100/Projekt-inzynierski", link: "https://github.com/strus100/Projekt-inzynierski"}, {title: "Projekt Inżynierski – Dysk Google", link: "https://drive.google.com/drive/folders/1OBH7hwjS7rxf_lPeMfBeXzLsXSPu-4sN"}]);
+  const [ws, setWebsocket] = useState(null); 
   const {authenticated, setAuthenticated} = useContext(AContext);
   const {admin, setAdmin} = useContext(AContext);
   const URL = 'ws://localhost:1111';
@@ -19,7 +20,6 @@ function Main() {
   useEffect(() => {
     var timeout = 1000;
     var connectInterval;
-    const [ws, setWebsocket] = useState(null); 
 
     function connect(){
       var webSocket = new WebSocket(URL);
@@ -27,6 +27,8 @@ function Main() {
   
       webSocket.onopen = () => {
         console.log('connected');
+        const message = { type: "chat", chat: `Połączono z chatem.`, name: "SERVER" }
+        addMessage(message);
         webSocket.send("1");
         clearTimeout(connectInterval);
       };

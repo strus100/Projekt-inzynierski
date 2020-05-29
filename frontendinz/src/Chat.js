@@ -16,15 +16,6 @@ function Chat(props){
         className += ' chat-hover';
     }
 
-    if(props.ws === null){
-        className += ' chat-disabled';
-      }else{
-        //console.log(this.state.ws.readyState)
-        if(props.ws.readyState !== 1){
-          className += ' chat-disabled';
-      }
-    }
-
     return(
       <div className={className}>            
           <div className="chat">

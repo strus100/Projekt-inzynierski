@@ -138,7 +138,7 @@ nav ul a:hover {
 
 #chat-area p{ 
   padding: 8px 0; 
-  border-bottom: 1px solid #ccc; 
+  border-bottom: 1px solid #ddd; 
 }
 
 #chat-area p:first-child{ 
@@ -287,12 +287,16 @@ nav ul a:hover {
 
 .wrap-additional-area p{ 
   padding: 8px 0; 
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid #ddd;
 }
 
 .wrap-additional-area p span a{ 
   text-decoration: none;
   color: black;
+}
+
+.wrap-additional-area p .history-line span a{
+  color: dodgerblue;
 }
 
 /* CHAT DISABLED */
