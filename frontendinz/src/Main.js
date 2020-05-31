@@ -28,14 +28,16 @@ function Main() {
         console.log('connected');
         const message = { type: "chat", chat: `Połączono z chatem.`, name: "SERVER" }
         addMessage(message);
-		if(admin){
-			webSocket.send("1");
-		}else{
-			webSocket.send("2");
-		}
+        if(admin){
+          webSocket.send("1");
+        }else{
+          webSocket.send("2");
+        }
         clearTimeout(connectInterval);
-		setWebsocket(webSocket);
-		setListenerScroll(webSocket);
+        setWebsocket(webSocket);
+        if(admin){
+          setListenerScroll(webSocket);
+        }
       };
   
       webSocket.onmessage = (evt) => {
@@ -43,11 +45,11 @@ function Main() {
         console.log(JSON.parse(message).type);
         switch(JSON.parse(message).type){
           case "chat": return addMessage(JSON.parse(message));
-		  case "event":
-			var parsed = JSON.parse(message);
-			var element = document.getElementById("scoreboard").contentWindow;
-			element.scrollTo(parsed.x, parsed.y);
-			break;
+          case "event":
+            var parsed = JSON.parse(message);
+            var element = document.getElementById("scoreboard").contentWindow;
+            element.scrollTo(parsed.x, parsed.y);
+            break;
         }
       };
   
@@ -63,9 +65,9 @@ function Main() {
         addMessage(message);
         timeout = timeout + timeout;
         connectInterval = setTimeout(check, Math.min(10000, timeout));
-		const element = document.getElementById("scoreboardx");
-        element.contentDocument.removeEventListener("scroll");
-		element.removeEventListener("load");
+        if(admin && (document.getElementById("scoreboardx") != null && document.getElementById("scoreboardx").contentDocument != null && document.getElementById("scoreboardx") != undefined && document.getElementById("scoreboardx").contentDocument != undefined)){
+          removeListenerScroll(webSocket);
+        }
       };
   
       webSocket.onerror = (err) => {
@@ -94,32 +96,49 @@ function Main() {
     };
   }, []);
 
-function setListenerScroll(ws){
-	const element = document.getElementById("scoreboardx");
-	const scrollStop = function (callback) {
-		// Make sure a valid callback was provided
-		if (!callback || typeof callback !== 'function') return;
-		// Setup scrolling variable
-		var isScrolling;
-		// Listen for scroll events
-		element.addEventListener('load', function(event) {
-			element.contentDocument.addEventListener('scroll', function(event) {
-				window.clearTimeout(isScrolling);
-				isScrolling = setTimeout(function() {
-
-					// Run the callback
-					callback();
-
-				}, 66);
-			}, false);
-		});
+	function setListenerScroll(ws){
+		if(admin){
+			const element = document.getElementById("scoreboardx");
+			const scrollStop = function (callback) {
+				if (!callback || typeof callback !== 'function') return;
+				var isScrolling;
+				element.addEventListener('load', function(event) {
+					element.contentDocument.addEventListener('scroll', function(event) {
+						window.clearTimeout(isScrolling);
+						isScrolling = setTimeout(function() {
+							callback();
+						}, 66);
+					}, false);
+				});
+			}
+			scrollStop(function () {
+				console.log("scroll frame5");
+				const message = { type: "event", event: "scroll", x: element.contentWindow.scrollX, y: element.contentWindow.scrollY };
+				ws.send(JSON.stringify(message));
+			});
+		}
 	}
-	scrollStop(function () {
-		console.log("scroll frame5");
-		const message = { type: "event", event: "scroll", x: element.contentWindow.scrollX, y: element.contentWindow.scrollY };
-		ws.send(JSON.stringify(message));
-	});
-}
+
+  function removeListenerScroll(ws){
+      const element = document.getElementById("scoreboardx");
+      const scrollStop = function (callback) {
+        if (!callback || typeof callback !== 'function') return;
+        var isScrolling;
+        var handler = function(event) {
+            element.contentDocument.addEventListener('scroll', function(event) {
+                window.clearTimeout(isScrolling);
+                isScrolling = setTimeout(function() { callback(); }, 66); }, false);
+            }
+            element.removeEventListener("onload", handler);
+      }
+      scrollStop(function () {
+            if(ws != null){
+                console.log("scroll frame5");
+                const message = { type: "event", event: "scroll", x: element.contentWindow.scrollX, y: element.contentWindow.scrollY };
+                ws.send(JSON.stringify(message));
+            }
+      });
+  }
 
   function addMessage(message){
       setMesseges(x => [message, ...x] );
