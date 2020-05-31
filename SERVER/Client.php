@@ -51,7 +51,7 @@
         }
 
         public function isAdmin(){
-            return $permission === PERMISSION::ADMIN;
+            return $this->permission == PERMISSION::ADMIN;
         }
     }
 ?>
