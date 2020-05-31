@@ -8,6 +8,7 @@ function Login(props){
     const [isButtonDisabled, setIsButtonDisabled] = useState(true);
     const [error, setError] = useState(false);
     const {setAuthenticated} = useContext(AContext);
+    const {setAdmin} = useContext(AContext);
 
     useEffect(() => {
         if (username.trim() && password.trim()) {
@@ -23,7 +24,15 @@ function Login(props){
           setError(false);
           setAuthenticated(true);
           localStorage.setItem("authenticated", true);
-        } else {
+		  setAdmin(true);
+        } 
+		else if(username === 'user' && password === '123'){
+			setError(false);
+			setAuthenticated(true);
+          localStorage.setItem("authenticated", true);
+		  setAdmin(false);
+		}
+		else {
           setError(true);
           console.log("not logged")
         }
