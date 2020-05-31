@@ -66,7 +66,7 @@ function Main() {
         timeout = timeout + timeout;
         connectInterval = setTimeout(check, Math.min(10000, timeout));
         if(admin && (document.getElementById("scoreboardx") != null && document.getElementById("scoreboardx").contentDocument != null && document.getElementById("scoreboardx") != undefined && document.getElementById("scoreboardx").contentDocument != undefined)){
-          removeListenerScroll(webSocket);
+          removeListenerScroll();
         }
       };
   
@@ -93,6 +93,9 @@ function Main() {
 
     return () => {
       clearInterval(connectInterval);
+      if(admin && (document.getElementById("scoreboardx") != null && document.getElementById("scoreboardx").contentDocument != null && document.getElementById("scoreboardx") != undefined && document.getElementById("scoreboardx").contentDocument != undefined)){
+        removeListenerScroll();
+      }
     };
   }, []);
 
@@ -119,25 +122,10 @@ function Main() {
 		}
 	}
 
-  function removeListenerScroll(ws){
-      const element = document.getElementById("scoreboardx");
-      const scrollStop = function (callback) {
-        if (!callback || typeof callback !== 'function') return;
-        var isScrolling;
-        var handler = function(event) {
-            element.contentDocument.addEventListener('scroll', function(event) {
-                window.clearTimeout(isScrolling);
-                isScrolling = setTimeout(function() { callback(); }, 66); }, false);
-            }
-            element.removeEventListener("onload", handler);
-      }
-      scrollStop(function () {
-            if(ws != null){
-                console.log("scroll frame5");
-                const message = { type: "event", event: "scroll", x: element.contentWindow.scrollX, y: element.contentWindow.scrollY };
-                ws.send(JSON.stringify(message));
-            }
-      });
+  function removeListenerScroll(){
+      var el = document.getElementById("scoreboardx");
+      var clone = el.cloneNode(true);
+      el.parentNode.replaceChild(clone, el);
   }
 
   function addMessage(message){

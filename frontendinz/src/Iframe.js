@@ -5,7 +5,7 @@ import './App.css'
 function Iframe(props){
     const {admin} = useContext(AContext);
     return(
-        <div style={{height: '10000px'}}>
+        <div>
         { !admin ? 
             <div className="iframediv">
                 <iframe id="scoreboard" scrolling="no" src="http://localhost/proxy?url=http://wmi.amu.edu.pl" title="iframe-title"></iframe>
