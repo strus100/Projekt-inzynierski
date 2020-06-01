@@ -13,14 +13,16 @@ function Main() {
   const [messages, setMesseges] = useState([]);
   const [historyB, setHistoryB] = useState([{title: "strus100/Projekt-inzynierski", link: "https://github.com/strus100/Projekt-inzynierski"}, {title: "Projekt Inżynierski – Dysk Google", link: "https://drive.google.com/drive/folders/1OBH7hwjS7rxf_lPeMfBeXzLsXSPu-4sN"}]);
   const [ws, setWebsocket] = useState(null); 
+  const [iframeURL, setIframeURL] = useState("http://wmi.amu.edu.pl"); 
   const {authenticated, setAuthenticated} = useContext(AContext);
   const {admin, setAdmin} = useContext(AContext);
   const URL = 'ws://localhost:1111';
+  const proxy = 'http://localhost/proxy?url=';
 
   useEffect(() => {
     var timeout = 1000;
     var connectInterval;
-	var webSocket;
+	  var webSocket;
 	
     function connect(){
       webSocket = new WebSocket(URL);
@@ -178,6 +180,10 @@ function Main() {
     localStorage.removeItem('authenticated');
   }
 
+  function handleChangeURL(url){
+    setIframeURL(url);
+  }
+
   return (
       <div className="main">
           { admin ? <h1>admin</h1> : <h1>nie</h1> }
@@ -187,7 +193,11 @@ function Main() {
             checkedMenu={checkedMenu} 
             hoverMenu={hoverMenu}
             />
-          <Iframe/>
+          <Iframe
+            proxy={proxy}
+            iframeURL={iframeURL}
+            handleChangeURL={handleChangeURL}
+          />
           <Chat 
             checkedChat={checkedChat} 
             hoverChat={hoverChat} 
