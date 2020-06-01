@@ -20,9 +20,10 @@ function Main() {
   useEffect(() => {
     var timeout = 1000;
     var connectInterval;
-
+	var webSocket;
+	
     function connect(){
-      var webSocket = new WebSocket(URL);
+      webSocket = new WebSocket(URL);
   
       webSocket.onopen = () => {
         console.log('connected');
@@ -36,7 +37,8 @@ function Main() {
         clearTimeout(connectInterval);
         setWebsocket(webSocket);
         if(admin){
-          setListenerScroll(webSocket);
+          setListenerScroll();
+		  console.log("tuta");
         }
       };
   
@@ -66,7 +68,7 @@ function Main() {
         timeout = timeout + timeout;
         connectInterval = setTimeout(check, Math.min(10000, timeout));
         if(admin && (document.getElementById("scoreboardx") != null && document.getElementById("scoreboardx").contentDocument != null && document.getElementById("scoreboardx") != undefined && document.getElementById("scoreboardx").contentDocument != undefined)){
-          removeListenerScroll();
+          //removeListenerScroll();
         }
       };
   
@@ -91,22 +93,13 @@ function Main() {
 
     connect();
 
-    return () => {
-      clearInterval(connectInterval);
-      if(admin && (document.getElementById("scoreboardx") != null && document.getElementById("scoreboardx").contentDocument != null && document.getElementById("scoreboardx") != undefined && document.getElementById("scoreboardx").contentDocument != undefined)){
-        removeListenerScroll();
-      }
-    };
-  }, []);
-
-	function setListenerScroll(ws){
+	function setListenerScroll(){
 		if(admin){
-			const element = document.getElementById("scoreboardx");
 			const scrollStop = function (callback) {
 				if (!callback || typeof callback !== 'function') return;
 				var isScrolling;
-				element.addEventListener('load', function(event) {
-					element.contentDocument.addEventListener('scroll', function(event) {
+				document.getElementById("scoreboardx").addEventListener('load', function(event) {
+					document.getElementById("scoreboardx").contentDocument.addEventListener('scroll', function(event) {
 						window.clearTimeout(isScrolling);
 						isScrolling = setTimeout(function() {
 							callback();
@@ -116,11 +109,25 @@ function Main() {
 			}
 			scrollStop(function () {
 				console.log("scroll frame5");
-				const message = { type: "event", event: "scroll", x: element.contentWindow.scrollX, y: element.contentWindow.scrollY };
-				ws.send(JSON.stringify(message));
+				const message = { type: "event", event: "scroll", x: document.getElementById("scoreboardx").contentWindow.scrollX, y: document.getElementById("scoreboardx").contentWindow.scrollY };
+				if(webSocket.readyState === WebSocket.OPEN){
+					webSocket.send(JSON.stringify(message));
+				}
 			});
 		}
 	}
+
+    return () => {
+      clearInterval(connectInterval);
+      if(admin && (document.getElementById("scoreboardx") != null && document.getElementById("scoreboardx").contentDocument != null && document.getElementById("scoreboardx") != undefined && document.getElementById("scoreboardx").contentDocument != undefined)){
+        //removeListenerScroll();
+      }
+	  if(webSocket){
+		  webSocket.close();
+		  setWebsocket(null);
+	  }
+    };
+  }, []);
 
   function removeListenerScroll(){
       var el = document.getElementById("scoreboardx");
