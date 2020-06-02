@@ -6,7 +6,7 @@ import Iframe from "./Iframe"
 import IframeInputAdmin from "./IframeInputAdmin"
 import {AContext} from "./AContext"
 
-function Main() {
+function Main(props) {
   const [hoverMenu, setHoverMenu] = useState(false);
   const [checkedMenu, setChangeMenu] = useState(false);
   const [hoverChat, setHoverChat] = useState(false);
@@ -59,19 +59,21 @@ function Main() {
       };
   
       webSocket.onclose = e => {
-        console.log(
-          `Socket is closed. Reconnect will be attempted in ${Math.min(
-              10000 / 1000,
-              (timeout + timeout) / 1000
-          )} second.`,
-          e.reason
-      );
-        const message = { type: "chat", chat: `Nie połączono z chatem, ponowna próba połączenia za ${Math.min(10000 / 1000, (timeout + timeout) / 1000)} sekund.`, name: "SERVER" }
-        addMessage(message);
-        timeout = timeout + timeout;
-        connectInterval = setTimeout(check, Math.min(10000, timeout));
-        if(admin && (document.getElementById("scoreboardx") != null && document.getElementById("scoreboardx").contentDocument != null && document.getElementById("scoreboardx") != undefined && document.getElementById("scoreboardx").contentDocument != undefined)){
-          //removeListenerScroll();
+        if(window.location.href.indexOf("main") > -1){
+          console.log(
+            `Socket is closed. Reconnect will be attempted in ${Math.min(
+                10000 / 1000,
+                (timeout + timeout) / 1000
+            )} second.`,
+            e.reason
+        );
+          const message = { type: "chat", chat: `Nie połączono z chatem, ponowna próba połączenia za ${Math.min(10000 / 1000, (timeout + timeout) / 1000)} sekund.`, name: "SERVER" }
+          addMessage(message);
+          timeout = timeout + timeout;
+          connectInterval = setTimeout(check, Math.min(10000, timeout));
+          if(admin && (document.getElementById("scoreboardx") != null && document.getElementById("scoreboardx").contentDocument != null && document.getElementById("scoreboardx") != undefined && document.getElementById("scoreboardx").contentDocument != undefined)){
+            //removeListenerScroll();
+          }
         }
       };
   
@@ -91,7 +93,9 @@ function Main() {
     }
 
     function check(){
-      if (!ws || ws.readyState === WebSocket.CLOSED) connect();
+      if ((!ws || ws.readyState === WebSocket.CLOSED) && (window.location.href.indexOf("main") > -1)) {
+        connect();
+      }
     };
 
     connect();
