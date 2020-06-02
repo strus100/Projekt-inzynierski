@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import './App.css'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import ChatMessage from "./ChatMessage";
 import ChatInput from "./ChatInput";
 import HistoryMessage from "./HistoryMessage"
+import {AContext} from "./AContext"
+
 
 function Chat(props){
+    const {admin} = useContext(AContext);
+
     let className = 'chat-activea';
 
     if(props.checkedChat){
@@ -19,7 +23,7 @@ function Chat(props){
     return(
       <div className={className}>            
           <div className="chat">
-              <p id="name-area">Witaj</p>
+              <p id="name-area">Witaj { admin ? "admin" : "nie admin" }</p>
               <Tabs>
                 <div className="chat-tabs">
                     <TabList>

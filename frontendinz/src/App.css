@@ -26,6 +26,10 @@ body {
   color: black;
 }
 
+.main{
+  padding: 20px;
+}
+
 /* MENU */
 
 nav {
@@ -474,6 +478,23 @@ input:checked + label{
 
 .iframeurl--button{
   margin: 0 auto;
+  width: 20%;
+  height: 50px;
+  background-color: #353441;
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border: 1px solid white;
+  border-top: 0;
+  transition: all 0.5s ease-in;
+  cursor: pointer;
+}
+
+.iframeurl--button:hover{
+  background-color: orangered;
 }
 
 .form-iframe{
@@ -484,6 +505,7 @@ input:checked + label{
 
 .form-iframe input[type=text]{
   margin: 0 auto;
+  height: 40px;
   width: 100%;
   padding: 10px 10px;
 }
@@ -505,6 +527,7 @@ input:checked + label{
   z-index: 50;
   position: fixed;
   top: 0;
+  left: 0;
   height: 100px;
   width: 100%;
   padding: 10px;
@@ -513,6 +536,7 @@ input:checked + label{
   -webkit-box-shadow: 0 5px 15px 0 rgba(0, 0, 0, .5);
   -moz-box-shadow: 0 5px 15px 0 rgba(0, 0, 0, .5);
   box-shadow: 0 5px 15px 0 rgba(0, 0, 0, .5);
+  border-bottom: 1px solid white;
 }
 
 .admin--iframe--active {
@@ -536,7 +560,7 @@ input:checked + label{
 /* 600px */
 
 @media only screen and (max-width: 600px) {
-  .menu-active, .chat-active{
+  .menu-active, .chat-active, .admin--iframe--active, .form-iframe{
     width: 100%;
   }
 
@@ -549,7 +573,7 @@ input:checked + label{
 /* MOBILE */
 
 @media (hover: none) and (pointer: coarse) {
-  .menu-active, .chat-active{
+  .menu-active, .chat-active, .admin--iframe--active, .form-iframe{
     width: 100%;
   }
 

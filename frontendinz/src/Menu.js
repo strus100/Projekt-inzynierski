@@ -20,12 +20,9 @@ function Menu(props){
         <div className="menu">            
             <nav className={className}>
                 <ul>
-                    <li><Link to="/">Home</Link></li>
-                    <li><Link to="/test">Test</Link></li>
-                    <li><Link to="/main">Main</Link></li>
+                    <li><Link to="/main">Home</Link></li>
+                    <li onClick={() => props.handleLogout()}><a href="#">WYLOGUJ</a></li>
                 </ul>
-                <button onClick={() => props.handleLogout()}>WYLOGUJ</button>
-                { admin ? <h1>admin</h1> : <h1>nie</h1> }
             </nav>
         </div>
         )
