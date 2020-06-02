@@ -3,7 +3,7 @@ import {AContext} from "./AContext"
 import './App.css'
 
 function Iframe(props){
-    const [URLtmp, setURLtmp] = useState(null);
+    const [URLtmp, setURLtmp] = useState('');
     const [isButtonDisabled, setIsButtonDisabled] = useState(false);
     const {admin} = useContext(AContext);
 

@@ -3,7 +3,7 @@
 export default ({ link, title, handleChangeURL }) =>
   <p>
     <span className="history-line" onClick={(e)=>handleChangeURL(e, link)}>
-        <a>Title: {title}</a><br></br>
-        <span><a>{link}</a></span>
+        Title: {title}<br></br>
+        <span>{link}</span>
     </span>
   </p>

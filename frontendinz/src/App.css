@@ -291,13 +291,13 @@ nav ul a:hover {
   border-bottom: 1px solid #ddd;
 }
 
-.wrap-additional-area p span a{ 
+.wrap-additional-area p span{ 
   text-decoration: none;
   color: black;
   cursor: pointer;
 }
 
-.wrap-additional-area p .history-line span a{
+.wrap-additional-area p .history-line span{
   color: dodgerblue;
 }
 

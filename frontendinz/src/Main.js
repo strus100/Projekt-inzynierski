@@ -11,7 +11,7 @@ function Main() {
   const [hoverChat, setHoverChat] = useState(false);
   const [checkedChat, setChangeChat] = useState(false);
   const [messages, setMesseges] = useState([]);
-  const [historyB, setHistoryB] = useState([{title: "strus100/Projekt-inzynierski", link: "https://github.com/strus100/Projekt-inzynierski"}, {title: "Projekt Inżynierski – Dysk Google", link: "https://drive.google.com/drive/folders/1OBH7hwjS7rxf_lPeMfBeXzLsXSPu-4sN"}]);
+  const [historyB, setHistoryB] = useState([{title: "strus100/Projekt-inzynierski", link: "http://localhost/proxy?url=https://github.com/strus100/Projekt-inzynierski"}, {title: "Projekt Inżynierski – Dysk Google", link: "http://localhost/proxy?url=https://drive.google.com/drive/folders/1OBH7hwjS7rxf_lPeMfBeXzLsXSPu-4sN"}]);
   const [ws, setWebsocket] = useState(null); 
   const [iframeURL, setIframeURL] = useState("http://wmi.amu.edu.pl"); 
   const {authenticated, setAuthenticated} = useContext(AContext);
@@ -40,7 +40,6 @@ function Main() {
         setWebsocket(webSocket);
         if(admin){
           setListenerScroll();
-		  console.log("tuta");
         }
       };
   
@@ -95,39 +94,40 @@ function Main() {
 
     connect();
 
-	function setListenerScroll(){
-		if(admin){
-			const scrollStop = function (callback) {
-				if (!callback || typeof callback !== 'function') return;
-				var isScrolling;
-				document.getElementById("scoreboardx").addEventListener('load', function(event) {
-					document.getElementById("scoreboardx").contentDocument.addEventListener('scroll', function(event) {
-						window.clearTimeout(isScrolling);
-						isScrolling = setTimeout(function() {
-							callback();
-						}, 66);
-					}, false);
-				});
-			}
-			scrollStop(function () {
-				console.log("scroll frame5");
-				const message = { type: "event", event: "scroll", x: document.getElementById("scoreboardx").contentWindow.scrollX, y: document.getElementById("scoreboardx").contentWindow.scrollY };
-				if(webSocket.readyState === WebSocket.OPEN){
-					webSocket.send(JSON.stringify(message));
-				}
-			});
-		}
-	}
+    function setListenerScroll(){
+      if(admin){
+        const scrollStop = function (callback) {
+          if (!callback || typeof callback !== 'function') return;
+          var isScrolling;
+          document.getElementById("scoreboardx").addEventListener('load', function(event) {
+            document.getElementById("scoreboardx").contentDocument.addEventListener('scroll', function(event) {
+              window.clearTimeout(isScrolling);
+              isScrolling = setTimeout(function() {
+                callback();
+              }, 66);
+            }, false);
+          });
+        }
+        scrollStop(function () {
+          console.log("scroll frame5");
+          const message = { type: "event", event: "scroll", x: document.getElementById("scoreboardx").contentWindow.scrollX, y: document.getElementById("scoreboardx").contentWindow.scrollY };
+          if(webSocket.readyState === WebSocket.OPEN){
+            webSocket.send(JSON.stringify(message));
+          }
+        });
+      }
+    }
 
     return () => {
+      console.log("clear");
       clearInterval(connectInterval);
       if(admin && (document.getElementById("scoreboardx") != null && document.getElementById("scoreboardx").contentDocument != null && document.getElementById("scoreboardx") != undefined && document.getElementById("scoreboardx").contentDocument != undefined)){
         //removeListenerScroll();
       }
-	  if(webSocket){
-		  webSocket.close();
-		  setWebsocket(null);
-	  }
+      if(webSocket){
+        webSocket.close();
+        setWebsocket(null);
+      }
     };
   }, []);
 
