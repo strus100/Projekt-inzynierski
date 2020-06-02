@@ -3,6 +3,7 @@ import Menu from "./Menu"
 import Chat from "./Chat"
 import Footer from "./Footer"
 import Iframe from "./Iframe"
+import IframeInputAdmin from "./IframeInputAdmin"
 import {AContext} from "./AContext"
 
 function Main() {
@@ -10,8 +11,9 @@ function Main() {
   const [checkedMenu, setChangeMenu] = useState(false);
   const [hoverChat, setHoverChat] = useState(false);
   const [checkedChat, setChangeChat] = useState(false);
+  const [checkedIframeInputAdmin, setCheckedIframeInputAdmin] = useState(false);
   const [messages, setMesseges] = useState([]);
-  const [historyB, setHistoryB] = useState([{title: "strus100/Projekt-inzynierski", link: "http://localhost/proxy?url=https://github.com/strus100/Projekt-inzynierski"}, {title: "Projekt Inżynierski – Dysk Google", link: "http://localhost/proxy?url=https://drive.google.com/drive/folders/1OBH7hwjS7rxf_lPeMfBeXzLsXSPu-4sN"}]);
+  const [historyB, setHistoryB] = useState([{title: "strus100/Projekt-inzynierski", link: "https://github.com/strus100/Projekt-inzynierski"}, {title: "Projekt Inżynierski – Dysk Google", link: "https://drive.google.com/drive/folders/1OBH7hwjS7rxf_lPeMfBeXzLsXSPu-4sN"}]);
   const [ws, setWebsocket] = useState(null); 
   const [iframeURL, setIframeURL] = useState("http://wmi.amu.edu.pl"); 
   const {authenticated, setAuthenticated} = useContext(AContext);
@@ -167,6 +169,10 @@ function Main() {
     setChangeChat(checkedChat => !checkedChat);
   }
 
+  function handleChangeIframeInputAdmin(checkedIframeInputAdmin){
+    setCheckedIframeInputAdmin(checkedIframeInputAdmin => !checkedIframeInputAdmin);
+  }
+
   function handleHoverChat(x){
     setHoverChat(x);
   }
@@ -187,17 +193,20 @@ function Main() {
 
   return (
       <div className="main">
-          { admin ? <h1>admin</h1> : <h1>nie</h1> }
-          <button onClick={() => handleLogout()}>WYLOGUJ</button>
-          <button onClick={() => setAdmin(!admin)}>Admin</button>
+          <IframeInputAdmin
+            checkedIframeInputAdmin={checkedIframeInputAdmin}
+            iframeURL={iframeURL}
+            handleChangeURL={handleChangeURL}
+          />
+          
           <Menu 
             checkedMenu={checkedMenu} 
             hoverMenu={hoverMenu}
+            handleLogout={handleLogout}
             />
           <Iframe
             proxy={proxy}
             iframeURL={iframeURL}
-            handleChangeURL={handleChangeURL}
           />
           <Chat 
             checkedChat={checkedChat} 
@@ -211,10 +220,12 @@ function Main() {
           <Footer 
             checkedMenu={checkedMenu} 
             checkedChat={checkedChat} 
+            checkedIframeInputAdmin={checkedIframeInputAdmin}
             handleChangeChat={handleChangeChat} 
             handleChangeMenu={handleChangeMenu} 
             handleHoverChat={handleHoverChat}
             handleHoverMenu={handleHoverMenu}
+            handleChangeIframeInputAdmin={handleChangeIframeInputAdmin}
             />
       </div>
   );

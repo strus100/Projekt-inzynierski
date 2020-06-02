@@ -29,6 +29,16 @@ function Footer(props){
                 onMouseLeave={() => props.handleHoverChat(false)}
             >
                 <span aria-labelledby="jsx-a11y/accessible-emoji" role="img">&#128172;</span></label>
+            <input 
+                type="checkbox" 
+                id="toogleiframeinputadmin"
+                checked={ props.checkedIframeInputAdmin } 
+                onChange={ props.handleChangeIframeInputAdmin } 
+                />
+            <label 
+                htmlFor="toogleiframeinputadmin"
+            >
+                <span aria-labelledby="jsx-a11y/accessible-emoji" role="img"><i className="material-icons">http</i></span></label>
         </div>
         
     </div>

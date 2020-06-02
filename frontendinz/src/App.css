@@ -363,6 +363,12 @@ input:checked + label{
   color: #000;
 }
 
+.footer div label span i {
+  height: 60px;
+  line-height: 60px;
+  vertical-align: bottom;
+}
+
 /* LOGIN */
 
 .login_form{
@@ -492,6 +498,25 @@ input:checked + label{
   overflow-x: scroll;
   white-space: nowrap; 
   text-overflow: ellipsis;
+}
+
+.admin--iframe {
+  transition: transform 150ms ease-out;
+  z-index: 50;
+  position: fixed;
+  top: 0;
+  height: 100px;
+  width: 100%;
+  padding: 10px;
+  background-color: #353441;
+  transform: translateY(-100px);
+  -webkit-box-shadow: 0 5px 15px 0 rgba(0, 0, 0, .5);
+  -moz-box-shadow: 0 5px 15px 0 rgba(0, 0, 0, .5);
+  box-shadow: 0 5px 15px 0 rgba(0, 0, 0, .5);
+}
+
+.admin--iframe--active {
+  transform: translateY(0);
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
