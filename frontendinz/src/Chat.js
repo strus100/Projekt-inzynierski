@@ -55,6 +55,7 @@ function Chat(props){
                             key={index}
                             title={historyB.title}
                             link={historyB.link}
+                            handleChangeURL={props.handleChangeURL}
                         />,
                         )}
                     </div>

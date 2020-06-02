@@ -180,7 +180,8 @@ function Main() {
     localStorage.removeItem('authenticated');
   }
 
-  function handleChangeURL(url){
+  function handleChangeURL(e, url){
+    e.preventDefault();
     setIframeURL(url);
   }
 
@@ -205,6 +206,7 @@ function Main() {
             messages={messages} 
             historyB={historyB}
             submitMessage={submitMessage}
+            handleChangeURL={handleChangeURL}
             />
           <Footer 
             checkedMenu={checkedMenu} 

@@ -294,6 +294,7 @@ nav ul a:hover {
 .wrap-additional-area p span a{ 
   text-decoration: none;
   color: black;
+  cursor: pointer;
 }
 
 .wrap-additional-area p .history-line span a{
@@ -463,6 +464,48 @@ input:checked + label{
 
 #scoreboard{
   pointer-events: none;
+}
+
+.iframeurl--button{
+  margin: 0 auto;
+}
+
+.form-iframe{
+  margin: 0 auto;
+  width: 700px;
+  text-align: center;
+}
+
+.form-iframe input[type=text]{
+  margin: 0 auto;
+  width: 100%;
+  padding: 10px 10px;
+}
+
+.iframeURLinfo{
+  margin: 0 auto;
+  width: 700px;
+  border: 1px solid black;
+  padding: 10px 10px;
+  background-color: #fff;
+  overflow: hidden; 
+  overflow-x: scroll;
+  white-space: nowrap; 
+  text-overflow: ellipsis;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.iframeURLinfo::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE and Edge */
+.iframeURLinfo {
+  -ms-overflow-style: none;
+}
+
+.iframeURLinfo h1{
+  font-size: 12px;
 }
 
 /* 600px */
