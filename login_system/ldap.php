@@ -23,7 +23,7 @@
                     break;
                 case 'doktorant':
                     echo "{\"type\": \"login\", \"login\": 1, \"access\": \"doktorant\"}";
-                    fillDatabase($login, "s");
+                    fillDatabase($login, "doktorant");
                     break;
                 case 'pracownik':
                     echo "{\"type\": \"login\", \"login\": 1, \"access\": \"pracownik\"}";
