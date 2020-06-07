@@ -18,8 +18,9 @@ function Main(props) {
   const [iframeURL, setIframeURL] = useState("http://wmi.amu.edu.pl"); 
   const {authenticated, setAuthenticated} = useContext(AContext);
   const {admin, setAdmin} = useContext(AContext);
+  const [iframeURLadmin, setIframeURLadmin] = useState("http://wmi.amu.edu.pl"); 
   const URL = 'ws://localhost:1111';
-  const proxy = 'http://localhost/proxy?url=';
+  const proxy = 'http://localhost/proxy/index.php?url=';
 
   useEffect(() => {
     var timeout = 1000;
@@ -41,7 +42,7 @@ function Main(props) {
         clearTimeout(connectInterval);
         setWebsocket(webSocket);
         if(admin){
-          setListenerScroll();
+          setListeners();
         }
       };
   
@@ -51,9 +52,19 @@ function Main(props) {
         switch(JSON.parse(message).type){
           case "chat": return addMessage(JSON.parse(message));
           case "event":
-            var parsed = JSON.parse(message);
-            var element = document.getElementById("scoreboard").contentWindow;
-            element.scrollTo(parsed.x, parsed.y);
+		    var element = document.getElementById("scoreboard").contentWindow;
+		    var parsed = JSON.parse(message);
+			switch(parsed.event){
+				case "scroll":
+					element.scrollTo(parsed.x, parsed.y);
+				break;
+				case "redirection":
+					handleChangeURL(evt, parsed.url);
+				break;
+			}
+            
+            
+            
             break;
         }
       };
@@ -100,6 +111,11 @@ function Main(props) {
 
     connect();
 
+	function setListeners(){
+		setListenerScroll();
+		setListenerRedirection();
+	}
+
     function setListenerScroll(){
       if(admin){
         const scrollStop = function (callback) {
@@ -123,6 +139,29 @@ function Main(props) {
         });
       }
     }
+	
+	function setListenerRedirection(){
+		if(admin){
+			document.getElementById("scoreboardx").addEventListener('load', function(event) {
+				var address =  this.contentWindow.location.href;
+				var replaced;
+				if(address.includes(proxy)){
+					replaced = address.replace(proxy, "");
+				}
+				else{
+					replaced = address.replace("index.php?q", "index.php?url");
+					replaced = replaced.replace(proxy, "");
+				}
+				
+				const message = { type: "event", event: "redirection", url: replaced };
+				if(webSocket.readyState === WebSocket.OPEN){
+					webSocket.send(JSON.stringify(message));
+					setIframeURLadmin(replaced);
+				}
+				//console.log("frame9: "+ this.contentWindow.location.href);
+			})
+		}
+	}
 
     return () => {
       console.log("clear");
@@ -193,6 +232,7 @@ function Main(props) {
   function handleChangeURL(e, url){
     e.preventDefault();
     setIframeURL(url);
+	document.getElementById("scoreboardx").contentDocument.location.reload(true);
   }
 
   return (
@@ -210,6 +250,7 @@ function Main(props) {
             />
           <Iframe
             proxy={proxy}
+			iframeURLadmin={iframeURLadmin}
             iframeURL={iframeURL}
           />
           <Chat 

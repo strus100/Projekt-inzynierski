@@ -24,12 +24,14 @@ function Login(props){
           setError(false);
           setAuthenticated(true);
           localStorage.setItem("authenticated", true);
+          localStorage.setItem("admin", true);
 		  setAdmin(true);
         } 
 		else if(username === 'user' && password === '123'){
 			setError(false);
 			setAuthenticated(true);
           localStorage.setItem("authenticated", true);
+		  localStorage.setItem("admin", false);
 		  setAdmin(false);
 		}
 		else {

@@ -10,7 +10,11 @@ function Iframe(props){
     return(
         <div>
             <div className="iframeURLinfo">
-                <h1>{props.iframeURL}</h1>
+			{admin ?
+				<h1>{props.iframeURLadmin}</h1>
+				:
+				<h1>{props.iframeURL}</h1>
+			}
             </div>
             { !admin ? 
                 <div className="iframediv">
