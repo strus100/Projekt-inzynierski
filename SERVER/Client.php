@@ -26,18 +26,17 @@
         // Checks if user has admin privileges and gets user infos
         public function authorize(){
             $DB = new DatabaseConnection();
-            $conn = $DB->connect();
-            if(($row = $DB->getRowByToken('usertable', $conn, $this->token))){
+            if(($row = $DB->getUserByToken($this->token))){
                 $this->nick = $row['login'];
-                if($row['role'] == "Admin"){
+                if($row['role'] == "pracownik" || $row['role'] == "doktorant"){
                     $this->permission = PERMISSION::ADMIN;
                 }else{
                     $this->permission = PERMISSION::USER;
                 }
-                $DB->closeConnection($conn);
+                $DB->closeConnection();
                 return true;
             }else{
-                $DB->closeConnection($conn);
+                $DB->closeConnection();
                 return false;
             }
         }
