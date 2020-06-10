@@ -5,6 +5,7 @@ import Footer from "./Footer"
 import Iframe from "./Iframe"
 import IframeInputAdmin from "./IframeInputAdmin"
 import {AContext} from "./AContext"
+import axios from 'axios';
 
 function Main(props) {
   const [hoverMenu, setHoverMenu] = useState(false);
@@ -18,42 +19,46 @@ function Main(props) {
   const [iframeURL, setIframeURL] = useState("http://wmi.amu.edu.pl"); 
   const {authenticated, setAuthenticated} = useContext(AContext);
   const {admin, setAdmin} = useContext(AContext);
+  
+  const {login, setLogin} = useContext(AContext);
+  const {name, setName} = useContext(AContext);
+  const {surname, setSurname} = useContext(AContext);
+  const {access, setAccess} = useContext(AContext);
+  const {token, setToken} = useContext(AContext);
+  
   const [iframeURLadmin, setIframeURLadmin] = useState("http://wmi.amu.edu.pl"); 
   const URL = 'ws://localhost:1111';
   const proxy = 'http://localhost/proxy/index.php?url=';
 
   useEffect(() => {
-    var timeout = 1000;
-    var connectInterval;
+	var timeout = 1000;
+	var connectInterval;
 	  var webSocket;
 	
-    function connect(){
-      webSocket = new WebSocket(URL);
+	function connect(){
+	  webSocket = new WebSocket(URL);
   
-      webSocket.onopen = () => {
-        console.log('connected');
-        const message = { type: "chat", chat: `Połączono z chatem.`, name: "SERVER" }
-        addMessage(message);
-        if(admin){
-          webSocket.send("1");
-        }else{
-          webSocket.send("2");
-        }
-        clearTimeout(connectInterval);
-        setWebsocket(webSocket);
-        if(admin){
-          setListeners();
-        }
-      };
+	  webSocket.onopen = () => {
+		console.log('connected');
+		const message = { type: "chat", chat: `Połączono z chatem.`, name: "SERVER" }
+		addMessage(message);
+		webSocket.send(token);
+		clearTimeout(connectInterval);
+		setWebsocket(webSocket);
+		if(admin){
+		  setListeners();
+		  console.log("admin");
+		}
+	  };
   
-      webSocket.onmessage = (evt) => {
-        const message = evt.data;
-        console.log(JSON.parse(message).type);
-        switch(JSON.parse(message).type){
-          case "chat": return addMessage(JSON.parse(message));
-          case "event":
-		    var element = document.getElementById("scoreboard").contentWindow;
-		    var parsed = JSON.parse(message);
+	  webSocket.onmessage = (evt) => {
+		const message = evt.data;
+		console.log(JSON.parse(message).type);
+		switch(JSON.parse(message).type){
+		  case "chat": return addMessage(JSON.parse(message));
+		  case "event":
+			var element = document.getElementById("scoreboard").contentWindow;
+			var parsed = JSON.parse(message);
 			switch(parsed.event){
 				case "scroll":
 					element.scrollTo(parsed.x, parsed.y);
@@ -62,83 +67,84 @@ function Main(props) {
 					handleChangeURL(evt, parsed.url);
 				break;
 			}
-            
-            
-            
-            break;
-        }
-      };
+			
+			
+			
+			break;
+		}
+	  };
   
-      webSocket.onclose = e => {
-        if(window.location.href.indexOf("main") > -1){
-          console.log(
-            `Socket is closed. Reconnect will be attempted in ${Math.min(
-                10000 / 1000,
-                (timeout + timeout) / 1000
-            )} second.`,
-            e.reason
-        );
-          const message = { type: "chat", chat: `Nie połączono z chatem, ponowna próba połączenia za ${Math.min(10000 / 1000, (timeout + timeout) / 1000)} sekund.`, name: "SERVER" }
-          addMessage(message);
-          timeout = timeout + timeout;
-          connectInterval = setTimeout(check, Math.min(10000, timeout));
-          if(admin && (document.getElementById("scoreboardx") != null && document.getElementById("scoreboardx").contentDocument != null && document.getElementById("scoreboardx") != undefined && document.getElementById("scoreboardx").contentDocument != undefined)){
-            //removeListenerScroll();
-          }
-        }
-      };
+	  webSocket.onclose = e => {
+		if(window.location.href.indexOf("main") > -1){
+		  console.log(
+			`Socket is closed. Reconnect will be attempted in ${Math.min(
+				10000 / 1000,
+				(timeout + timeout) / 1000
+			)} second.`,
+			e.reason
+		);
+		  const message = { type: "chat", chat: `Nie połączono z chatem, ponowna próba połączenia za ${Math.min(10000 / 1000, (timeout + timeout) / 1000)} sekund.`, name: "SERVER" }
+		  addMessage(message);
+		  timeout = timeout + timeout;
+		  connectInterval = setTimeout(check, Math.min(10000, timeout));
+		  if(admin && (document.getElementById("scoreboardx") != null && document.getElementById("scoreboardx").contentDocument != null && document.getElementById("scoreboardx") != undefined && document.getElementById("scoreboardx").contentDocument != undefined)){
+			//removeListenerScroll();
+		  }
+		}
+	  };
   
-      webSocket.onerror = (err) => {
-        console.error(
-            "Socket encountered error: ",
-            err.message,
-            "Closing socket"
-        );
+	  webSocket.onerror = (err) => {
+		console.error(
+			"Socket encountered error: ",
+			err.message,
+			"Closing socket"
+		);
   
-        webSocket.close();
-      };
+		webSocket.close();
+	  };
   
-      return () => {
-        webSocket.close();
-      };
-    }
+	  return () => {
+		webSocket.close();
+	  };
+	}
 
-    function check(){
-      if ((!ws || ws.readyState === WebSocket.CLOSED) && (window.location.href.indexOf("main") > -1)) {
-        connect();
-      }
-    };
+	function check(){
+	  if ((!ws || ws.readyState === WebSocket.CLOSED) && (window.location.href.indexOf("main") > -1)) {
+		connect();
+	  }
+	};
 
-    connect();
+	console.log('trying to connect');
+	connect();
 
 	function setListeners(){
 		setListenerScroll();
 		setListenerRedirection();
 	}
 
-    function setListenerScroll(){
-      if(admin){
-        const scrollStop = function (callback) {
-          if (!callback || typeof callback !== 'function') return;
-          var isScrolling;
-          document.getElementById("scoreboardx").addEventListener('load', function(event) {
-            document.getElementById("scoreboardx").contentDocument.addEventListener('scroll', function(event) {
-              window.clearTimeout(isScrolling);
-              isScrolling = setTimeout(function() {
-                callback();
-              }, 66);
-            }, false);
-          });
-        }
-        scrollStop(function () {
-          console.log("scroll frame5");
-          const message = { type: "event", event: "scroll", x: document.getElementById("scoreboardx").contentWindow.scrollX, y: document.getElementById("scoreboardx").contentWindow.scrollY };
-          if(webSocket.readyState === WebSocket.OPEN){
-            webSocket.send(JSON.stringify(message));
-          }
-        });
-      }
-    }
+	function setListenerScroll(){
+	  if(admin){
+		const scrollStop = function (callback) {
+		  if (!callback || typeof callback !== 'function') return;
+		  var isScrolling;
+		  document.getElementById("scoreboardx").addEventListener('load', function(event) {
+			document.getElementById("scoreboardx").contentDocument.addEventListener('scroll', function(event) {
+			  window.clearTimeout(isScrolling);
+			  isScrolling = setTimeout(function() {
+				callback();
+			  }, 66);
+			}, false);
+		  });
+		}
+		scrollStop(function () {
+		  console.log("scroll frame5");
+		  const message = { type: "event", event: "scroll", x: document.getElementById("scoreboardx").contentWindow.scrollX, y: document.getElementById("scoreboardx").contentWindow.scrollY };
+		  if(webSocket.readyState === WebSocket.OPEN){
+			webSocket.send(JSON.stringify(message));
+		  }
+		});
+	  }
+	}
 	
 	function setListenerRedirection(){
 		if(admin){
@@ -163,17 +169,17 @@ function Main(props) {
 		}
 	}
 
-    return () => {
-      console.log("clear");
-      clearInterval(connectInterval);
-      if(admin && (document.getElementById("scoreboardx") != null && document.getElementById("scoreboardx").contentDocument != null && document.getElementById("scoreboardx") != undefined && document.getElementById("scoreboardx").contentDocument != undefined)){
-        //removeListenerScroll();
-      }
-      if(webSocket){
-        webSocket.close();
-        setWebsocket(null);
-      }
-    };
+	return () => {
+	  console.log("clear");
+	  clearInterval(connectInterval);
+	  if(admin && (document.getElementById("scoreboardx") != null && document.getElementById("scoreboardx").contentDocument != null && document.getElementById("scoreboardx") != undefined && document.getElementById("scoreboardx").contentDocument != undefined)){
+		//removeListenerScroll();
+	  }
+	  if(webSocket){
+		webSocket.close();
+		setWebsocket(null);
+	  }
+	};
   }, []);
 
   function removeListenerScroll(){
@@ -190,7 +196,7 @@ function Main(props) {
     if( ws != null ){
       if( ws.readyState === 1 ){
         if( messageString !== ""){
-          const message = { type: "chat", chat: messageString, name: "test" }
+          const message = { type: "chat", chat: messageString, name: name }
           ws.send(JSON.stringify(message))
           addMessage(message)
         }
@@ -225,8 +231,18 @@ function Main(props) {
   }
 
   function handleLogout(){
-    setAuthenticated(false);
-    localStorage.removeItem('authenticated');
+	axios.get('/login_system/login.php?logout', {  })
+		.then(function (response) {
+		})
+		.catch(function (error) {
+			console.log(error);
+		});
+	setAccess(false);
+	setName(false);
+	setSurname(false);
+	setToken(false);
+	setAdmin(false);
+	setAuthenticated(false);
   }
 
   function handleChangeURL(e, url){
@@ -253,7 +269,8 @@ function Main(props) {
 			iframeURLadmin={iframeURLadmin}
             iframeURL={iframeURL}
           />
-          <Chat 
+          <Chat
+			name={name}
             checkedChat={checkedChat} 
             hoverChat={hoverChat} 
             ws={ws} 

@@ -23,7 +23,7 @@ function Chat(props){
     return(
       <div className={className}>            
           <div className="chat">
-              <p id="name-area">Witaj { admin ? "admin" : "nie admin" }</p>
+              <p id="name-area">Witaj { props.name }</p>
               <Tabs>
                 <div className="chat-tabs">
                     <TabList>
