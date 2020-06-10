@@ -1,30 +1,41 @@
-<!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=1">
-</head>
+	<head>
+		<script src="RTCMultiConnection.js"></script>
+		<script src="socket.io.js"></script>
+	</head>
+	<body>
+		<button id="btn-open-room">Open Room</button>
+		<button id="btn-join-room">Join Room</button><hr>
+		
+		<script>
+			var connection = new RTCMultiConnection();
 
-<body>
-<div id="container">
-    <div id="videos">
-        <video id="videoLocal" playsinline autoplay muted></video>
-        <video id="video2" playsinline autoplay></video>
-    </div>
+			// this line is VERY_important
+			connection.socketURL = 'http://localhost:9001/';
 
-    <section><input type="checkbox" id="audio"><label for="audio">Include audio</label></section>
+			connection.session = {
+				audio: true,
+			};
 
-    <div id="buttons">
-        <button id="start">Start</button>
-        <button id="call" disabled>Call</button>
-        <button id="hangup" disabled>Hang Up</button>
-    </div>
-	
-</div>
+			connection.sdpConstraints.mandatory = {
+				OfferToReceiveAudio: true,
+			};
 
-<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
-<!-- TODO real connection with ours server -->
-<script src="js/videopipe.js"></script>
-<script src="js/main.js" async></script>
-</body>
+			connection.onstream = function(event) {
+				document.body.appendChild( event.mediaElement );
+			};
+
+			var predefinedRoomId = 'inzynierka';
+
+			document.getElementById('btn-open-room').onclick = function() {
+				this.disabled = true;
+				connection.open( predefinedRoomId );
+			};
+
+			document.getElementById('btn-join-room').onclick = function() {
+				this.disabled = true;
+				connection.join( predefinedRoomId );
+			};
+		</script>
+	</body>
 </html>
