@@ -65,11 +65,14 @@ function Lobby(props){
 		if(x == null || x == undefined || x == ''){
 			setRoomsFilter(roomsList);
 		}else{
+			setRoomsFilter(roomsList);
 			const regex = new RegExp("^.*"+x+".*$", 'g');
-			const filtered = roomsFilter.filter((a) => {
+			const filtered = roomsList.filter((a) => {
+				console.log("inside filter " + x);
 				return a.roomName.match(regex) || a.name.match(regex) || a.surname.match(regex);
 			  });
 			  setRoomsFilter(filtered);
+			  console.log(regex);
 		}
 	  }
 
@@ -88,7 +91,7 @@ function Lobby(props){
 				<br></br>
 			</div>
 			
-			<div class="roominfo--div">       
+			<div className="roominfo--div">       
 				{roomsFilter.map((room, index) =>
 				<RoomInfo
 					id={room.id}
