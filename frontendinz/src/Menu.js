@@ -20,7 +20,6 @@ function Menu(props){
         <div className="menu">            
             <nav className={className}>
                 <ul>
-                    <li><Link to="/main">Home</Link></li>
                     <li onClick={() => props.handleLogout()}><a href="#">WYLOGUJ</a></li>
                 </ul>
             </nav>

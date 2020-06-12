@@ -4,6 +4,12 @@ import './App.css'
 function Footer(props){
     return(
     <div className="footer">
+        {props.lobby ?
+        <label 
+        htmlFor="tooglemenu"
+        onClick={() => props.handleLogout()}
+        ><span aria-labelledby="jsx-a11y/accessible-emoji" role="img">Wyloguj</span></label>
+        :
         <div>        
             <input 
                 type="checkbox" 
@@ -35,12 +41,14 @@ function Footer(props){
                 checked={ props.checkedIframeInputAdmin } 
                 onChange={ props.handleChangeIframeInputAdmin } 
                 />
+            {props.roomAdmin &&
             <label 
                 htmlFor="toogleiframeinputadmin"
             >
                 <span aria-labelledby="jsx-a11y/accessible-emoji" role="img"><i className="material-icons">http</i></span></label>
+            }
         </div>
-        
+    }
     </div>
     )
 } 

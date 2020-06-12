@@ -19,6 +19,7 @@ body {
   background: #c31432;  /* fallback for old browsers */
   background: -webkit-linear-gradient(to right, #240b36, #c31432);  /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(to right, #240b36, #c31432); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */    
+  max-width: 100vw;
 }
 
 ::selection{
@@ -28,6 +29,15 @@ body {
 
 .main{
   padding: 20px;
+}
+
+.appdiv{
+  min-height: 100vh;
+  background-image: linear-gradient(to top,rgba(0,0,0,.8) 0,rgba(0,0,0,0) 60%,rgba(0,0,0,.8) 100%);
+}
+
+.clear{
+  clear: both;
 }
 
 /* MENU */
@@ -465,6 +475,7 @@ input:checked + label{
   height: 700px;
   position: relative;
   margin: 0 auto;
+  margin-bottom: 100px;
 }
 
 #scoreboard, #scoreboardx{
@@ -557,6 +568,90 @@ input:checked + label{
   font-size: 12px;
 }
 
+/* LOBBY */
+
+.roominfo--div{
+	padding: 30px 30px;
+}
+
+.responsive{
+    padding: 5px;
+    float: left;
+    width: 25%;
+    display: block;
+    text-align: center;
+}
+    
+.responsive h2{
+    word-wrap: break-word;
+    overflow: hidden; 
+    overflow-x: hidden;
+    white-space: nowrap; 
+    text-overflow: ellipsis;
+}
+
+.roominfo--item{
+    display: block;
+    border: 1px solid transparent;
+    background-color: rgba(240, 240, 240, 0.99);
+    padding: 30px 30px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    text-decoration: none;
+    color: black;
+}
+
+.roominfo--item:hover{
+    background: #e65c00;
+    border: 1px solid black;
+}
+    
+.createroom, .findroom{
+    width: 100%;
+    text-align: center;
+    padding: 60px;
+    margin: 0 auto;
+    margin-bottom: 60px;
+    color: white;
+}
+    
+.createroom input[type=text], .findroom input[type=text]{
+    width: 75%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: none;
+    border-bottom: 1px solid #999;
+    background: transparent;
+    outline: none;
+    box-sizing: border-box;
+    font-size: 2rem;
+    text-align: center;
+    color: #EEE;
+}
+	
+.createroom input[type=text]:hover,
+.createroom input[type=text]:focus,
+.findroom input[type=text]:hover,
+.findroom input[type=text]:focus{
+    border-bottom-color: #FFF;
+    transition: .25s all linear;
+}
+    
+.createroom button{
+    width: 25%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.lobby{
+  padding-bottom: 300px;
+}
+
 /* 600px */
 
 @media only screen and (max-width: 600px) {
@@ -567,6 +662,23 @@ input:checked + label{
   .form-div{
     width: 80%;
     height: 100vh;
+  }
+}
+
+/* 700px */
+
+@media (max-width: 700px) {
+  .responsive {
+    width: 50%;
+    margin: 6px 0;
+  }
+}
+
+/* 500px */
+
+@media (max-width: 500px) {
+  .responsive {
+    width: 100%;
   }
 }
 

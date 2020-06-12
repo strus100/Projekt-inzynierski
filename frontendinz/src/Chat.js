@@ -51,6 +51,7 @@ function Chat(props){
                     <div className="wrap-users-area">wrap-users-area</div>
                 </div>
                 </TabPanel>
+                {props.roomAdmin &&
                 <TabPanel>
                 <div className="wrap-additional">
                     <div className="wrap-additional-area">
@@ -65,6 +66,7 @@ function Chat(props){
                     </div>
                 </div>
                 </TabPanel>
+                }
               </Tabs>
               <div id="send-message-area">
               <ChatInput

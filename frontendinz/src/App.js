@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import Main from "./Main"
 import Login from "./Login"
+import Lobby from "./Lobby"
 import {AContext} from "./AContext";
 import axios from 'axios';
 import {
@@ -11,9 +12,9 @@ import {
 } from "react-router-dom";
 
 function App() {
-  const [authenticated, setAuthenticated] = useState(false);
+  const [authenticated, setAuthenticated] = useState(false); //zmienić na false
   const [admin, setAdmin] = useState(false);
-  const [loaded, setLoaded] = useState(false);
+  const [loaded, setLoaded] = useState(false); //zmienić na false
 
   const [access, setAccess] = useState(false);
   const [name, setName] = useState(false);
@@ -55,7 +56,7 @@ function App() {
       }, []);
 	  
     return (
-		<div>
+		<div className="appdiv">
 		{loaded ?
 		  <Router>
 			<AContext.Provider value={providerValue}>
@@ -63,8 +64,9 @@ function App() {
 				<Route exact path="/">
 				  <Redirect to='/login' />
 				</Route>
-				<Route path="/main" render={() => (authenticated ? <Main/> : <Redirect to='/login' />)}></Route>
-				<Route path="/login" render={() => (!authenticated ? <Login/> : <Redirect to='/main' />)}></Route>
+				<Route path="/main/:id" render={() => (authenticated ? <Main/> : <Redirect to='/login' />)}></Route>
+				<Route path="/lobby" render={() => (authenticated ? <Lobby/> : <Redirect to='/login' />)}></Route>
+				<Route path="/login" render={() => (!authenticated ? <Login/> : <Redirect to='/lobby' />)}></Route>
 				<Route path="*">
 				  <h1>Not found</h1>
 				</Route>
