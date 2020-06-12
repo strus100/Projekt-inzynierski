@@ -60,6 +60,8 @@
 			$sql = "SELECT * FROM $table WHERE `token` = '$token'";
 			$result = $this->conn->query($sql);
 			if($result->num_rows != 1){
+				echo "Error num rows: ".$result->num_rows."\r\n";
+				echo $token;
 				return false;
 			}
 			

@@ -26,6 +26,7 @@
         // Checks if user has admin privileges and gets user infos
         public function authorize(){
             $DB = new DatabaseConnection();
+            $DB->connect();
             if(($row = $DB->getUserByToken($this->token))){
                 $this->nick = $row['login'];
                 if($row['role'] == "pracownik" || $row['role'] == "doktorant"){

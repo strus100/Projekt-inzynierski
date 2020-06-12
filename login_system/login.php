@@ -54,7 +54,7 @@
 				$dbConnection->insertUser($login, $result['name'], $result['surname'], $result['access'], $refreshToken);
 			}
 			setcookie("token", $refreshToken, time()+3600, "/", $domain, false, true);
-            $result['token'] = $accessToken;
+            $result['token'] = $refreshToken;
         }
 		$dbConnection->closeConnection();
         echo json_encode($result);
