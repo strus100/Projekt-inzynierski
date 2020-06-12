@@ -240,6 +240,42 @@
             }
         }
 
+        //Handles new connection (client)
+        private function handleNewClient($clientSocket){
+            socket_getpeername($clientSocket, $address, $port);
+            echo "New connection: $address:$port\r\n";
+
+            $msg = @socket_read($clientSocket, MAX_BUFFER);
+            $token = $this->handshake($clientSocket, $msg);
+            $client = new Client($clientSocket, $token);
+            if($client->authorize()){
+                $this->clients[] = $client;
+                $roomID = $client->getRoomID();
+                $room = $this->rooms[$roomID];
+                if( !$room ){
+                    $room = new Room($roomID);
+                    $this->rooms[$roomID] = $room;
+                }
+                $client->joinRoom($room);
+                $url = [
+                    "type" => "event",
+                    "event" => "redirection",
+                    "url" => $room->getUrl()
+                ];
+                $scroll = [
+                    "type" => "event",
+                    "event" => "scroll",
+                    "x" => $room->getScrollX(),
+                    "y" => $room->getScrollX()
+                ];
+                $this->send($clientSocket, json_encode($url));
+                $this->send($clientSocket, json_encode($scroll));
+            }else{
+                echo "ERROR token!\r\n";
+                $this->send_encoded($clientSocket, $this->encode("CLOSE", OPCODE::CLOSE));
+            }
+        }
+
         // Main Server function/loop
         private function main(){
             while($this->running==true){
@@ -250,25 +286,7 @@
                 if(in_array($this->socket, $read)){
                     $clientSocket = socket_accept($this->socket);
                     // socket_set_nonblock($clientSocket);
-                    socket_getpeername($clientSocket, $address, $port);
-                    echo "New connection: $address:$port\r\n";
-
-                    $msg = @socket_read($clientSocket, MAX_BUFFER);
-                    $token = $this->handshake($clientSocket, $msg);
-                    $client = new Client($clientSocket, $token);
-                    if($client->authorize()){
-                        $this->clients[] = $client;
-                        $roomID = $client->getRoomID();
-                        $room = $this->rooms[$roomID];
-                        if( !$room ){
-                            $room = new Room($roomID);
-                            $this->rooms[$roomID] = $room;
-                        }
-                        $client->joinRoom($room);
-                    }else{
-                        echo "ERROR token!\r\n";
-                        $this->send_encoded($clientSocket, $this->encode("CLOSE", OPCODE::CLOSE));
-                    }
+                    $this->handleNewClient($clientSocket);
                 }
 
                 // Reads incoming messages

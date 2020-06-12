@@ -90,7 +90,7 @@
 		}
 
 		function insertUser($login, $name, $surname, $role, $token=NULL){
-			$stmt = $this->conn->prepare("INSERT INTO `userTable` VALUES (?, ?, ?, ?, ?)");
+			$stmt = $this->conn->prepare("INSERT INTO `userTable` VALUES (?, ?, ?, ?, ?, NULL)");
 			$stmt->bind_param('sssss', $login, $name, $surname, $role, $token);
 			$stmt->execute();
 		}

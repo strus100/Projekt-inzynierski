@@ -44,6 +44,7 @@
             }
         }
 
+        //Getters
         public function getRoomID(){
             return $this->roomID;
         }
@@ -62,6 +63,31 @@
 
         public function getClients(){
             return $this->clients;
+        }
+
+        public function getUrl(){
+            return $this->url;
+        }
+
+        public function getScrollX(){
+            return $this->scrollX;
+        }
+
+        public function getScrollY(){
+            return $this->scrollY;
+        }
+
+        //Setters
+        public function setUrl($url){
+            $this->url = $url;
+        }
+
+        public function setScrollX($scrollX){
+            $this->scrollX = $scrollX;
+        }
+
+        public function setScrollY($scrollY){
+            $this->scrollY = $scrollY;
         }
     }
 ?>

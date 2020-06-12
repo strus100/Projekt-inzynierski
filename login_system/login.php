@@ -2,6 +2,8 @@
     require_once __DIR__."/../database/DatabaseConnection.php";
     require_once __DIR__."/ldap.php";
 
+    $TEST = TRUE;
+
     $dbConnection = new DatabaseConnection();
     $dbConnection->connect();
     $refreshToken = md5(rand().microtime().rand());
@@ -38,13 +40,26 @@
         }
     }
     // react and axios input parsing
+    //LDAP login
     else{
         $request_body = file_get_contents('php://input');
         $data = json_decode($request_body, true);
         $login = htmlspecialchars($data['login']);
         $password = htmlspecialchars($data['pwd']);
-
-        $result = LDAP::login($login, $password);
+        $result = null;
+        
+        if(!$TEST){
+            $result = LDAP::login($login, $password);
+        }
+        else{
+            $result = [
+                "type" => "login",
+                "login" => 1,
+                "access" => "pracownik",
+                "name" => "Adam",
+                "surname" => "Kowalski"
+            ];
+        }
         if($result['login'] == 1){
             $user = $dbConnection->getUserByLogin($login);
             // If user exists in DB update token | if not insert -> user
