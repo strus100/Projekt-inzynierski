@@ -479,7 +479,7 @@ input:checked + label{
   pointer-events: none;
 }
 
-.iframeurl--button{
+.iframeurl--button, .drop-form button{
   margin: 0 auto;
   width: 20%;
   height: 50px;
@@ -491,12 +491,12 @@ input:checked + label{
   display: inline-block;
   font-size: 16px;
   border: 1px solid white;
-  border-top: 0;
+  margin-top: 5px;
   transition: all 0.5s ease-in;
   cursor: pointer;
 }
 
-.iframeurl--button:hover{
+.iframeurl--button:hover, .drop-form button:hover{
   background-color: orangered;
 }
 
@@ -504,6 +504,7 @@ input:checked + label{
   margin: 0 auto;
   width: 700px;
   text-align: center;
+  margin-bottom: 10px;
 }
 
 .form-iframe input[type=text]{
@@ -531,11 +532,11 @@ input:checked + label{
   position: fixed;
   top: 0;
   left: 0;
-  height: 100px;
+  height: 271px;
   width: 100%;
   padding: 10px;
   background-color: #353441;
-  transform: translateY(-100px);
+  transform: translateY(-280px);
   -webkit-box-shadow: 0 5px 15px 0 rgba(0, 0, 0, .5);
   -moz-box-shadow: 0 5px 15px 0 rgba(0, 0, 0, .5);
   box-shadow: 0 5px 15px 0 rgba(0, 0, 0, .5);
@@ -558,6 +559,32 @@ input:checked + label{
 
 .iframeURLinfo h1{
   font-size: 12px;
+}
+
+#drop-area{
+  background-color: #353441;
+  height: 100px;
+  max-height: 100px;
+  text-align: center;
+  margin: 0;
+}
+
+#fileElem{
+  display: none;
+}
+
+.filelabel{
+  display: block;
+  width: 50%;
+  margin: 0 auto;
+  border: 1px dotted #fff;
+  color: white;
+  padding: 30px;
+  word-wrap: break-word;
+  overflow: hidden; 
+  overflow-x: hidden;
+  white-space: nowrap; 
+  text-overflow: ellipsis;
 }
 
 /* LOBBY */
