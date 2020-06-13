@@ -277,9 +277,10 @@ function Main(props) {
   }
 
   function changePermission(namex){
-	let foundIndex = usersList.findIndex(x => x.name == namex);
-	usersList[foundIndex].permission = !usersList[foundIndex].permission;
-	//console.log(usersList[foundIndex].permission);
+	let copy = JSON.parse(JSON.stringify(usersList))
+	let foundIndex = copy.findIndex(x => x.name == namex);
+	copy[foundIndex].permission = !copy[foundIndex].permission
+	setUsersList(copy);
 	}
 
   return (
