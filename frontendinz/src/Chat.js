@@ -4,6 +4,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import ChatMessage from "./ChatMessage";
 import ChatInput from "./ChatInput";
 import HistoryMessage from "./HistoryMessage"
+import UsersListChat from "./UsersListChat"
 import {AContext} from "./AContext"
 
 
@@ -39,8 +40,7 @@ function Chat(props){
                         <ChatMessage
                             key={index}
                             message={message.chat}
-                            name={message.name} //dodane
-                            //name={this.state.name}
+                            name={message.name}
                         />,
                         )}
                     </div>
@@ -48,7 +48,17 @@ function Chat(props){
                 </TabPanel>
                 <TabPanel>
                 <div className="wrap-users">
-                    <div className="wrap-users-area">wrap-users-area</div>
+                    <div className="wrap-users-area">
+                        {props.usersList.map((usersList, index) =>
+                        <UsersListChat
+                            changePermission={props.changePermission}
+                            key={index}
+                            name={usersList.name}
+                            permission={usersList.permission}
+                            roomAdmin={props.roomAdmin}
+                        />,
+                        )}
+                        </div>
                 </div>
                 </TabPanel>
                 {props.roomAdmin &&

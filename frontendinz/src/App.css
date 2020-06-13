@@ -262,15 +262,7 @@ nav ul a:hover {
   background: #fff;
 }
 
-#wrap-users-area{ 
-  height: calc(100vh - 100px - 60px - 100px); 
-  overflow: auto; 
-  border-top: 2px solid #fff; 
-  padding: 20px; 
-  background: #fff; 
-}
-
-#wrap-additional-area{ 
+.wrap-users-area{ 
   height: calc(100vh - 100px - 60px - 100px); 
   overflow: auto; 
   border-top: 2px solid #fff; 

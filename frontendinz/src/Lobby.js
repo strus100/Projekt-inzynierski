@@ -94,6 +94,7 @@ function Lobby(props){
 			<div className="roominfo--div">       
 				{roomsFilter.map((room, index) =>
 				<RoomInfo
+					key={index}
 					id={room.id}
 					name={room.name}
 					surname={room.surname}

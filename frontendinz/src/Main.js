@@ -16,6 +16,7 @@ function Main(props) {
   const [checkedIframeInputAdmin, setCheckedIframeInputAdmin] = useState(false);
   const [messages, setMesseges] = useState([]);
   const [historyB, setHistoryB] = useState([{title: "strus100/Projekt-inzynierski", link: "https://github.com/strus100/Projekt-inzynierski"}, {title: "Projekt Inżynierski – Dysk Google", link: "https://drive.google.com/drive/folders/1OBH7hwjS7rxf_lPeMfBeXzLsXSPu-4sN"}]);
+  const [usersList, setUsersList] = useState([{name: "Dawid", permission: true}, {name: "Radek", permission: false}, {name: "Daniel", permission: true}]);
   const [ws, setWebsocket] = useState(null); 
   const [iframeURL, setIframeURL] = useState("http://wmi.amu.edu.pl"); 
   const {authenticated, setAuthenticated} = useContext(AContext);
@@ -89,6 +90,7 @@ function Main(props) {
 					break;
 				}
 				break;
+			case "updatelist": return handleUsersList(JSON.parse(message));
 			}
 		};
 	
@@ -270,6 +272,16 @@ function Main(props) {
 	document.getElementById("scoreboardx").contentDocument.location.reload(true);
   }
 
+  function handleUsersList(x){
+	  setUsersList(x);
+  }
+
+  function changePermission(namex){
+	let foundIndex = usersList.findIndex(x => x.name == namex);
+	usersList[foundIndex].permission = !usersList[foundIndex].permission;
+	//console.log(usersList[foundIndex].permission);
+	}
+
   return (
       <div className="main">
 		  {loadingMain ?
@@ -300,6 +312,8 @@ function Main(props) {
 				ws={ws} 
 				messages={messages} 
 				historyB={historyB}
+				usersList={usersList}
+				changePermission={changePermission}
 				submitMessage={submitMessage}
 				handleChangeURL={handleChangeURL}
 				/>
