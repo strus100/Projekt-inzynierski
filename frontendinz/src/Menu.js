@@ -1,20 +1,26 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { Link } from "react-router-dom";
+import {AContext} from "./AContext"
 import './App.css'
 
 function Menu(props){   
+        const {admin} = useContext(AContext);
+
         var className = 'menu-activea';
 
         if(props.checkedMenu){
             className += ' menu-active';
         }
 
+        if(props.hoverMenu && !props.checkedMenu){
+            className += ' menu-hover';
+        }
+
         return(
         <div className="menu">            
             <nav className={className}>
                 <ul>
-                    <a href="#"><li>HOME</li></a>
-                    <a href="#section1"><li>Section I</li></a>
-                    <a href="#section2"><li>Section II</li></a>
+                    <li onClick={() => props.handleLogout()}><a href="#">WYLOGUJ</a></li>
                 </ul>
             </nav>
         </div>
