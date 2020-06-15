@@ -12,7 +12,13 @@
         private $socket;
         private $token;
         private $permission;
-        private $nick;
+        
+        private $login;
+        private $name;
+        private $surname;
+        
+        private $roomID;
+        private $room;
 
         function __construct($socket, $token){
             $this->socket = $socket;
@@ -26,24 +32,30 @@
         // Checks if user has admin privileges and gets user infos
         public function authorize(){
             $DB = new DatabaseConnection();
-            $conn = $DB->connect();
-            if(($row = $DB->getRowByToken('usertable', $conn, $this->token))){
-                $this->nick = $row['login'];
-                if($row['role'] == "Admin"){
+            $DB->connect();
+            if(($row = $DB->getUserByToken($this->token))){
+                $this->login = $row['login'];
+                $this->name = $row['name'];
+                $this->surname = $row['surname'];
+
+                if($row['role'] == "pracownik" || $row['role'] == "doktorant"){
                     $this->permission = PERMISSION::ADMIN;
                 }else{
                     $this->permission = PERMISSION::USER;
                 }
-                $DB->closeConnection($conn);
+
+                $this->roomID = $row['room'];
+                
+                $DB->closeConnection();
                 return true;
             }else{
-                $DB->closeConnection($conn);
+                $DB->closeConnection();
                 return false;
             }
         }
 
-        public function get_nick(){
-            return $this->nick;
+        public function get_login(){
+            return $this->login;
         }
 
         public function get_socket(){
@@ -51,7 +63,25 @@
         }
 
         public function isAdmin(){
-            return $permission === PERMISSION::ADMIN;
+            return $this->permission == PERMISSION::ADMIN;
+        }
+
+        public function joinRoom($room){
+            $this->room = $room;
+            $room->join($this);
+        }
+
+        public function leaveRoom(){
+            $this->room->leave($this);
+            $this->room = null;
+        }
+
+        public function getRoomID(){
+            return $this->roomID;
+        }
+
+        public function getRoom(){
+            return $this->room;
         }
     }
 ?>

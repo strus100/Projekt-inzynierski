@@ -8,11 +8,12 @@
     error_reporting(E_ALL);
     if(PHP_SAPI !== 'cli') die("Run only using CLI");
 
-    require_once "Client.php";
+    require_once __DIR__."/Client.php";
+    require_once __DIR__."/Room.php";
 
     define("DEFAULT_IP", "127.0.0.1");
     define("DEFAULT_PORT", 1111);
-    define("MAX_BUFFER", 100000);
+    define("MAX_BUFFER", 10000000);
 
     // Arguments parsing
     if($argc>1 && $argv[1]=="start"){
@@ -42,6 +43,7 @@
 
         private $socket;
         private $clients = array();
+        private $rooms = array();
         private $sleepCounter = 1;
         private $sleepInterval = 0.25*1000000;   //Seconds * 1.000.000 (microseconds 1/mil)
         private $pingInterval = 5;  //Seconds
@@ -96,13 +98,24 @@
             if($length <= 125){
                 $datagramBytes[1] = $length;
             }
-            else if($length >= 126 && length <= 65535){
+            else if($length >= 126 && $length <= 65535){
                 $datagramBytes[1] = 126;
                 $datagramBytes[2] = ($length >> 8) & 255;
                 $datagramBytes[3] = $length & 255;
             }
+            else if($length > 65535){
+                $datagramBytes[1] = 127;
+                $datagramBytes[2] = ($length >> 56) & 255;
+                $datagramBytes[3] = ($length >> 48) & 255;
+                $datagramBytes[4] = ($length >> 40) & 255;
+                $datagramBytes[5] = ($length >> 32) & 255;
+                $datagramBytes[6] = ($length >> 24) & 255;
+                $datagramBytes[7] = ($length >> 16) & 255;
+                $datagramBytes[8] = ($length >> 8) & 255;
+                $datagramBytes = $length & 255;
+            }
             else{
-                echo "ERROR encoding message";
+                echo "ERROR encoding message - length";
             }
             $parsedArray = array_map("chr", $datagramBytes);
             // print_r($datagramBytes);
@@ -137,13 +150,12 @@
                 $index = 2;
             }
             else if($length == 126){
-                $length = ($octets[2] << 8) | $octets[3];
+                // $length = ($octets[2] << 8) | $octets[3];
                 $index = 4;
             }
             else if($length == 127){
-                echo("payload length=127 - To implement LATER\r\n\r\n");
                 $index = 10;
-                return false;
+                // return false;
             }
             else{
                 return false;
@@ -184,11 +196,11 @@
             return @socket_write($socket, $encoded_message, strlen($encoded_message));
         }
 
-        // Send message to all clients except
-        private function send_to_all($message, $except = false){
+        // Send message to all clients except (socket)
+        private function send_to_all($message, $clientsArray, $except = false){
             $encoded_message = $this->encode($message);
 
-            foreach ($this->clients as $client) {
+            foreach ($clientsArray as $client) {
                 if(!in_array($client->get_socket(), $except)){
                     $this->send_encoded($client->get_socket(), $encoded_message);
                 }
@@ -197,30 +209,27 @@
 
         private function parse_message_from($client, $message){
             $clientSocket = $client->get_socket();
+            $roomClients = $client->getRoom()->getClients();
+
             echo "$clientSocket:\t$message\r\n";
             if($message === "PONG"){
                 // echo "$client:\t$message\r\n";
             }
             else{
                 $decoded_JSON_array = json_decode($message, true);
-                // $token = $decoded_JSON_array['token'];
-                // unset($decoded_JSON_array['token']);
-                // if(!$token){
-                //     echo "$clientSocket:\tTOKEN not present\r\n";
-                //     return false;
-                // }
-
                 $type = $decoded_JSON_array['type'];
+                
                 switch ($type) {
                     case 'chat':
-                        $decoded_JSON_array['name'] = $client->get_nick();
+                        $decoded_JSON_array['name'] = $client->get_login();
                         $encoded_JSON_array = json_encode($decoded_JSON_array);
                         // echo $encoded_JSON_array."\r\n";
-                        $this->send_to_all($message, [$clientSocket]);
+                        
+                        $this->send_to_all($encoded_JSON_array, $roomClients, [$clientSocket]);
                         break;
                     case 'event':
                         if($client->isAdmin()){
-
+                            $this->send_to_all($message, $roomClients, [$clientSocket]);
                         }
                         echo "$clientSocket: event: $decoded_JSON_array[$type]\r\n";
                         break;
@@ -228,6 +237,42 @@
                         echo "Undefined JSON type received: $type\r\n";
                         break;
                 }
+            }
+        }
+
+        //Handles new connection (client)
+        private function handleNewClient($clientSocket){
+            socket_getpeername($clientSocket, $address, $port);
+            echo "New connection: $address:$port\r\n";
+
+            $msg = @socket_read($clientSocket, MAX_BUFFER);
+            $token = $this->handshake($clientSocket, $msg);
+            $client = new Client($clientSocket, $token);
+            if($client->authorize()){
+                $this->clients[] = $client;
+                $roomID = $client->getRoomID();
+                $room = $this->rooms[$roomID];
+                if( !$room ){
+                    $room = new Room($roomID);
+                    $this->rooms[$roomID] = $room;
+                }
+                $client->joinRoom($room);
+                $url = [
+                    "type" => "event",
+                    "event" => "redirection",
+                    "url" => $room->getUrl()
+                ];
+                $scroll = [
+                    "type" => "event",
+                    "event" => "scroll",
+                    "x" => $room->getScrollX(),
+                    "y" => $room->getScrollX()
+                ];
+                $this->send($clientSocket, json_encode($url));
+                $this->send($clientSocket, json_encode($scroll));
+            }else{
+                echo "ERROR token!\r\n";
+                $this->send_encoded($clientSocket, $this->encode("CLOSE", OPCODE::CLOSE));
             }
         }
 
@@ -241,18 +286,7 @@
                 if(in_array($this->socket, $read)){
                     $clientSocket = socket_accept($this->socket);
                     // socket_set_nonblock($clientSocket);
-                    socket_getpeername($clientSocket, $address, $port);
-                    echo "New connection: $address:$port\r\n";
-
-                    $msg = @socket_read($clientSocket, MAX_BUFFER);
-                    $token = $this->handshake($clientSocket, $msg);
-                    $client = new Client($clientSocket, $token);
-                    if($client->authorize()){
-                        $this->clients[] = $client;
-                    }else{
-                        echo "ERROR token!\r\n";
-                        $this->send_encoded($clientSocket, $this->encode("CLOSE", OPCODE::CLOSE));
-                    }
+                    $this->handleNewClient($clientSocket);
                 }
 
                 // Reads incoming messages
@@ -269,6 +303,7 @@
                     
                     foreach ($this->clients as $id => $client) {
                         if($this->ping_socket($client->get_socket()) === false){
+                            $client->leaveRoom();
                             unset($client);
                             $toDelete[] = $id;
                             echo "Connection timeout: $id\r\n";
