@@ -1,29 +1,30 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import './App.css'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import ChatMessage from "./ChatMessage";
 import ChatInput from "./ChatInput";
+import HistoryMessage from "./HistoryMessage"
+import UsersListChat from "./UsersListChat"
+import {AContext} from "./AContext"
+
 
 function Chat(props){
+    const {admin} = useContext(AContext);
+
     let className = 'chat-activea';
 
     if(props.checkedChat){
         className += ' chat-active';
     }
 
-    if(props.ws === null){
-        className += ' chat-disabled';
-      }else{
-        //console.log(this.state.ws.readyState)
-        if(props.ws.readyState !== 1){
-          className += ' chat-disabled';
-      }
+    if(props.hoverChat && !props.checkedChat){
+        className += ' chat-hover';
     }
 
     return(
       <div className={className}>            
           <div className="chat">
-              <p id="name-area">Witaj</p>
+              <p id="name-area">Witaj { props.name }</p>
               <Tabs>
                 <div className="chat-tabs">
                     <TabList>
@@ -39,8 +40,7 @@ function Chat(props){
                         <ChatMessage
                             key={index}
                             message={message.chat}
-                            name={message.name} //dodane
-                            //name={this.state.name}
+                            name={message.name}
                         />,
                         )}
                     </div>
@@ -48,14 +48,35 @@ function Chat(props){
                 </TabPanel>
                 <TabPanel>
                 <div className="wrap-users">
-                    <div className="wrap-users-area">wrap-users-area</div>
+                    <div className="wrap-users-area">
+                        {props.usersList.map((usersList, index) =>
+                        <UsersListChat
+                            changePermission={props.changePermission}
+                            key={index}
+                            name={usersList.name}
+                            permission={usersList.permission}
+                            roomAdmin={props.roomAdmin}
+                        />,
+                        )}
+                        </div>
                 </div>
                 </TabPanel>
+                {props.roomAdmin &&
                 <TabPanel>
                 <div className="wrap-additional">
-                    <div className="wrap-additional-area">wrap-additional-area</div>
+                    <div className="wrap-additional-area">
+                    {props.historyB.map((historyB, index) =>
+                        <HistoryMessage
+                            key={index}
+                            title={historyB.title}
+                            link={historyB.link}
+                            handleChangeURL={props.handleChangeURL}
+                        />,
+                        )}
+                    </div>
                 </div>
                 </TabPanel>
+                }
               </Tabs>
               <div id="send-message-area">
               <ChatInput
