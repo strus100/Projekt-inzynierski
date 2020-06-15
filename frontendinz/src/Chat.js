@@ -1,31 +1,133 @@
-import React, { useContext } from 'react';
+import React, { Component } from 'react';
 import './App.css'
+import axios from 'axios'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import ChatMessage from "./ChatMessage";
 import ChatInput from "./ChatInput";
-import HistoryMessage from "./HistoryMessage"
-import UsersListChat from "./UsersListChat"
-import {AContext} from "./AContext"
 
+const URL = 'ws://localhost:1111';
 
-function Chat(props){
-    const {admin} = useContext(AContext);
+class Chat extends Component{
+    constructor(props) {
+        super(props);
+        this.state = {
+            name: 'Bob',
+            messages: [],
+            ws: null,
+        }
+        this.getDataAxios = this.getDataAxios.bind(this);
 
-    let className = 'chat-activea';
+        this.timeout = 1000;
+      }
+    
+    componentDidMount() {       
+        this.connect();
+        this.getDataAxios();
+        
+      }
 
-    if(props.checkedChat){
-        className += ' chat-active';
+    componentWillUnmount() {
+        //clearInterval(this.timerID);
+      }
+
+    connect = () => {
+      var ws = new WebSocket(URL);
+      var connectInterval;
+
+      ws.onopen = () => {
+        console.log('connected');
+        ws.send("1");
+        this.setState({ws: ws});
+        clearTimeout(connectInterval);
+      };
+
+      ws.onmessage = evt => {
+        const message = evt.data
+        this.addMessage(JSON.parse(message))
+      };
+  
+      ws.onclose = e => {
+        console.log(
+            `Socket is closed. Reconnect will be attempted in ${Math.min(
+                10000 / 1000,
+                (this.timeout + this.timeout) / 1000
+            )} second.`,
+            e.reason
+        );
+
+        this.timeout = this.timeout + this.timeout;
+        connectInterval = setTimeout(this.check, Math.min(10000, this.timeout));
+      };
+
+      ws.onerror = err => {
+        console.error(
+            "Socket encountered error: ",
+            err.message,
+            "Closing socket"
+        );
+
+        ws.close();
+      };
     }
 
-    if(props.hoverChat && !props.checkedChat){
-        className += ' chat-hover';
-    }
+    check = () => {
+      const { ws } = this.state;
+      if (!ws || ws.readyState == WebSocket.CLOSED) this.connect();
+    };
 
-    return(
-      <div className={className}>            
-          <div className="chat">
-              <p id="name-area">Witaj { props.name }</p>
-              <Tabs>
+    async getDataAxios(){
+        const response =
+          await axios.get("https://randomuser.me/api");
+        const user = response.data.results[0];
+        console.log(user);
+        this.setState({name: user.name.first});
+      }
+
+    addMessage = message => {
+        this.setState(state => ({ messages: [message, ...state.messages] }))
+        }
+  
+    submitMessage = messageString => {
+          if(this.state.ws != null){
+            if(this.state.ws.readyState === 1){
+              if( messageString !== ""){
+                const message = { type: "chat", chat: messageString, name: this.state.name }
+                this.state.ws.send(JSON.stringify(message))
+                this.addMessage(message)
+                console.log(this.state.ws.readyState)
+                console.log(this.state.user)
+              }
+            }
+            else{
+              this.addMessage({ type: "chat", chat: "Nie połączono z chatem", name: "SERVER" })
+            }
+          }
+          else{
+            this.addMessage({ type: "chat", chat: "Nie połączono z chatem", name: "SERVER"  })
+          }
+        }
+
+    createChat = () => { //chwilowo niepotrzebne
+        let chat = []
+        for (let i = 0; i < 100; i++) {
+            chat.push(<span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span><br></br></span>)
+          }
+        return chat
+      }
+
+    render(){
+        let className = 'chat-activea';
+
+        if(this.props.checkedChat){
+            className += ' chat-active';
+        }
+
+        return(
+        <div className={className}>            
+            <div className="chat">
+                <p id="name-area">Witaj {this.state.name}</p>
+                
+                <Tabs>
                 <div className="chat-tabs">
                     <TabList>
                         <Tab>&#9776;</Tab>
@@ -36,11 +138,12 @@ function Chat(props){
                 <TabPanel>
                 <div id="chat-wrap">
                     <div id="chat-area">
-                    {props.messages.map((message, index) =>
+                    {this.state.messages.map((message, index) =>
                         <ChatMessage
                             key={index}
                             message={message.chat}
-                            name={message.name}
+                            name={message.name} //dodane
+                            //name={this.state.name}
                         />,
                         )}
                     </div>
@@ -48,45 +151,25 @@ function Chat(props){
                 </TabPanel>
                 <TabPanel>
                 <div className="wrap-users">
-                    <div className="wrap-users-area">
-                        {props.usersList.map((usersList, index) =>
-                        <UsersListChat
-                            changePermission={props.changePermission}
-                            key={index}
-                            name={usersList.name}
-                            permission={usersList.permission}
-                            roomAdmin={props.roomAdmin}
-                        />,
-                        )}
-                        </div>
+                    <div className="wrap-users-area">wrap-users-area</div>
                 </div>
                 </TabPanel>
-                {props.roomAdmin &&
                 <TabPanel>
                 <div className="wrap-additional">
-                    <div className="wrap-additional-area">
-                    {props.historyB.map((historyB, index) =>
-                        <HistoryMessage
-                            key={index}
-                            title={historyB.title}
-                            link={historyB.link}
-                            handleChangeURL={props.handleChangeURL}
-                        />,
-                        )}
-                    </div>
+                    <div className="wrap-additional-area">wrap-additional-area</div>
                 </div>
                 </TabPanel>
-                }
-              </Tabs>
-              <div id="send-message-area">
-              <ChatInput
-                  ws={props.ws}
-                  onSubmitMessage={messageString => props.submitMessage(messageString)}
-                  />
-              </div>
-          </div>
-      </div>
-      )
-  }
+                </Tabs>
+                <div id="send-message-area">
+                <ChatInput
+                    ws={this.ws}
+                    onSubmitMessage={messageString => this.submitMessage(messageString)}
+                    />
+                </div>
+            </div>
+        </div>
+        )
+    }
+} 
 
 export default Chat;
