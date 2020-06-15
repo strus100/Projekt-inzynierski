@@ -11,6 +11,8 @@
 			$dbname = "bazaInz";
 			// Create connection
 			$this->conn = new mysqli($servername, $username, $password, $dbname);
+			$this->conn->set_charset("UTF8");
+			$this->conn->query("SET NAMES UTF8");
 
 			// Check connection
 			if ($this->conn->connect_error) {
@@ -88,7 +90,7 @@
 		}
 
 		function insertUser($login, $name, $surname, $role, $token=NULL){
-			$stmt = $this->conn->prepare("INSERT INTO `userTable` VALUES (?, ?, ?, ?, ?)");
+			$stmt = $this->conn->prepare("INSERT INTO `userTable` VALUES (?, ?, ?, ?, ?, NULL)");
 			$stmt->bind_param('sssss', $login, $name, $surname, $role, $token);
 			$stmt->execute();
 		}
@@ -107,6 +109,51 @@
 			$stmt = $this->conn->prepare("UPDATE `userTable` SET `token`=? WHERE `login`=?");
 			$stmt->bind_param("ss", $token, $user);
 			$stmt->execute();
+		}
+
+		function getRooms(){
+			$sql = "SELECT * FROM `rooms` LEFT JOIN `usertable` ON `admin`=`login`";
+			$result = $this->conn->query($sql);
+			$rooms = array();
+			while($row = $result->fetch_assoc()){
+				$room = [
+					"id" => $row['id'],
+					"roomName" => $row['roomName'],
+					"name" => $row['name'],
+					"surname" => $row['surname']
+				];
+				$rooms[] = $room;
+			}
+			return $rooms;
+		}
+
+		function createRoom($roomName){
+			$token = htmlspecialchars($_COOKIE['token']);
+			$user = $this->getUserByToken($token);
+			$login = $user['login'];
+
+			$stmt = $this->conn->prepare("INSERT INTO `rooms` VALUES (NULL, ?, ?)");
+			$stmt->bind_param("ss", $roomName, $login);
+			$stmt->execute();
+
+			return $this->conn->insert_id;
+		}
+
+		function selectRoom($roomID){
+			$token = htmlspecialchars($_COOKIE['token']);
+			$stmt = $this->conn->prepare("UPDATE `usertable` SET `room` = ? WHERE `token`=?");
+			$stmt->bind_param("ds", $roomID, $token);
+			$stmt->execute();
+		}
+
+		function getRoom($roomID){
+			$sql = "SELECT * FROM `rooms` WHERE `id`=$roomID";
+			$result = $this->conn->query($sql);
+			if($result->num_rows != 1){
+				return false;
+			}else{
+				return $result->fetch_assoc();
+			}
 		}
 	}
 	
