@@ -42,9 +42,13 @@ function Main(props) {
 		roomID: id
 	  })
 	  .then(function (response) {
-		if(response.data.roomAdmin == login){
+		if(response.data){
 			setRoomAdmin(true);
 		}
+		else{
+			setRoomAdmin(false);
+		}
+		setLoadingMain(true);
 	  })
 	  .catch(function (error) {
 		console.log(error);
@@ -219,7 +223,7 @@ function Main(props) {
         if( messageString !== ""){
           const message = { type: "chat", chat: messageString, name: name }
           ws.send(JSON.stringify(message))
-          addMessage(message)
+          //addMessage(message)
         }
       }
       else{
@@ -267,9 +271,13 @@ function Main(props) {
   }
 
   function handleChangeURL(e, url){
-    e.preventDefault();
-    setIframeURL(url);
-	document.getElementById("scoreboardx").contentDocument.location.reload(true);
+	  if(url){
+		e.preventDefault();
+		setIframeURL(url);
+		if(roomAdmin){
+			document.getElementById("scoreboardx").contentDocument.location.reload(true);
+		}
+	  }
   }
 
   function handleUsersList(x){
@@ -302,6 +310,7 @@ function Main(props) {
 				/>
 			<Iframe
 				proxy={proxy}
+				roomAdmin={roomAdmin}
 				iframeURLadmin={iframeURLadmin}
 				iframeURL={iframeURL}
 			/>

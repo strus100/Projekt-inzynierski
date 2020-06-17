@@ -5,18 +5,17 @@ import './App.css'
 function Iframe(props){
     
     const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-    const {admin} = useContext(AContext);
 
     return(
         <div>
             <div className="iframeURLinfo">
-			{admin ?
+			{ props.roomAdmin ?
 				<h1>{props.iframeURLadmin}</h1>
 				:
 				<h1>{props.iframeURL}</h1>
 			}
             </div>
-            { !admin ? 
+            { ! props.roomAdmin ? 
                 <div className="iframediv">
                     <iframe id="scoreboard" scrolling="no" src={props.proxy + props.iframeURL} title="iframe-title"></iframe>
                 </div>
