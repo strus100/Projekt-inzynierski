@@ -713,3 +713,19 @@ input:checked + label{
     height: 100vh;
   }
 }
+
+.iframe-container-chat {
+  overflow: hidden;
+  min-height: 50px;
+  max-height: 200px;
+  margin-top: 100px;
+}
+
+.iframe-container-chat iframe {
+  border: 0;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}

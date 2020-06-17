@@ -7,6 +7,7 @@ import IframeInputAdmin from "./IframeInputAdmin"
 import {AContext} from "./AContext"
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import './App.css';
 
 function Main(props) {
   const [hoverMenu, setHoverMenu] = useState(false);
@@ -292,10 +293,13 @@ function Main(props) {
 	}
 
   return (
-      <div className="main">
+	  <div className="main">
+		  <div className={"iframe-container-chat"}>
+			  <iframe src={"https://strus100.github.io/video-broadcasting.html"} className={"iframe-container"}/>
+		  </div>
 		  {loadingMain ?
 			<div>
-			<h1>{ id }</h1>
+				<h1>{ id }</h1>
 			{roomAdmin &&
 			<IframeInputAdmin
 				checkedIframeInputAdmin={checkedIframeInputAdmin}
