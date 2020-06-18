@@ -50,13 +50,13 @@ function Login(props){
 			pwd: password
 		  })
 		  .then(function (response) {
-			if(response.data.login == 1){
+			if(response.data.login === 1){
 				setAccess(response.data.access);
 				setName(response.data.name);
 				setSurname(response.data.surname);
 				setToken(response.data.token);
 				setAuthenticated(true);
-				if(response.data.access == "pracownik" || response.data.access == "doktorant"){
+				if(response.data.access === "pracownik" || response.data.access === "doktorant"){
 					setAdmin(true);
 				}else{
 					setAdmin(false);
@@ -67,7 +67,8 @@ function Login(props){
 			}
 		  })
 		  .catch(function (error) {
-			console.log(error);
+        setError(true);
+        console.log(error);
 		  });
       };
     

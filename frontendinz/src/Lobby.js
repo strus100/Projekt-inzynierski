@@ -1,10 +1,9 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import {AContext} from "./AContext";
 import axios from 'axios';
 import RoomInfo from "./RoomInfo";
 import Footer from "./Footer";
-import Menu from "./Menu";
 import './App.css'
 
 function Lobby(props){
@@ -12,13 +11,12 @@ function Lobby(props){
 	const [roomsFilter, setRoomsFilter] = useState([{"id":"3","roomName":"Wst\u0119p do Matematyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"}]);
 	let history = useHistory();
 	const {admin, setAdmin} = useContext(AContext);
-    const {authenticated, setAuthenticated} = useContext(AContext);
+    const {setAuthenticated} = useContext(AContext);
 
-	const {login, setLogin} = useContext(AContext);
-	const {name, setName} = useContext(AContext);
-	const {surname, setSurname} = useContext(AContext);
-	const {access, setAccess} = useContext(AContext);
-	const {token, setToken} = useContext(AContext);
+	const {setName} = useContext(AContext);
+	const {setSurname} = useContext(AContext);
+	const {setAccess} = useContext(AContext);
+	const {setToken} = useContext(AContext);
 	
     const createLobby = e => {
 		var name = document.getElementById("roomName").value;
@@ -65,7 +63,7 @@ function Lobby(props){
 	  /*do naprawienia*/
 	  function filterRooms(x){ 
 		setRoomsFilter(roomsList);
-		if(x == null || x == undefined || x == ''){
+		if(x === null || x === undefined || x === ''){
 			setRoomsFilter(roomsList);
 		}else{
 			setRoomsFilter(roomsList);

@@ -4,6 +4,6 @@ export default ({ name, permission, roomAdmin, changePermission }) =>
   <p>
     {roomAdmin && 
         <span>
-            {permission ? <a onClick={() => changePermission(name)}>✔️</a> : <a onClick={() => changePermission(name)}>🚫</a>}</span>}
+            {permission ? <span onClick={() => changePermission(name)}><span aria-labelledby="jsx-a11y/accessible-emoji" role="img">✔️</span></span> : <span onClick={() => changePermission(name)}><span aria-labelledby="jsx-a11y/accessible-emoji" role="img">🚫</span></span>}</span>}
             <span> { name }</span>
   </p>

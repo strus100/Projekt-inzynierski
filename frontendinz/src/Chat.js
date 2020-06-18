@@ -1,15 +1,13 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import './App.css'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import ChatMessage from "./ChatMessage";
 import ChatInput from "./ChatInput";
 import HistoryMessage from "./HistoryMessage"
 import UsersListChat from "./UsersListChat"
-import {AContext} from "./AContext"
 
 
 function Chat(props){
-    const {admin} = useContext(AContext);
 
     let className = 'chat-activea';
 
@@ -24,13 +22,15 @@ function Chat(props){
     return(
       <div className={className}>            
           <div className="chat">
-              <p id="name-area">Witaj { props.name }</p>
+            <p id="name-area">Witaj { props.name } { props.surname }</p>
               <Tabs>
                 <div className="chat-tabs">
                     <TabList>
                         <Tab>&#9776;</Tab>
                         <Tab><i className="material-icons">person</i></Tab>
+                        {props.roomAdmin &&
                         <Tab>&#9851;</Tab>
+                        }
                     </TabList>
                 </div>
                 <TabPanel>
@@ -41,6 +41,7 @@ function Chat(props){
                             key={index}
                             message={message.chat}
                             name={message.name}
+                            messagetype={message.messagetype}
                         />,
                         )}
                     </div>

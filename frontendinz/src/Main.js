@@ -14,18 +14,19 @@ function Main(props) {
   const [hoverChat, setHoverChat] = useState(false);
   const [checkedChat, setChangeChat] = useState(false);
   const [checkedIframeInputAdmin, setCheckedIframeInputAdmin] = useState(false);
-  const [messages, setMesseges] = useState([]);
+  const [messages, setMesseges] = useState([{name: "Mały Kodziarz", messagetype: "code", chat: `for (int i = 0; i < 5; i++) {
+	cout << i << "\\n";
+  }`}]);
   const [historyB, setHistoryB] = useState([{title: "strus100/Projekt-inzynierski", link: "https://github.com/strus100/Projekt-inzynierski"}, {title: "Projekt Inżynierski – Dysk Google", link: "https://drive.google.com/drive/folders/1OBH7hwjS7rxf_lPeMfBeXzLsXSPu-4sN"}]);
   const [usersList, setUsersList] = useState([{name: "Dawid", permission: true}, {name: "Radek", permission: false}, {name: "Daniel", permission: true}]);
   const [ws, setWebsocket] = useState(null); 
   const [iframeURL, setIframeURL] = useState("http://wmi.amu.edu.pl"); 
-  const {authenticated, setAuthenticated} = useContext(AContext);
-  const {admin, setAdmin} = useContext(AContext);
+  const {setAuthenticated} = useContext(AContext);
+  const {setAdmin} = useContext(AContext);
   
-  const {login, setLogin} = useContext(AContext);
   const {name, setName} = useContext(AContext);
   const {surname, setSurname} = useContext(AContext);
-  const {access, setAccess} = useContext(AContext);
+  const {setAccess} = useContext(AContext);
   const {token, setToken} = useContext(AContext);
   
   const [iframeURLadmin, setIframeURLadmin] = useState("http://wmi.amu.edu.pl"); 
@@ -65,15 +66,16 @@ function Main(props) {
 		webSocket = new WebSocket(URL);
 	
 		webSocket.onopen = () => {
-			console.log('connected');
+			//console.log('connected');
 			const message = { type: "chat", chat: `Połączono z chatem.`, name: "SERVER" }
 			addMessage(message);
 			webSocket.send(token);
+			//webSocket.send("1"); //debug
 			clearTimeout(connectInterval);
 			setWebsocket(webSocket);
 			if(roomAdmin){
 			setListeners();
-			console.log("roomAdmin");
+			//console.log("roomAdmin");
 			}
 		};
 	
@@ -111,7 +113,7 @@ function Main(props) {
 			addMessage(message);
 			timeout = timeout + timeout;
 			connectInterval = setTimeout(check, Math.min(10000, timeout));
-			if(roomAdmin && (document.getElementById("scoreboardx") != null && document.getElementById("scoreboardx").contentDocument != null && document.getElementById("scoreboardx") != undefined && document.getElementById("scoreboardx").contentDocument != undefined)){
+			if(roomAdmin && (document.getElementById("scoreboardx") !== null && document.getElementById("scoreboardx").contentDocument !== null && document.getElementById("scoreboardx") !== undefined && document.getElementById("scoreboardx").contentDocument !== undefined)){
 				//removeListenerScroll();
 			}
 			}
@@ -197,7 +199,7 @@ function Main(props) {
 	return () => {
 	  console.log("clear");
 	  clearInterval(connectInterval);
-	  if(roomAdmin && (document.getElementById("scoreboardx") != null && document.getElementById("scoreboardx").contentDocument != null && document.getElementById("scoreboardx") != undefined && document.getElementById("scoreboardx").contentDocument != undefined)){
+	  if(roomAdmin && (document.getElementById("scoreboardx") !== null && document.getElementById("scoreboardx").contentDocument !== null && document.getElementById("scoreboardx") !== undefined && document.getElementById("scoreboardx").contentDocument !== undefined)){
 		//removeListenerScroll();
 	  }
 	  if(webSocket){
@@ -207,12 +209,6 @@ function Main(props) {
 	};
   }, [loadingMain]);
 
-  function removeListenerScroll(){
-      var el = document.getElementById("scoreboardx");
-      var clone = el.cloneNode(true);
-      el.parentNode.replaceChild(clone, el);
-  }
-
   function addMessage(message){
       setMesseges(x => [message, ...x] );
   }
@@ -221,9 +217,17 @@ function Main(props) {
     if( ws != null ){
       if( ws.readyState === 1 ){
         if( messageString !== ""){
-          const message = { type: "chat", chat: messageString, name: name }
-          ws.send(JSON.stringify(message))
-          //addMessage(message)
+			var message = "";
+			if(!messageString.includes("/c", 0)){
+				message = { type: "chat", chat: messageString, name: name+" "+surname, messagetype: "chat" };
+			}
+			else{
+				message = { type: "chat", chat: messageString.replace("/c",""), name: name+" "+surname, messagetype: "code" };
+				//message.chat.replace(/\n/g, "\\\\n").replace(/\r/g, "\\\\r").replace(/\t/g, "\\\\t");
+			}
+			//console.log(messageString);
+          	ws.send(JSON.stringify(message))
+          	//addMessage(message)
         }
       }
       else{
@@ -286,7 +290,7 @@ function Main(props) {
 
   function changePermission(namex){
 	let copy = JSON.parse(JSON.stringify(usersList))
-	let foundIndex = copy.findIndex(x => x.name == namex);
+	let foundIndex = copy.findIndex(x => x.name === namex);
 	copy[foundIndex].permission = !copy[foundIndex].permission
 	setUsersList(copy);
 	}
@@ -317,6 +321,7 @@ function Main(props) {
 			<Chat
 				roomAdmin={roomAdmin}
 				name={name}
+				surname={surname}
 				checkedChat={checkedChat} 
 				hoverChat={hoverChat} 
 				ws={ws} 

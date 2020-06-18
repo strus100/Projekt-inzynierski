@@ -1,11 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react';
-import {AContext} from "./AContext"
+import React from 'react';
 import './App.css'
 
 function Iframe(props){
-    
-    const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-
     return(
         <div>
             <div className="iframeURLinfo">

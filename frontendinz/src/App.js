@@ -17,9 +17,11 @@ function App() {
   const [loaded, setLoaded] = useState(false); //zmienić na false
 
   const [access, setAccess] = useState(false);
-  const [name, setName] = useState(false);
-  const [surname, setSurname] = useState(false);
+  const [name, setName] = useState("Imię");
+  const [surname, setSurname] = useState("Nazwisko");
   const [token, setToken] = useState(false);
+
+  const TITLE = 'Wykłady Webowe'
 
   const providerValue = useMemo(() => ({
         authenticated, setAuthenticated,
@@ -28,18 +30,22 @@ function App() {
 		name, setName,
 		surname, setSurname,
 		token, setToken,
-    }), [authenticated, admin, access, name, surname, token]);
+	}), [authenticated, admin, access, name, surname, token]);
+	
+	useEffect(() =>{
+		document.title = TITLE;
+	}, [])
 	
     useEffect(() => {
 		axios.post('/login_system/login.php', {  })
 		.then(function (response) {
-			if(response.data.login == 1){
+			if(response.data.login === 1){
 				setAccess(response.data.access);
 				setName(response.data.name);
 				setSurname(response.data.surname);
 				setToken(response.data.token);
 				setAuthenticated(true);
-				if(response.data.access == "pracownik" || response.data.access == "doktorant"){
+				if(response.data.access === "pracownik" || response.data.access === "doktorant"){
 					setAdmin(true);
 					console.log("admin SET");
 				}else{

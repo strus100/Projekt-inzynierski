@@ -12,7 +12,7 @@ function ChatInput(props){
         setMessage('')
       }}
     >
-      <input
+      <textarea
         type="text"
         placeholder={'Enter message...'}
         id="sendie"

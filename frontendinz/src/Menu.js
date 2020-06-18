@@ -1,11 +1,8 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Link } from "react-router-dom";
-import {AContext} from "./AContext"
 import './App.css'
 
 function Menu(props){   
-        const {admin} = useContext(AContext);
-
         var className = 'menu-activea';
 
         if(props.checkedMenu){
