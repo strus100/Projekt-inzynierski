@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useContext} from 'react';
 import { AContext } from "./AContext"
 import './App.css'
+import axios from 'axios';
 
 function Login(props){
     const [username, setUsername] = useState('');
@@ -8,6 +9,13 @@ function Login(props){
     const [isButtonDisabled, setIsButtonDisabled] = useState(true);
     const [error, setError] = useState(false);
     const {setAuthenticated} = useContext(AContext);
+    const {setAdmin} = useContext(AContext);
+	
+    const {setAccess} = useContext(AContext);
+    const {setName} = useContext(AContext);
+    const {setSurname} = useContext(AContext);
+    const {setToken} = useContext(AContext);
+	const {setLoaded} = useContext(AContext);
 
     useEffect(() => {
         if (username.trim() && password.trim()) {
@@ -17,21 +25,55 @@ function Login(props){
         }
       }, [username, password]);
 
-    const handleLogin = (e) => {
+    const handleLogin = e => {
       e.preventDefault();
-        if (username === 'admin' && password === '123') {
+        /*if (username === 'admin' && password === '123') {
           setError(false);
           setAuthenticated(true);
           localStorage.setItem("authenticated", true);
-        } else {
+          localStorage.setItem("admin", true);
+		  setAdmin(true);
+        } 
+		else if(username === 'user' && password === '123'){
+			setError(false);
+			setAuthenticated(true);
+          localStorage.setItem("authenticated", true);
+		  localStorage.setItem("admin", false);
+		  setAdmin(false);
+		}
+		else {
           setError(true);
           console.log("not logged")
-        }
+        }*/
+		axios.post('/login_system/login.php', {
+			login: username,
+			pwd: password
+		  })
+		  .then(function (response) {
+			if(response.data.login == 1){
+				setAccess(response.data.access);
+				setName(response.data.name);
+				setSurname(response.data.surname);
+				setToken(response.data.token);
+				setAuthenticated(true);
+				if(response.data.access == "pracownik" || response.data.access == "doktorant"){
+					setAdmin(true);
+				}else{
+					setAdmin(false);
+				}
+				setLoaded(true);
+			}else{
+				setAuthenticated(false);
+			}
+		  })
+		  .catch(function (error) {
+			console.log(error);
+		  });
       };
     
     const handleKeyPress = e => {
         if (e.keyCode === 13 || e.which === 13) {
-          isButtonDisabled || handleLogin();
+          isButtonDisabled || handleLogin(e);
         }
       };
 
