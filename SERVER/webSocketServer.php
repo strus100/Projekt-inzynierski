@@ -197,7 +197,7 @@
         }
 
         // Send message to all clients except (socket)
-        private function send_to_all($message, $clientsArray, $except = false){
+        private function send_to_all($message, $clientsArray, $except = [false]){
             $encoded_message = $this->encode($message);
 
             foreach ($clientsArray as $client) {
@@ -209,6 +209,7 @@
 
         private function parse_message_from($client, $message){
             $clientSocket = $client->get_socket();
+            $clientRoom = $client->getRoom();
             $roomClients = $client->getRoom()->getClients();
 
             echo "$clientSocket:\t$message\r\n";
@@ -225,11 +226,20 @@
                         $encoded_JSON_array = json_encode($decoded_JSON_array);
                         // echo $encoded_JSON_array."\r\n";
                         
-                        $this->send_to_all($encoded_JSON_array, $roomClients, [$clientSocket]);
+                        $this->send_to_all($encoded_JSON_array, $roomClients);
                         break;
                     case 'event':
                         if($client->isAdmin()){
                             $this->send_to_all($message, $roomClients, [$clientSocket]);
+                            if($decoded_JSON_array['event']=="redirection"){
+                                $clientRoom->setUrl($decoded_JSON_array['url']);
+                                echo "URL changed: ".$clientRoom->getUrl();
+                            }
+                            if($decoded_JSON_array['event']=="scroll"){
+                                $clientRoom->setScrollX($decoded_JSON_array['x']);
+                                $clientRoom->setScrollY($decoded_JSON_array['y']);
+                                echo "Scroll changed: ".$clientRoom->getScrollX()." | ".$clientRoom->getScrollY();
+                            }
                         }
                         echo "$clientSocket: event: $decoded_JSON_array[$type]\r\n";
                         break;

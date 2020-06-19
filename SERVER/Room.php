@@ -20,6 +20,7 @@
                 $this->roomID = $roomID;
                 $this->adminID = $room['admin'];
                 $this->roomName = $room['roomName'];
+                $this->clients = array();
             }
             $db->closeConnection();
         }
@@ -39,7 +40,7 @@
         }
 
         public function leave($client){
-            if(($key = array_search($client, $this->$clients, TRUE))){
+            if(($key = array_search($client, $this->clients, TRUE))){
                 array_splice($this->clients, $key, 1);
             }
         }

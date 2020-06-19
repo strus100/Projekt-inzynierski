@@ -14,7 +14,7 @@
         }
         elseif(isset($data['roomID'])){
             $roomID = htmlspecialchars($data['roomID']);
-            $dbConnection->selectRoom($roomID);
+            echo $dbConnection->selectRoom($roomID);
         }
     }
     else{

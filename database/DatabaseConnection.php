@@ -90,23 +90,23 @@
 		}
 
 		function insertUser($login, $name, $surname, $role, $token=NULL){
-			$stmt = $this->conn->prepare("INSERT INTO `userTable` VALUES (?, ?, ?, ?, ?, NULL)");
+			$stmt = $this->conn->prepare("INSERT INTO `usertable` VALUES (?, ?, ?, ?, ?, NULL)");
 			$stmt->bind_param('sssss', $login, $name, $surname, $role, $token);
 			$stmt->execute();
 		}
 
 		function getUserByToken($token){
-			return $this->getRowByToken("userTable", $token);
+			return $this->getRowByToken("usertable", $token);
 		}
 
 		function getUserByLogin($login){
-			$sql = "SELECT * FROM `userTable` WHERE `login`='$login'";
+			$sql = "SELECT * FROM `usertable` WHERE `login`='$login'";
 			$result = $this->conn->query($sql);
 			return $result->fetch_assoc();
 		}
 
 		function updateUserToken($user, $token){
-			$stmt = $this->conn->prepare("UPDATE `userTable` SET `token`=? WHERE `login`=?");
+			$stmt = $this->conn->prepare("UPDATE `usertable` SET `token`=? WHERE `login`=?");
 			$stmt->bind_param("ss", $token, $user);
 			$stmt->execute();
 		}
@@ -144,6 +144,14 @@
 			$stmt = $this->conn->prepare("UPDATE `usertable` SET `room` = ? WHERE `token`=?");
 			$stmt->bind_param("ds", $roomID, $token);
 			$stmt->execute();
+			
+			$sql = "SELECT * FROM `usertable` LEFT JOIN `rooms` ON `room`=`id` WHERE `token`='$token' AND `admin`=`login`";
+			$result = $this->conn->query($sql);
+			if($result->num_rows != 1){
+				return false;
+			}else{
+				return true;
+			}
 		}
 
 		function getRoom($roomID){
@@ -156,18 +164,4 @@
 			}
 		}
 	}
-	
-
-//$db = new DatabaseConnection();
-//createDatabase();
-//$conn = $db->connect();
-//createTable($conn);
-//$colNames = ["id", "login", "pass","role","token" ];
-//$data = [1,"Daniel","test","Admin","token1"];
-//$db->insertData($conn,"userTable",$data,$colNames);
-//$data = [2,"Wojtek", "test","User","token2"];
-//$db->insertData($conn,"userTable",$data,$colNames);
-//print_r( $db->getRow("userTable",$conn,1));
-//print_r( $db->getRowByToken("userTable",$conn,"token2"));
-//$db->closeConnection($conn);
 ?>
