@@ -36,8 +36,8 @@ function Main(props) {
 
   const { id } = useParams();
 
-  const [roomAdmin, setRoomAdmin] = useState(false); //zmienić na false
-  const [loadingMain, setLoadingMain] = useState(false); //zmienić na false
+  const [roomAdmin, setRoomAdmin] = useState(true); //zmienić na false
+  const [loadingMain, setLoadingMain] = useState(true); //zmienić na false
 
   useEffect(() => {
 	axios.post('/rooms/', {
