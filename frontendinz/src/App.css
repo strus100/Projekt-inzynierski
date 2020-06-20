@@ -51,7 +51,7 @@ nav {
   position: fixed;
   top: 0;
   left: 0;
-  height: calc(100vh - 60px);
+  height: calc(100% - 60px);
   width: 16em;
   background-color: #353441;
   transform: translateX(-16em);
@@ -106,7 +106,7 @@ nav ul a:hover {
   position: fixed;
   top: 0;
   right: 0;
-  height: calc(100vh - 60px);
+  height: calc(100% - 60px);
   width: 20em;
   background-color: #353441;
   transform: translateX(20em);
@@ -156,10 +156,6 @@ nav ul a:hover {
   border-bottom: 1px solid #ddd; 
 }
 
-#chat-area p:first-child{ 
-  ; 
-}
-
 #chat-area .nickname{
   font-weight: bold;
 }
@@ -180,13 +176,18 @@ nav ul a:hover {
 #sendie{ 
   position: absolute; 
   width: 80%; 
-  height: 50px;
+  min-height: 50px;
   padding: 10px; 
   font: 12px "Lucida Grande", Sans-Serif; 
   float: right; 
   resize: none; 
   bottom: 0;
 }
+
+#sendie::-webkit-scrollbar { width: 0 !important; }
+#sendie { overflow: -moz-scrollbars-none; };
+#sendie { -ms-overflow-style: none; }
+
 
 #chat-button{
   width: 20%;
@@ -263,7 +264,7 @@ nav ul a:hover {
 }
 
 .wrap-users-area{ 
-  height: calc(100vh - 100px - 60px - 100px); 
+  height: calc(100% - 100px - 60px - 100px); 
   overflow: auto; 
   border-top: 2px solid #fff; 
   padding: 20px; 
@@ -273,7 +274,7 @@ nav ul a:hover {
 
 .wrap-additional-area{ 
 
-  height: calc(100vh - 100px - 60px - 100px); 
+  height: calc(100% - 100px - 60px - 100px); 
   overflow: auto; 
   border-top: 2px solid #fff; 
   padding: 20px; 
@@ -717,13 +718,32 @@ input:checked + label{
     width: 80%;
     height: 100vh;
   }
+
+  #chat-area, #chat-wrap, .wrap-users-area, .wrap-users, .wrap-additional-area, .wrap-additional{
+    height: calc(var(--vh, 1vh) * 100);
+  }
+
+  body{
+    position:fixed;
+    width:100vw;
+  }
+
+  #root{
+    height: 100%;
+    overflow-y: scroll;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) and (min-width: 600px)  {
+  .menu-active, .chat-active{
+    width: 50%;
+  }
 }
 
 .iframe-container-chat {
   overflow: hidden;
   min-height: 50px;
   max-height: 200px;
-  margin-top: 100px;
 }
 
 .iframe-container-chat iframe {

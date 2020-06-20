@@ -8,6 +8,7 @@ function Footer(props){
         <label 
         htmlFor="tooglemenu"
         onClick={() => props.handleLogout()}
+        style={{width: 100+"px"}}
         ><span aria-labelledby="jsx-a11y/accessible-emoji" role="img">Wyloguj</span></label>
         :
         <div>        

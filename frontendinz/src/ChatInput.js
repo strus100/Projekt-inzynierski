@@ -12,13 +12,15 @@ function ChatInput(props){
         setMessage('')
       }}
     >
-      <textarea
-        type="text"
-        placeholder={'Enter message...'}
-        id="sendie"
-        value={message}
-        onChange={e => setMessage(e.target.value)}
-      />
+      <div className="textarea-wrapper">
+        <textarea
+          type="text"
+          placeholder={'Enter message...'}
+          id="sendie"
+          value={message}
+          onChange={e => setMessage(e.target.value)}
+        />
+      </div> 
       <input id="chat-button" type="submit" value={'Send'} />
     </form>
   )
