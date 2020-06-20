@@ -31,13 +31,13 @@ function Main(props) {
   const {token, setToken} = useContext(AContext);
   
   const [iframeURLadmin, setIframeURLadmin] = useState("http://wmi.amu.edu.pl"); 
-  const URL = 'ws://localhost:1111';
+  const URL = 'wss://localhost:3000';
   const proxy = 'http://localhost/proxy/index.php?url=';
 
   const { id } = useParams();
 
-  const [roomAdmin, setRoomAdmin] = useState(true); //zmienić na false
-  const [loadingMain, setLoadingMain] = useState(true); //zmienić na false
+  const [roomAdmin, setRoomAdmin] = useState(false); //zmienić na false
+  const [loadingMain, setLoadingMain] = useState(false); //zmienić na false
 
   useEffect(() => {
 	axios.post('/rooms/', {

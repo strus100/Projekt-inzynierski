@@ -185,7 +185,7 @@ nav ul a:hover {
 }
 
 #sendie::-webkit-scrollbar { width: 0 !important; }
-#sendie { overflow: -moz-scrollbars-none; };
+#sendie { overflow: -moz-scrollbars-none; }
 #sendie { -ms-overflow-style: none; }
 
 

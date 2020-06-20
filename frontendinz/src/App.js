@@ -12,9 +12,9 @@ import {
 } from "react-router-dom";
 
 function App() {
-  const [authenticated, setAuthenticated] = useState(true); //zmienić na false
+  const [authenticated, setAuthenticated] = useState(false); //zmienić na false
   const [admin, setAdmin] = useState(false);
-  const [loaded, setLoaded] = useState(true); //zmienić na false
+  const [loaded, setLoaded] = useState(false); //zmienić na false
 
   const [access, setAccess] = useState(false);
   const [name, setName] = useState("Imię");
@@ -50,7 +50,7 @@ function App() {
     useEffect(() => {
 		axios.post('/login_system/login.php', {  })
 		.then(function (response) {
-			if(response.data.login === 1){
+			if(response.data.login !== 0){
 				setAccess(response.data.access);
 				setName(response.data.name);
 				setSurname(response.data.surname);

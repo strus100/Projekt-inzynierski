@@ -50,7 +50,7 @@ function Login(props){
 			pwd: password
 		  })
 		  .then(function (response) {
-			if(response.data.login === 1){
+			if(response.data.login !== 0){
 				setAccess(response.data.access);
 				setName(response.data.name);
 				setSurname(response.data.surname);
