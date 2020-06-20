@@ -25,7 +25,7 @@
             $dbConnection->closeConnection();
 			$return = [
 				"type" => "login",
-				"login" => 1,
+				"login" => $user['login'],
 				"access" => $user['role'],
 				"name" => $user['name'],
 				"surname" => $user['surname'],
@@ -44,34 +44,74 @@
     else{
         $request_body = file_get_contents('php://input');
         $data = json_decode($request_body, true);
-        $login = htmlspecialchars($data['login']);
-        $password = htmlspecialchars($data['pwd']);
-        $result = null;
-        
-        if(!$TEST){
-            $result = LDAP::login($login, $password);
+        if(isset($data['login']) && isset($data['pwd'])){
+            $login = htmlspecialchars($data['login']);
+            $password = htmlspecialchars($data['pwd']);
+            $result = null;
+            
+            if(!$TEST){
+                $result = LDAP::login($login, $password);
+            }
+            else{
+                if($login=="admin" || $login=="pracownik"){
+                    $result = [
+                        "type" => "login",
+                        "login" => $login,
+                        "access" => "pracownik",
+                        "name" => "Pracownik",
+                        "surname" => "Admin"
+                    ];
+                }
+                elseif ($login=="doktorant") {
+                    $result = [
+                        "type" => "login",
+                        "login" => $login,
+                        "access" => "doktorant",
+                        "name" => "Doktorant",
+                        "surname" => "Admin"
+                    ];
+                }
+                elseif ($login=="user" || $login=="student") {
+                    $result = [
+                        "type" => "login",
+                        "login" => $login,
+                        "access" => "student",
+                        "name" => "Student",
+                        "surname" => "Admin"
+                    ];
+                }
+                else{
+                    $result = [
+                        "type" => "login",
+                        "login" => 0,
+                        "access" => "login"
+                    ];
+                }
+    
+            }
+            if($result['login'] != '0'){
+                $user = $dbConnection->getUserByLogin($login);
+                // If user exists in DB update token | if not -> insert user
+                if($user){
+                    $dbConnection->updateUserToken($user['login'], $refreshToken);
+                }else{
+                    $dbConnection->insertUser($login, $result['name'], $result['surname'], $result['access'], $refreshToken);
+                }
+                setcookie("token", $refreshToken, time()+3600, "/", $domain, false, true);
+                $result['token'] = $refreshToken;
+                $result['login'] = $login;
+            }
+            $dbConnection->closeConnection();
+            echo json_encode($result);
         }
         else{
             $result = [
                 "type" => "login",
-                "login" => 1,
-                "access" => "pracownik",
-                "name" => "Adam",
-                "surname" => "Kowalski"
+                "login" => 0,
+                "access" => "login"
             ];
+            $dbConnection->closeConnection();
+            echo json_encode($result);
         }
-        if($result['login'] == 1){
-            $user = $dbConnection->getUserByLogin($login);
-            // If user exists in DB update token | if not insert -> user
-			if($user){
-				$dbConnection->updateUserToken($user['login'], $refreshToken);
-			}else{
-				$dbConnection->insertUser($login, $result['name'], $result['surname'], $result['access'], $refreshToken);
-			}
-			setcookie("token", $refreshToken, time()+3600, "/", $domain, false, true);
-            $result['token'] = $refreshToken;
-        }
-		$dbConnection->closeConnection();
-        echo json_encode($result);
     }
 ?>

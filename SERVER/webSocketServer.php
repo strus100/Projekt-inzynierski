@@ -11,8 +11,8 @@
     require_once __DIR__."/Client.php";
     require_once __DIR__."/Room.php";
 
-    define("DEFAULT_IP", "127.0.0.1");
-    define("DEFAULT_PORT", 1111);
+    define("DEFAULT_IP", "0.0.0.0");
+    define("DEFAULT_PORT", 3000);
     define("MAX_BUFFER", 10000000);
 
     // Arguments parsing
