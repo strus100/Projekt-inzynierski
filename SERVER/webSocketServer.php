@@ -49,16 +49,28 @@
         private $pingInterval = 5;  //Seconds
         
         function __construct($args){
-            $this->socket = socket_create(AF_INET, SOCK_STREAM, 0);
-            socket_bind($this->socket, (isset($args['-a']) ? $args['-a'] : DEFAULT_IP), (isset($args['-p']) ? $args['-p'] : DEFAULT_PORT));
-            socket_listen($this->socket);
-            socket_getsockname($this->socket, $address, $port);
-            echo "Socket listening on $address:$port\r\n";
+            $context = stream_context_create();
+            stream_context_set_option($context, 'ssl', 'local_cert', "/etc/letsencrypt/live/s153070.projektstudencki.pl/fullchain.pem");
+            stream_context_set_option($context, 'ssl', 'local_pk', "/etc/letsencrypt/live/s153070.projektstudencki.pl/privkey.pem");
+            stream_context_set_option($context, 'ssl', 'allow_self_signed', false);
+            stream_context_set_option($context, 'ssl', 'verify_peer', false);
+            $this->socket = stream_socket_server("tcp://".DEFAULT_IP.":".DEFAULT_PORT, $errno, $errstr, STREAM_SERVER_BIND|STREAM_SERVER_LISTEN, $context);
+            $address = stream_socket_get_name($this->socket, FALSE);
+            echo "Socket listening on $address\r\n";
+            echo "Main socket: $this->socket\r\n";
+            // $this->socket = socket_create(AF_INET, SOCK_STREAM, 0);
+            // socket_bind($this->socket, (isset($args['-a']) ? $args['-a'] : DEFAULT_IP), (isset($args['-p']) ? $args['-p'] : DEFAULT_PORT));
+            //socket_listen($this->socket);
+            //$this->socket = socket_import_stream($this->socket);
+            //socket_getsockname($this->socket, $address, $port);
+            // stream_socket_get_name();
+            
+            //echo "Socket listening on $address:$port\r\n";
             $this->main();
         }
 
         function __destruct(){
-            socket_close($this->socket);
+            fclose($this->socket);
             echo "Socket closed\r\n";
         }
 
@@ -85,8 +97,9 @@
                         ."Upgrade: websocket\r\n"
                         ."Connection: Upgrade\r\n"
                         ."Sec-Websocket-Accept: $keyHash\r\n\r\n";
-            socket_write($socket, $response, strlen($response));
-            return $this->decode(socket_read($socket, MAX_BUFFER));
+            // socket_write($socket, $response, strlen($response));
+            fwrite($socket, $response);
+            return $this->decode(fread($socket, MAX_BUFFER));
         }
 
         // Websocket frame encoding
@@ -175,7 +188,7 @@
 
         private function ping_socket($socket){
             echo "ping $socket\r\n";
-            $request = $this->encode("send BASS", OPCODE::PING);
+            $request = $this->encode("", OPCODE::PING);
             /*if(@socket_write($client, $request, strlen($request)) === false){
                 return false;
             }
@@ -193,7 +206,8 @@
 
         // Send encoded frame message to socket
         private function send_encoded($socket, $encoded_message){
-            return @socket_write($socket, $encoded_message, strlen($encoded_message));
+            // return @socket_write($socket, $encoded_message, strlen($encoded_message));
+            return fwrite($socket, $encoded_message);
         }
 
         // Send message to all clients except (socket)
@@ -252,10 +266,10 @@
 
         //Handles new connection (client)
         private function handleNewClient($clientSocket){
-            socket_getpeername($clientSocket, $address, $port);
-            echo "New connection: $address:$port\r\n";
+            $address = stream_socket_get_name($clientSocket, TRUE);
+            echo "New connection: $address\r\n";
 
-            $msg = @socket_read($clientSocket, MAX_BUFFER);
+            $msg = fread($clientSocket, MAX_BUFFER);
             $token = $this->handshake($clientSocket, $msg);
             $client = new Client($clientSocket, $token);
             if($client->authorize()){
@@ -290,23 +304,26 @@
         private function main(){
             while($this->running==true){
                 $read = array_merge([$this->socket], array_map(function($client){ return $client->get_socket(); }, $this->clients));
-                @socket_select($read, $write, $except, 0, 1);   //Select sockets that status has changed
-
+                // @socket_select($read, $write, $except, 0, 1);   //Select sockets that status has changed
+                stream_select($read, $write, $except, 0, 1);
+                echo "after_select\r\n";
                 // If main server socket is in selected sockets array, then there is a new connection incoming
                 if(in_array($this->socket, $read)){
-                    $clientSocket = socket_accept($this->socket);
+                    // $clientSocket = socket_accept($this->socket);
+                    $clientSocket = stream_socket_accept($this->socket);
                     // socket_set_nonblock($clientSocket);
                     $this->handleNewClient($clientSocket);
                 }
-
+                echo "after_handleNewClient\r\n";
+                print_r($read);
                 // Reads incoming messages
                 foreach ($read as $id => $clientSocket) {
-                    if($msg = @socket_read($clientSocket, MAX_BUFFER)){
+                    if($msg = stream_get_contents($clientSocket, MAX_BUFFER)){
                         $this->parse_message_from($this->clients[$id-1], $this->decode($msg));
                         // echo "Message from $client:\t$decodedMSG\r\n";
                     }
                 }
-
+                echo "after_incoming\r\n";
                 // Ping every x seconds and disconnect outdated sockets
                 if($this->sleepCounter > $this->pingInterval/$this->sleepInterval*1000000){
                     $toDelete = array();
