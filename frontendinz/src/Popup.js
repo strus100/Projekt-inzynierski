@@ -94,10 +94,11 @@ function Popup(props){
                 <div className="modal-inside">
                 <Tabs>
                     <TabList>
-                        <Tab>Ogólne</Tab>
+                        {props.fromMain && <Tab>Ogólne</Tab>}
                         <Tab>Pliki</Tab>
                     </TabList>
 
+                    {props.fromMain &&
                     <TabPanel>
                         <div className="general-area">
                             <h1 style={{marginTop: 10 + "px"}}>Nazwa pokoju</h1>
@@ -106,7 +107,7 @@ function Popup(props){
                             <button className="generalbtn" onClick={() => handleChangeName()}>Change</button>
                         </div>
                     </TabPanel>
-                    
+                    }
                     <TabPanel>
                        <div id="drop-area">
                         <h1>Upload file</h1>

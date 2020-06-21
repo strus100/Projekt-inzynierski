@@ -4,6 +4,7 @@ import {AContext} from "./AContext";
 import axios from 'axios';
 import RoomInfo from "./RoomInfo";
 import Footer from "./Footer";
+import Popup from "./Popup";
 import './App.css'
 
 function Lobby(props){
@@ -60,6 +61,11 @@ function Lobby(props){
 		setAuthenticated(false);
 	  }
 
+	  function handlePopupLobby(e){
+		e.preventDefault();
+		document.getElementById("myModal").style.display = "block";
+	  }
+
 	  /*do naprawienia*/
 	  function filterRooms(x){ 
 		setRoomsFilter(roomsList);
@@ -91,6 +97,10 @@ function Lobby(props){
 				<input type="text" placeholder="Find room" onChange={(e) => filterRooms(e.target.value)}></input>
 				<br></br>
 			</div>
+
+			{admin && <Popup
+							fromMain={false}
+							/>}
 			
 			<div className="roominfo--div">       
 				{roomsFilter.map((room, index) =>
@@ -106,6 +116,7 @@ function Lobby(props){
 			<div className="clear"></div>
 			<Footer
 				lobby={true}
+				handlePopupLobby={handlePopupLobby}
 				handleLogout={handleLogout}
 				/>
 		</div>

@@ -328,6 +328,7 @@ function Main(props) {
 				iframeURL={iframeURL}
 			/>
 			{roomAdmin && <Popup
+							fromMain={true}
 							roomName={roomName}
 							handleChangeURL={handleChangeURL}
 							/>}

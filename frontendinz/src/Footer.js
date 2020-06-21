@@ -1,15 +1,26 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import './App.css'
+import {AContext} from "./AContext";
 
 function Footer(props){
+    const {admin} = useContext(AContext);
+
     return(
     <div className="footer">
         {props.lobby ?
+        <div>
+        {admin && <label 
+        htmlFor="tooglemenu"
+        onClick={(e) => props.handlePopupLobby(e)}
+        style={{position: "absolute", left: 5+"px", width: 50+"%", borderRight: 1+"px solid #fff"}}
+        ><span aria-labelledby="jsx-a11y/accessible-emoji" role="img">Moje pliki</span></label>
+        }
         <label 
         htmlFor="tooglemenu"
         onClick={() => props.handleLogout()}
-        style={{width: 100+"px"}}
+        style={{position: "absolute", right: 5+"px",width: 50+"%", borderLeft: 1+"px solid #fff"}}
         ><span aria-labelledby="jsx-a11y/accessible-emoji" role="img">Wyloguj</span></label>
+        </div>
         :
         <div>        
             <input 
