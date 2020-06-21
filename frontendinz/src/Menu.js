@@ -23,7 +23,7 @@ function Menu(props){
         <div className="menu">
             <nav className={className}>
                 <ul>
-                    <li onClick={(e) => handleClick(e) }><a href="#">Ustawienia</a></li>
+                    {props.roomAdmin && <li onClick={(e) => handleClick(e) }><a href="#">Ustawienia</a></li>}
                     <li><Link to="/lobby">Lobby</Link></li>
                     <li onClick={() => props.handleLogout()}><a href="#">WYLOGUJ</a></li>
                 </ul>

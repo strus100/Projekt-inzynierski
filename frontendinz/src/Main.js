@@ -316,6 +316,8 @@ function Main(props) {
 				checkedMenu={checkedMenu} 
 				hoverMenu={hoverMenu}
 				handleLogout={handleLogout}
+				roomAdmin={roomAdmin}
+				fromMain={true}
 				/>
 			<Iframe
 				proxy={proxy}
@@ -323,7 +325,7 @@ function Main(props) {
 				iframeURLadmin={iframeURLadmin}
 				iframeURL={iframeURL}
 			/>
-			<Popup/>
+			{roomAdmin && <Popup/>}
 			<Chat
 				roomAdmin={roomAdmin}
 				name={name}

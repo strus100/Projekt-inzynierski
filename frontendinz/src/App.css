@@ -576,7 +576,13 @@ input:checked + label{
 }
 
 #fileElem{
-  display: none;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  padding: 30px;
 }
 
 .filelabel{
@@ -585,7 +591,6 @@ input:checked + label{
   margin: 0 auto;
   border: 1px dotted #fff;
   color: white;
-  padding: 30px;
   word-wrap: break-word;
   overflow: hidden; 
   overflow-x: hidden;
@@ -736,6 +741,8 @@ input:checked + label{
 
 .modal-inside .react-tabs{
   width: 100%;
+  min-height: 100vh;
+  height: auto;
 }
 
 .modal-inside .react-tabs .react-tabs__tab-list{
@@ -761,7 +768,7 @@ input:checked + label{
   color: #fff;
   text-transform: uppercase;
   text-align: center;
-  background-color: #353441;
+  background-color: #151421;
   cursor: pointer;
   text-decoration: none;
   user-select: none;
@@ -779,7 +786,6 @@ input:checked + label{
 
 .modal-inside ul li:hover {
   color: #fff;
-  background: #353441;
 }
 
 .modal-inside .react-tabs__tab.react-tabs__tab--selected{
@@ -787,13 +793,59 @@ input:checked + label{
 }
 
 .modal-inside .react-tabs__tab.react-tabs__tab--selected{
-  background-color: #353441;
+  background-color: #151421;
   color: #fff;
+}
+
+.modal-inside .react-tabs .react-tabs__tab-panel.react-tabs__tab--selected{
+  height: auto;
+  min-height: 100%;
 }
 
 .general-area{
   padding: 20px 50px;
 }
+
+/* POPUP table */
+
+.filestable, tr, td
+
+.filestable {
+  border-collapse: collapse;
+  width: 60%;
+  max-width: 60%;
+  margin: 0 auto;
+  text-align: center;
+  border: 1px solid lightgrey;
+  text-overflow: ellipsis;
+}
+
+th{
+  text-align: center;
+  width: 60%;
+  padding: 8px;
+  border: 1px solid lightgrey;
+  background-color: #4CAF50;
+}
+
+tr td {
+  text-align: center;
+  padding: 8px;
+  border: 1px solid lightgrey;
+}
+
+td:first-child, td:nth-child(2){
+  width: 25%;
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+td:nth-child(3){
+  width: 10%;
+}
+
 
 /* 600px */
 
