@@ -4,6 +4,7 @@ import Chat from "./Chat"
 import Footer from "./Footer"
 import Iframe from "./Iframe"
 import IframeInputAdmin from "./IframeInputAdmin"
+import Popup from "./Popup"
 import {AContext} from "./AContext"
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
@@ -322,6 +323,7 @@ function Main(props) {
 				iframeURLadmin={iframeURLadmin}
 				iframeURL={iframeURL}
 			/>
+			<Popup/>
 			<Chat
 				roomAdmin={roomAdmin}
 				name={name}

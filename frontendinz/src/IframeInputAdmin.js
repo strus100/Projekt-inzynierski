@@ -34,13 +34,6 @@ function IframeInputAdmin(props){
                         Change URL
                     </button>
             </form>
-            <div id="drop-area">
-                <form className="drop-form">
-                    <input type="file" id="fileElem" multiple onChange={() => console.log("file")}></input>
-                    <label className="filelabel" htmlFor="fileElem">Kliknij, aby wybrać plik lub upuść go tutaj</label>
-                    <button onClick={() => console.log("confirmed")}>confirm</button>
-                </form>
-            </div>
         </div>
     </div>
     )
