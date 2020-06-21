@@ -306,28 +306,26 @@
                 $read = array_merge([$this->socket], array_map(function($client){ return $client->get_socket(); }, $this->clients));
                 // @socket_select($read, $write, $except, 0, 1);   //Select sockets that status has changed
                 stream_select($read, $write, $except, 0, 1);
-                echo "after_select\r\n";
+
                 // If main server socket is in selected sockets array, then there is a new connection incoming
                 if(in_array($this->socket, $read)){
                     // $clientSocket = socket_accept($this->socket);
                     $clientSocket = stream_socket_accept($this->socket);
-                    // socket_set_nonblock($clientSocket);
                     $this->handleNewClient($clientSocket);
+                    array_splice($read, 0, 1);
                 }
-                echo "after_handleNewClient\r\n";
-                print_r($read);
+
                 // Reads incoming messages
                 foreach ($read as $id => $clientSocket) {
-                    if($msg = stream_get_contents($clientSocket, MAX_BUFFER)){
+                    if($msg = fread($clientSocket, MAX_BUFFER)){
                         $this->parse_message_from($this->clients[$id-1], $this->decode($msg));
                         // echo "Message from $client:\t$decodedMSG\r\n";
                     }
                 }
-                echo "after_incoming\r\n";
+
                 // Ping every x seconds and disconnect outdated sockets
                 if($this->sleepCounter > $this->pingInterval/$this->sleepInterval*1000000){
-                    $toDelete = array();
-                    
+                    $toDelete = array();                    
                     foreach ($this->clients as $id => $client) {
                         if($this->ping_socket($client->get_socket()) === false){
                             $client->leaveRoom();
