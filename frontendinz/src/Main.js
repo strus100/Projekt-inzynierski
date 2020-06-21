@@ -37,6 +37,7 @@ function Main(props) {
 
   const { id } = useParams();
 
+  const [roomName, setRoomName] = useState("roomname");
   const [roomAdmin, setRoomAdmin] = useState(false); //zmienić na false
   const [loadingMain, setLoadingMain] = useState(false); //zmienić na false
 
@@ -47,6 +48,7 @@ function Main(props) {
 	  .then(function (response) {
 		if(response.data){
 			setRoomAdmin(true);
+			//setRoomName(response.data.roomName);
 		}
 		else{
 			setRoomAdmin(false);
@@ -325,7 +327,10 @@ function Main(props) {
 				iframeURLadmin={iframeURLadmin}
 				iframeURL={iframeURL}
 			/>
-			{roomAdmin && <Popup/>}
+			{roomAdmin && <Popup
+							roomName={roomName}
+							handleChangeURL={handleChangeURL}
+							/>}
 			<Chat
 				roomAdmin={roomAdmin}
 				name={name}
