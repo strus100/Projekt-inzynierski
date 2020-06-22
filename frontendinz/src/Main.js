@@ -16,9 +16,7 @@ function Main(props) {
   const [hoverChat, setHoverChat] = useState(false);
   const [checkedChat, setChangeChat] = useState(false);
   const [checkedIframeInputAdmin, setCheckedIframeInputAdmin] = useState(false);
-  const [messages, setMesseges] = useState([{name: "Mały Kodziarz", messagetype: "code", chat: `for (int i = 0; i < 5; i++) {
-	cout << i << "\\n";
-  }`}]);
+  const [messages, setMesseges] = useState([]);
   const [historyB, setHistoryB] = useState([{title: "strus100/Projekt-inzynierski", link: "https://github.com/strus100/Projekt-inzynierski"}, {title: "Projekt Inżynierski – Dysk Google", link: "https://drive.google.com/drive/folders/1OBH7hwjS7rxf_lPeMfBeXzLsXSPu-4sN"}]);
   const [usersList, setUsersList] = useState([{name: "Dawid", permission: true}, {name: "Radek", permission: false}, {name: "Daniel", permission: true}]);
   const [ws, setWebsocket] = useState(null); 
@@ -37,7 +35,7 @@ function Main(props) {
 
   const { id } = useParams();
 
-  const [roomName, setRoomName] = useState("roomname");
+  const [roomName, setRoomName] = useState("");
   const [roomAdmin, setRoomAdmin] = useState(false); //zmienić na false
   const [loadingMain, setLoadingMain] = useState(false); //zmienić na false
 
@@ -104,6 +102,7 @@ function Main(props) {
 			console.log(JSON.parse(message).type);
 			switch(JSON.parse(message).type){
 			case "chat": return addMessage(JSON.parse(message));
+			case "info": return setRoomName(JSON.parse(message).name);
 			case "event":
 				var element = null;
 				if(roomAdmin){
