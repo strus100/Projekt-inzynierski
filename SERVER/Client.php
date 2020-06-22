@@ -26,7 +26,7 @@
         }
 
         function __destruct(){
-            socket_close($this->socket);
+            fclose($this->socket);
         }
 
         // Checks if user has admin privileges and gets user infos
@@ -72,8 +72,10 @@
         }
 
         public function leaveRoom(){
-            $this->room->leave($this);
-            $this->room = null;
+            if($this->room){
+                $this->room->leave($this);
+                $this->room = null;
+            }
         }
 
         public function getRoomID(){

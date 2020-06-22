@@ -225,6 +225,9 @@
         }
 
         private function parse_message_from($client, $message){
+            if(!isset($client)){
+                return;
+            }
             $clientSocket = $client->get_socket();
             $clientRoom = $client->getRoom();
             $roomClients = $client->getRoom()->getClients();
@@ -250,15 +253,15 @@
                             $this->send_to_all($message, $roomClients, [$clientSocket]);
                             if($decoded_JSON_array['event']=="redirection"){
                                 $clientRoom->setUrl($decoded_JSON_array['url']);
-                                echo "URL changed: ".$clientRoom->getUrl();
+                                echo "URL changed: ".$clientRoom->getUrl()."\r\n";
                             }
                             if($decoded_JSON_array['event']=="scroll"){
                                 $clientRoom->setScrollX($decoded_JSON_array['x']);
                                 $clientRoom->setScrollY($decoded_JSON_array['y']);
-                                echo "Scroll changed: ".$clientRoom->getScrollX()." | ".$clientRoom->getScrollY();
+                                echo "Scroll changed: ".$clientRoom->getScrollX()." | ".$clientRoom->getScrollY()."\r\n";
                             }
                         }
-                        echo "$clientSocket: event: $decoded_JSON_array[$type]\r\n";
+                        echo "$clientSocket: event: ".$decoded_JSON_array[$type]."\r\n";
                         break;
                     default:
                         echo "Undefined JSON type received: $type\r\n";
@@ -307,12 +310,10 @@
         private function main(){
             while($this->running==true){
                 $read = array_merge([$this->socket], array_map(function($client){ return $client->get_socket(); }, $this->clients));
-                // @socket_select($read, $write, $except, 0, 1);   //Select sockets that status has changed
                 stream_select($read, $write, $except, 0, 1);
 
                 // If main server socket is in selected sockets array, then there is a new connection incoming
                 if(in_array($this->socket, $read)){
-                    // $clientSocket = socket_accept($this->socket);
                     $clientSocket = stream_socket_accept($this->socket);
                     $this->handleNewClient($clientSocket);
                     array_splice($read, 0, 1);
