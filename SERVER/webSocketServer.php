@@ -54,24 +54,34 @@
             stream_context_set_option($context, 'ssl', 'local_pk', "/etc/letsencrypt/live/s153070.projektstudencki.pl/privkey.pem");
             stream_context_set_option($context, 'ssl', 'allow_self_signed', false);
             stream_context_set_option($context, 'ssl', 'verify_peer', false);
-            $this->socket = stream_socket_server("tcp://".DEFAULT_IP.":".DEFAULT_PORT, $errno, $errstr, STREAM_SERVER_BIND|STREAM_SERVER_LISTEN, $context);
-            $address = stream_socket_get_name($this->socket, FALSE);
-            echo "Socket listening on $address\r\n";
-            echo "Main socket: $this->socket\r\n";
-            // $this->socket = socket_create(AF_INET, SOCK_STREAM, 0);
-            // socket_bind($this->socket, (isset($args['-a']) ? $args['-a'] : DEFAULT_IP), (isset($args['-p']) ? $args['-p'] : DEFAULT_PORT));
-            //socket_listen($this->socket);
-            //$this->socket = socket_import_stream($this->socket);
-            //socket_getsockname($this->socket, $address, $port);
-            // stream_socket_get_name();
-            
-            //echo "Socket listening on $address:$port\r\n";
-            $this->main();
+
+            $ip = isset($args['-a']) ? $args['-a'] : DEFAULT_IP;
+            $port = isset($args['-p']) ? $args['-p'] : DEFAULT_PORT;
+
+            $this->socket = stream_socket_server("tcp://$ip:$port", $errno, $errstr, STREAM_SERVER_BIND|STREAM_SERVER_LISTEN, $context);
+            if($this->socket){
+                $address = stream_socket_get_name($this->socket, FALSE);
+                echo "Socket listening on $address\r\n";
+                echo "Server socket: $this->socket\r\n";
+                $this->main();
+            }
         }
 
         function __destruct(){
-            fclose($this->socket);
+            if($this->socket){
+                fclose($this->socket);
+            }
             echo "Socket closed\r\n";
+        }
+
+        private function getCookies($httpCookie){
+            $cookies = array();
+            $cookiesTMP = explode("; ", $httpCookie);
+            foreach ($cookiesTMP as $key => $value) {
+                $tmp = explode("=", trim($value));
+                $cookies[$tmp[0]] = $tmp[1];
+            }
+            return $cookies;
         }
 
         // WebSocket Handshake returns TOKEN
@@ -91,15 +101,16 @@
             $shaArray = str_split($sha, 2);
             $hexArray = array_map('hexdec', $shaArray);
             $chrArray = array_map('chr', $hexArray);
-            $token = implode($chrArray);
-            $keyHash = base64_encode($token);
+            $key = implode($chrArray);
+            $keyHash = base64_encode($key);
             $response = "HTTP/1.1 101 Switching Protocols\r\n"
                         ."Upgrade: websocket\r\n"
                         ."Connection: Upgrade\r\n"
                         ."Sec-Websocket-Accept: $keyHash\r\n\r\n";
-            // socket_write($socket, $response, strlen($response));
             fwrite($socket, $response);
-            return $this->decode(fread($socket, MAX_BUFFER));
+            
+            $cookies = $this->getCookies($HTTPdata['Cookie']);
+            return $cookies['token'];;
         }
 
         // Websocket frame encoding
@@ -189,13 +200,6 @@
         private function ping_socket($socket){
             echo "ping $socket\r\n";
             $request = $this->encode("", OPCODE::PING);
-            /*if(@socket_write($client, $request, strlen($request)) === false){
-                return false;
-            }
-            else{
-                return true;
-            }*/
-            // return @socket_write($client, $request, strlen($request));
             return $this->send_encoded($socket, $request);
         }
 
@@ -206,7 +210,6 @@
 
         // Send encoded frame message to socket
         private function send_encoded($socket, $encoded_message){
-            // return @socket_write($socket, $encoded_message, strlen($encoded_message));
             return fwrite($socket, $encoded_message);
         }
 
@@ -319,7 +322,6 @@
                 foreach ($read as $id => $clientSocket) {
                     if($msg = fread($clientSocket, MAX_BUFFER)){
                         $this->parse_message_from($this->clients[$id-1], $this->decode($msg));
-                        // echo "Message from $client:\t$decodedMSG\r\n";
                     }
                 }
 
@@ -327,7 +329,7 @@
                 if($this->sleepCounter > $this->pingInterval/$this->sleepInterval*1000000){
                     $toDelete = array();                    
                     foreach ($this->clients as $id => $client) {
-                        if($this->ping_socket($client->get_socket()) === false){
+                        if(!$this->ping_socket($client->get_socket())){
                             $client->leaveRoom();
                             unset($client);
                             $toDelete[] = $id;
