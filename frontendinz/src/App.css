@@ -331,7 +331,7 @@ span[role="img"]{
 /* FOOTER */
 
 .footer {
-  position: fixed;
+  position: sticky;
   z-index: 200;
   left: 0;
   bottom: 0;
@@ -663,10 +663,6 @@ input:checked + label{
     border: none;
     border-radius: 2px;
     cursor: pointer;
-}
-
-.lobby{
-  padding-bottom: 300px;
 }
 
 /* POPUP */

@@ -113,6 +113,7 @@ function Lobby(props){
 							roomName={room.roomName}
 						/>
 						)}
+						<div className="clear"></div>
 					</div>
 				</TabPanel>
 				
@@ -128,7 +129,6 @@ function Lobby(props){
 					</TabPanel>
 				}
 			</Tabs>
-			<div className="clear"></div>
 			{admin && <Popup
 									fromMain={false}
 									/>}
