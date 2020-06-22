@@ -515,6 +515,10 @@ input:checked + label{
   text-overflow: ellipsis;
 }
 
+.iframeURLinfo h1{
+  margin: 0;
+}
+
 .admin--iframe {
   transition: transform 150ms ease-out;
   z-index: 50;
@@ -722,23 +726,23 @@ input:checked + label{
   cursor: pointer;
 }
 
-.modal-inside .react-tabs{
+.modal-inside .react-tabs, .lobby .react-tabs{
   width: 100%;
   min-height: 100vh;
   height: auto;
 }
 
-.modal-inside .react-tabs .react-tabs__tab-list{
+.modal-inside .react-tabs .react-tabs__tab-list, .lobby .react-tabs .react-tabs__tab-list{
   position: sticky;
   top: 0;
   z-index: 99999;
 }
 
-.modal-inside ul{
+.modal-inside ul, .lobby ul{
   width: 100%;
 }
 
-.modal-inside ul li{
+.modal-inside ul li, .lobby ul li{
   height: 60px;
   line-height: 60px;
   z-index: 100;
@@ -758,30 +762,30 @@ input:checked + label{
   user-select: none;
 }
 
-.modal-inside ul li i{
+.modal-inside ul li i, .lobby ul li i{
   height: 60px;
   line-height: 60px;
   vertical-align: bottom;
 }
 
-.modal-inside ul li  + .modal-inside ul li  {
+.modal-inside ul li  + .modal-inside ul li, .lobby ul li  + .lobby ul li  {
   margin-left: 2%;
 }
 
-.modal-inside ul li:hover {
+.modal-inside ul li:hover, .lobby ul li:hover {
   color: #fff;
 }
 
-.modal-inside .react-tabs__tab.react-tabs__tab--selected{
+.modal-inside .react-tabs__tab.react-tabs__tab--selected, .lobby .react-tabs__tab.react-tabs__tab--selected{
   border-bottom: 1px solid #fff;
 }
 
-.modal-inside .react-tabs__tab.react-tabs__tab--selected{
+.modal-inside .react-tabs__tab.react-tabs__tab--selected, .lobby .react-tabs__tab.react-tabs__tab--selected{
   background-color: #151421;
   color: #fff;
 }
 
-.modal-inside .react-tabs .react-tabs__tab-panel.react-tabs__tab--selected{
+.modal-inside .react-tabs .react-tabs__tab-panel.react-tabs__tab--selected, .lobby .react-tabs .react-tabs__tab-panel.react-tabs__tab--selected{
   height: auto;
   min-height: 100%;
 }
@@ -819,8 +823,6 @@ input:checked + label{
 
 /* POPUP table */
 
-.filestable, tr, td
-
 .filestable {
   border-collapse: collapse;
   width: 60%;
@@ -835,14 +837,15 @@ th{
   text-align: center;
   width: 60%;
   padding: 8px;
-  border: 1px solid lightgrey;
-  background-color: #4CAF50;
+  border-bottom: 1px solid lightgrey;
+  background-color: #2e2f3e;
 }
 
 tr td {
   text-align: center;
   padding: 30px;
-  border: 1px solid lightgrey;
+  border-bottom: 1px solid lightgrey;
+  color: #000;
 }
 
 td:first-child, td:nth-child(2), td:nth-child(3){
@@ -853,12 +856,24 @@ td:first-child, td:nth-child(2), td:nth-child(3){
   white-space: nowrap;
 }
 
-td:nth-child(3), td:nth-child(4){
+td:nth-child(3) span, td:nth-child(4) span{
   cursor: pointer;
 }
 
 td:nth-child(4){
   width: 10%;
+}
+
+tr:nth-child(even){
+  background-color: #fff;
+}
+
+tr:nth-child(odd){
+  background-color: #eee;
+}
+
+tr:hover{
+  background-color: #ccc;
 }
 
 .upload-btn-wrapper {
@@ -922,6 +937,9 @@ td:nth-child(4){
   margin-bottom: 100px;
 }
 
+.lobby #myModal .react-tabs__tab.react-tabs__tab--selected, .lobby:not(.adminlobby) .react-tabs__tab.react-tabs__tab--selected{
+  width: 100%;
+}
 
 /* 600px */
 

@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { useHistory } from "react-router-dom";
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import {AContext} from "./AContext";
 import axios from 'axios';
 import RoomInfo from "./RoomInfo";
@@ -83,42 +84,59 @@ function Lobby(props){
 		}
 	  }
 
-        return(
-        <div className="lobby">   
-			{admin &&  
-			<div className="createroom">
-				<h1>Create room</h1>
-				<input id="roomName" type="text"></input><br></br>
-				<button onClick={()=>createLobby()}>create</button>
-			</div>
-			}
-			
-			<div className="findroom">
-				<input type="text" placeholder="Find room" onChange={(e) => filterRooms(e.target.value)}></input>
-				<br></br>
-			</div>
+	  var classNameLobby = "lobby";
+	  if(admin){
+		classNameLobby += " adminlobby";
+	  }
 
-			{admin && <Popup
-							fromMain={false}
-							/>}
-			
-			<div className="roominfo--div">       
-				{roomsFilter.map((room, index) =>
-				<RoomInfo
-					key={index}
-					id={room.id}
-					name={room.name}
-					surname={room.surname}
-					roomName={room.roomName}
-				/>
-				)}
-			</div>
+        return(
+        <div className={classNameLobby}>   
+			<Tabs>
+				<TabList>
+				<Tab>Znajdź pokój</Tab>
+					{admin && <Tab>Stwórz pokój</Tab>}
+				</TabList>
+				
+				<TabPanel>
+					<div className="findroom">
+						<input type="text" placeholder="Find room" onChange={(e) => filterRooms(e.target.value)}></input>
+						<br></br>
+					</div>
+					
+					<div className="roominfo--div">       
+						{roomsFilter.map((room, index) =>
+						<RoomInfo
+							key={index}
+							id={room.id}
+							name={room.name}
+							surname={room.surname}
+							roomName={room.roomName}
+						/>
+						)}
+					</div>
+				</TabPanel>
+				
+				{admin &&  
+					<TabPanel>
+						
+						<div className="createroom">
+							<h1>Create room</h1>
+							<input id="roomName" type="text"></input><br></br>
+							<button onClick={()=>createLobby()}>create</button>
+						</div>
+						
+					</TabPanel>
+				}
+			</Tabs>
 			<div className="clear"></div>
-			<Footer
-				lobby={true}
-				handlePopupLobby={handlePopupLobby}
-				handleLogout={handleLogout}
-				/>
+			{admin && <Popup
+									fromMain={false}
+									/>}
+				<Footer
+					lobby={true}
+					handlePopupLobby={handlePopupLobby}
+					handleLogout={handleLogout}
+					/>
 		</div>
         )
 } 

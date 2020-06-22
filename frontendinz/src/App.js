@@ -10,6 +10,7 @@ import {
   Route,
   Redirect
 } from "react-router-dom";
+import { findAllByAltText } from '@testing-library/react';
 
 function App() {
   const [authenticated, setAuthenticated] = useState(false); //zmienić na false
