@@ -15,13 +15,13 @@ function ChatInput(props){
       <div className="textarea-wrapper">
         <textarea
           type="text"
-          placeholder={'Enter message...'}
+          placeholder={'Wpisz wiadomość...'}
           id="sendie"
           value={message}
           onChange={e => setMessage(e.target.value)}
         />
       </div> 
-      <input id="chat-button" type="submit" value={'Send'} />
+      <input id="chat-button" type="submit" value={'Wyślij'} />
     </form>
   )
 }

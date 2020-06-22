@@ -14,7 +14,7 @@ function Menu(props){
         }
 
         function handleClick(e){
-            console.log("this is working fine");
+            //console.log("this is working fine");
             e.preventDefault();
             document.getElementById("myModal").style.display = "block";
         }

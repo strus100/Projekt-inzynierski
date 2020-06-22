@@ -31,7 +31,7 @@ function IframeInputAdmin(props){
                         className="iframeurl--button"
                         onClick={(e)=>props.handleChangeURL(e, URLtmp)}
                         >
-                        Change URL
+                        Zmień adres URL
                     </button>
             </form>
         </div>

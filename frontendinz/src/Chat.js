@@ -19,6 +19,10 @@ function Chat(props){
         className += ' chat-hover';
     }
 
+    if(props.roomAdmin){
+        className += ' chat-admin';
+    }
+
     return(
       <div className={className}>            
           <div className="chat">

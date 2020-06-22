@@ -99,7 +99,7 @@ function Lobby(props){
 				
 				<TabPanel>
 					<div className="findroom">
-						<input type="text" placeholder="Find room" onChange={(e) => filterRooms(e.target.value)}></input>
+						<input type="text" placeholder="Znajdź pokój" onChange={(e) => filterRooms(e.target.value)}></input>
 						<br></br>
 					</div>
 					
@@ -121,9 +121,8 @@ function Lobby(props){
 					<TabPanel>
 						
 						<div className="createroom">
-							<h1>Create room</h1>
-							<input id="roomName" type="text"></input><br></br>
-							<button onClick={()=>createLobby()}>create</button>
+							<input id="roomName" type="text" placeholder="Nazwa pokoju"></input><br></br>
+							<button onClick={()=>createLobby()}>Stwórz</button>
 						</div>
 						
 					</TabPanel>

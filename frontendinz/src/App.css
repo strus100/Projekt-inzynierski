@@ -317,6 +317,10 @@ span[role="img"]{
   cursor: pointer; 
 }
 
+.chat-activea:not(.chat-admin) .react-tabs__tab{
+  width: 50%;
+}
+
 /* CHAT DISABLED */
 
 .chat-disabled div #react-tabs-1 #chat-wrap::after{
@@ -331,7 +335,7 @@ span[role="img"]{
 /* FOOTER */
 
 .footer {
-  position: sticky;
+  position: fixed;
   z-index: 200;
   left: 0;
   bottom: 0;
@@ -468,6 +472,7 @@ input:checked + label{
   padding: 20px 0;
   border-radius: 5px;
   color: #ff3434;
+  margin: 0;
 }
 
 /* IFRAME */
@@ -630,6 +635,10 @@ input:checked + label{
     margin-bottom: 60px;
     color: white;
 }
+
+.createroom{
+  margin-top: 100px;
+}
     
 .createroom input[type=text], .findroom input[type=text]{
     width: 75%;
@@ -653,16 +662,28 @@ input:checked + label{
     border-bottom-color: #FFF;
     transition: .25s all linear;
 }
+
+button{
+  transition: all 0.5s ease-in;
+}
     
 .createroom button{
     width: 25%;
-    background-color: #4CAF50;
+    background-color: #353441;
     color: white;
-    padding: 14px 20px;
-    margin: 8px 0;
-    border: none;
+    padding: 20px 10px;
+    margin: 15px 0;
+    border: 2px solid white;
     border-radius: 2px;
     cursor: pointer;
+}
+
+.createroom button:hover{
+  background-color: orangered;
+}
+
+.lobby{
+  padding-bottom: 200px;
 }
 
 /* POPUP */
@@ -951,6 +972,7 @@ tr:hover{
   .form-div{
     width: 80%;
     height: 100vh;
+    max-width: 80%;
   }
 }
 
@@ -1012,7 +1034,6 @@ tr:hover{
 
 .iframe-container-chat iframe {
   border: 0;
-  height: 100%;
   left: 0;
   position: absolute;
   top: 0;

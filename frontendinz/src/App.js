@@ -17,8 +17,8 @@ function App() {
   const [loaded, setLoaded] = useState(false); //zmienić na false
 
   const [access, setAccess] = useState(false);
-  const [name, setName] = useState("Imię");
-  const [surname, setSurname] = useState("Nazwisko");
+  const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
   const [token, setToken] = useState(false);
 
   const TITLE = 'Wykłady Webowe'
@@ -58,7 +58,7 @@ function App() {
 				setAuthenticated(true);
 				if(response.data.access === "pracownik" || response.data.access === "doktorant"){
 					setAdmin(true);
-					console.log("admin SET");
+					//console.log("admin SET");
 				}else{
 					setAdmin(false);
 				}
@@ -91,7 +91,9 @@ function App() {
 			</AContext.Provider>
 		  </Router>
 		  :
-		  <h1>Loading</h1>
+		  <div style={{margin: 0 + " auto", height: 100+"vh", lineHeight: 100+"vh", width: 100+"%"}}>
+		  	<h1 style={{textAlign: "center", margin: 0}}>Łączenie z serwerem...</h1>
+		  </div>
 		}
 		</div>
     );

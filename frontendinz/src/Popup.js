@@ -104,16 +104,16 @@ function Popup(props){
                             <h1 style={{marginTop: 10 + "px"}}>Nazwa pokoju</h1>
                             <h2>{props.roomName}</h2>
                             <input type="text" value={roomNameTmp} onChange={(e) => handleSetRoomNameTmp(e.target.value)}></input><br></br>
-                            <button className="generalbtn" onClick={() => handleChangeName()}>Change</button>
+                            <button className="generalbtn" onClick={() => handleChangeName()}>Zmień</button>
                         </div>
                     </TabPanel>
                     }
                     <TabPanel>
                        <div id="drop-area">
-                        <h1>Upload file</h1>
+                        <h1>Wrzuć plik</h1>
                             <form className="drop-form">
                             <div className="upload-btn-wrapper">
-                                <button className="btn" id="uploadbtn">Upload a file</button>
+                                <button className="btn" id="uploadbtn">Wybierz plik</button>
                                 <input 
                                     name="files[]" 
                                     id="files" 
@@ -132,13 +132,13 @@ function Popup(props){
                                         
                                         </input>
                                 </label>*/}
-                                <button className="filesbtn" onClick={(e) => handleUploadFile(e)}>confirm</button>
+                                <button className="filesbtn" onClick={(e) => handleUploadFile(e)}>Potwierdź</button>
                             </form>
                             <h1>Lista plików użytkownika</h1>
                             <div style={{overflowX: "auto"}}>
                                 <table className="filestable">
                                     <thead>
-                                        <tr><th>Filename</th><th>Room</th><th>Link</th><th></th></tr>
+                                        <tr><th>Nazwa pliku</th><th>Pokój</th><th>Link</th><th></th></tr>
                                     </thead>
                                     <tbody>
                                         {files.map((files, index) =>

@@ -63,7 +63,8 @@ function Login(props){
 				}
 				setLoaded(true);
 			}else{
-				setAuthenticated(false);
+        setAuthenticated(false);
+        setError(true);
 			}
 		  })
 		  .catch(function (error) {
@@ -107,7 +108,7 @@ function Login(props){
                         required></input>
                 </div>
 
-                {error && <h1 id="error-msg">Nie udało się zalogować.</h1>}
+                <h1 id="error-msg">{error ? "Błąd logowania." : <span style={{color: "white", userSelect: "none"}}>.</span>}</h1>
 
                 <button 
                     type="submit" 
