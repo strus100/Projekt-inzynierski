@@ -242,7 +242,7 @@
                 
                 switch ($type) {
                     case 'chat':
-                        $decoded_JSON_array['name'] = $client->get_login();
+                        $decoded_JSON_array['name'] = $client->getName()." ".$client->getSurname()." (".$client->get_login().")";
                         $encoded_JSON_array = json_encode($decoded_JSON_array);
                         // echo $encoded_JSON_array."\r\n";
                         
@@ -296,7 +296,7 @@
                     "type" => "event",
                     "event" => "scroll",
                     "x" => $room->getScrollX(),
-                    "y" => $room->getScrollX()
+                    "y" => $room->getScrollY()
                 ];
                 $info = [
                     "type" => "info",
