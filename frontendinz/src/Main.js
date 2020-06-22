@@ -32,7 +32,7 @@ function Main(props) {
   const {token, setToken} = useContext(AContext);
   
   const [iframeURLadmin, setIframeURLadmin] = useState("http://wmi.amu.edu.pl"); 
-  const URL = 'wss://localhost:3000';
+  const URL = 'ws://localhost:3000';
   const proxy = 'http://localhost/proxy/index.php?url=';
 
   const { id } = useParams();
@@ -73,7 +73,7 @@ function Main(props) {
 			//console.log('connected');
 			const message = { type: "chat", chat: `Połączono z chatem.`, name: "SERVER" }
 			addMessage(message);
-			webSocket.send(token);
+			//webSocket.send(token);
 			//webSocket.send("1"); //debug
 			clearTimeout(connectInterval);
 			setWebsocket(webSocket);
@@ -83,17 +83,40 @@ function Main(props) {
 			}
 		};
 	
+		function checkLoadedIframe(callback){
+			var contentDocument = null;
+			if(roomAdmin){
+				contentDocument = document.getElementById("scoreboardx").contentDocument;
+			}else{
+				contentDocument = document.getElementById("scoreboard").contentDocument;
+			}
+			if(contentDocument.readyState !== "complete"){
+				setTimeout(function(){
+					checkLoadedIframe(callback);
+				}, 500);
+			}
+			else
+				callback();
+		}
+	
 		webSocket.onmessage = (evt) => {
 			const message = evt.data;
 			console.log(JSON.parse(message).type);
 			switch(JSON.parse(message).type){
 			case "chat": return addMessage(JSON.parse(message));
 			case "event":
-				var element = document.getElementById("scoreboard").contentWindow;
+				var element = null;
+				if(roomAdmin){
+					element = document.getElementById("scoreboardx").contentWindow;
+				}else{
+					element = document.getElementById("scoreboard").contentWindow;
+				}
 				var parsed = JSON.parse(message);
 				switch(parsed.event){
 					case "scroll":
-						element.scrollTo(parsed.x, parsed.y);
+						checkLoadedIframe(function(){
+							element.scrollTo(parsed.x, parsed.y);
+						});
 					break;
 					case "redirection":
 						handleChangeURL(evt, parsed.url);
