@@ -30,16 +30,22 @@
         }
 
         public function join($client){
+            /*$clientLogin = $client->get_login();
+            if(!isset($this->clients[$clientLogin])){
+                $this->clients[$clientLogin] = $client;
+            }*/
             if(!in_array($client, $this->clients)){
-                $this->clients[] = $client;
+                $this->clients[$client->get_login()] = $client;
 
                 if($client->get_login() == $this->adminID){
                     $this->admin = $client;
                 }
             }
+            print_r($this->clients);
         }
 
         public function leave($client){
+            // unset($this->clients[$client->get_login()]);
             if(($key = array_search($client, $this->clients, TRUE))){
                 array_splice($this->clients, $key, 1);
             }
@@ -89,6 +95,16 @@
 
         public function setScrollY($scrollY){
             $this->scrollY = $scrollY;
+        }
+
+        public function getClientByLogin($login){
+            // return $this->clients[$login];
+            foreach ($this->clients as $client) {
+                if($client->get_login() === $login){
+                    return $client;
+                }
+            }
+            return false;
         }
     }
 ?>

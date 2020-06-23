@@ -29,6 +29,7 @@
         }
 
         function __destruct(){
+            $this->leaveRoom();
             fclose($this->socket);
         }
 

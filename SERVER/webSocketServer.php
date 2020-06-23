@@ -226,7 +226,7 @@
         }
 
         private function parse_message_from($client, $message){
-            if(!isset($client)){
+            if(!isset($client) || !$client->getRoom()){
                 return;
             }
             $clientSocket = $client->get_socket();
@@ -265,6 +265,17 @@
                         }
                         echo "$clientSocket: event: ".$decoded_JSON_array[$type]."\r\n";
                         break;
+                    case 'mute':
+                        if($client->isAdmin()){
+                            if(($clientToMute = $clientRoom->getClientByLogin($decoded_JSON_array['login']))){
+                                if($clientToMute->isMuted()){
+                                    $clientToMute->unMute();
+                                }else{
+                                    $clientToMute->mute();
+                                }
+                                $this->sendClientsListToAllInRoom($clientRoom);
+                            }
+                        }
                     default:
                         echo "Undefined JSON type received: $type\r\n";
                         break;
@@ -272,21 +283,32 @@
             }
         }
 
+        private function sendClientsListToAllInRoom($room){
+            if(!isset($room)){
+                return;
+            }
+            $list = array();
+            $roomClients = $room->getClients();
+            foreach($roomClients as $item){
+                $list[] = [
+                    "login" => $item->get_login(),
+                    "name" => $item->getName()." ".$item->getSurname()." (".$item->get_login().")",
+                    "permission" => ($item->isMuted()) ? false : true
+                ];
+            }
+
+            $clientsList = [
+                "type" => "updatelist",
+                "clients" => $list
+            ];
+            // echo json_encode($clientsList);
+            $this->send_to_all(json_encode($clientsList), $roomClients);
+        }
+
         //Sends initial info about room/clients/iframe
         private function sendStartInfo($client){
             $clientSocket = $client->get_socket();
             $room = $client->getRoom();
-            $clientList = array();
-            $clients = $room->getClients();
-            foreach($clients as $item){
-                $json = [
-                    "login" => $item->get_login(),
-                    "name" => $item->getName()." ".$item->getSurname(),
-                    "isMuted" => $item->isMuted()
-                ];
-                $clientList[] = $json;
-            }
-
             $url = [
                 "type" => "event",
                 "event" => "redirection",
@@ -304,12 +326,8 @@
                 "name" => $room->getRoomName(),
                 "admin" => $room->getAdminID()
             ];
-            $clientslist= [
-                "type" => "updatelist",
-                "clients" => $clientList
-            ];
+            $this->sendClientsListToAllInRoom($room);
             $this->send($clientSocket, json_encode($info));
-            $this->send($clientSocket, json_encode($clientslist));
             $this->send($clientSocket, json_encode($url));
             $this->send($clientSocket, json_encode($scroll));
         }
@@ -363,8 +381,10 @@
                     $toDelete = array();                    
                     foreach ($this->clients as $id => $client) {
                         if(!$this->ping_socket($client->get_socket())){
+                            $room = $client->getRoom();
                             $client->leaveRoom();
                             unset($client);
+                            $this->sendClientsListToAllInRoom($room);
                             $toDelete[] = $id;
                             echo "Connection timeout: $id\r\n";
                         }
