@@ -163,5 +163,41 @@
 				return $result->fetch_assoc();
 			}
 		}
+		
+		function createFile($fileName, $fileLocation){
+			$token = htmlspecialchars($_COOKIE['token']);
+			$user = $this->getUserByToken($token);
+			$login = $user['login'];
+
+			$stmt = $this->conn->prepare("INSERT INTO `files` VALUES (NULL, ?, ?, ?)");
+			$stmt->bind_param("ss", $fileName, $fileLocation, $login);
+			$stmt->execute();
+
+			return $this->conn->insert_id;
+		}
+		
+		function removeFile($fileName){
+			$token = htmlspecialchars($_COOKIE['token']);
+			$user = $this->getUserByToken($token);
+			$login = $user['login'];
+
+			$stmt = $this->conn->prepare("DELETE FROM `files` WHERE `fileName`=?");
+			$stmt->bind_param("ss", $fileName);
+			$stmt->execute();
+
+			return $this->conn->insert_id;
+		}
+		
+		function getFile($fileName){
+			$sql = "SELECT * FROM `files` WHERE `fileName`=$fileName";
+			$result = $this->conn->query($sql);
+			if($result->num_rows != 1){
+				return false;
+			}else{
+				return $result->fetch_assoc();
+			}
+		}
 	}
+	
+	
 ?>
