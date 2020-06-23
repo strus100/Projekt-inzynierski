@@ -12,9 +12,9 @@ import {
 } from "react-router-dom";
 
 function App() {
-  const [authenticated, setAuthenticated] = useState(false); //zmienić na false
-  const [admin, setAdmin] = useState(false);
-  const [loaded, setLoaded] = useState(false); //zmienić na false
+  const [authenticated, setAuthenticated] = useState(true); //zmienić na false
+  const [admin, setAdmin] = useState(true);
+  const [loaded, setLoaded] = useState(true); //zmienić na false
 
   const [access, setAccess] = useState(false);
   const [name, setName] = useState(false);
@@ -85,7 +85,7 @@ function App() {
 				<Route path="/lobby" render={() => (authenticated ? <Lobby/> : <Redirect to='/login' />)}></Route>
 				<Route path="/login" render={() => (!authenticated ? <Login/> : <Redirect to='/lobby' />)}></Route>
 				<Route path="*">
-				  <h1>Not found</h1>
+					<Redirect to='/login' />
 				</Route>
 			  </Switch>
 			</AContext.Provider>
