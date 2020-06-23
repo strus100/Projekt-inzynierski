@@ -29,6 +29,7 @@ $config['plugins'] = array(
 	// ^^ do not disable any of the plugins above
 	'Cookie',
 	'Proxify',
+	"PostMessage",
 	// site specific plugins below
 	'Youtube',
 	'DailyMotion',

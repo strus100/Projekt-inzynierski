@@ -15,14 +15,9 @@ class PostMessagePlugin extends AbstractPlugin
             return;
         }
 
-		$postMessage = "<script>
-		window.addEventListener('message',function(event) {
-			event.source.postMessage('post mnessage working '+event.origin, event.origin);
-			scrollTo(0,parseInt(event.data));
-		},false);
-		</script>";
+		$output = $response->getContent();
 
-        $output = $response->getContent();
+		$output .= "<style>::-webkit-scrollbar { width: 0px; height: 0px; }</style>";
 
         $response->setContent($output);
     }

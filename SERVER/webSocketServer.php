@@ -248,6 +248,13 @@
                             $encoded_JSON_array = json_encode($decoded_JSON_array);
                             // echo $encoded_JSON_array."\r\n";
                             $this->send_to_all($encoded_JSON_array, $roomClients);
+                        }else{
+                            $muted = [
+                                "type" => "chat",
+                                "chat" => "Zostałeś zablokowany",
+                                "name" => "SERVER"
+                            ];
+                            $this->send($clientSocket, json_encode($muted));
                         }
                         break;
                     case 'event':
