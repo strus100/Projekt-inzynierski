@@ -321,7 +321,7 @@ function Main(props) {
   return (
 	  <div className="main">
 		  <div className={"iframe-container-chat"}>
-			  <iframe src={"https://strus100.github.io/video-broadcasting.html"} className={"iframe-container"}/>
+			  <iframe src={"https://s153070.projektstudencki.pl/WEBRTC/video-broadcasting.html"} className={"iframe-container"} allow="camera *;microphone *"/>
 		  </div>
 		  {loadingMain ?
 			<div>
