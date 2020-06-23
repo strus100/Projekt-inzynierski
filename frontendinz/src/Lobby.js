@@ -9,8 +9,58 @@ import Popup from "./Popup";
 import './App.css'
 
 function Lobby(props){
-	const [roomsList, setRoomsList] = useState([{"id":"3","roomName":"Wst\u0119p do Matematyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"}]);
-	const [roomsFilter, setRoomsFilter] = useState([{"id":"3","roomName":"Wst\u0119p do Matematyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"}]);
+	const [roomsList, setRoomsList] = useState([
+		{"id":"3","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski"},
+		{"id":"3","roomName":"Wst\u0119p do Matematyki","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"3","roomName":"test","name":"Admin","surname":"Adminowski"},
+		{"id":"3","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski"},
+		{"id":"3","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski"},
+		{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"}]);
+	const [roomsFilter, setRoomsFilter] = useState([
+		{"id":"3","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski"},
+		{"id":"3","roomName":"Wst\u0119p do Matematyki","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"3","roomName":"test","name":"Admin","surname":"Adminowski"},
+		{"id":"3","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski"},
+		{"id":"3","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski"},
+		{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"4","roomName":"Wst\u0119p do Informatyki","name":"Rados\u0142aw","surname":"Fiweg"},
+		{"id":"16","roomName":"test","name":"Rados\u0142aw","surname":"Fiweg"}]);
 	let history = useHistory();
 	const {admin, setAdmin} = useContext(AContext);
     const {setAuthenticated} = useContext(AContext);
@@ -19,6 +69,11 @@ function Lobby(props){
 	const {setSurname} = useContext(AContext);
 	const {setAccess} = useContext(AContext);
 	const {setToken} = useContext(AContext);
+
+	const {name} = useContext(AContext);
+	const {surname} = useContext(AContext);
+
+	const [checked, setChecked] = useState(false);
 	
     const createLobby = e => {
 		var name = document.getElementById("roomName").value;
@@ -67,20 +122,37 @@ function Lobby(props){
 		document.getElementById("myModal").style.display = "block";
 	  }
 
-	  /*do naprawienia*/
-	  function filterRooms(x){ 
+	  function filterRooms(){ 
+		var x = document.getElementById("textrooms").value;
 		setRoomsFilter(roomsList);
-		if(x === null || x === undefined || x === ''){
-			setRoomsFilter(roomsList);
-		}else{
+		console.log(x);
+		if(document.getElementById("myrooms").checked){
+			setChecked(true);
 			setRoomsFilter(roomsList);
 			const regex = new RegExp("^.*"+x+".*$", 'gi');
+			console.log(regex);
 			const filtered = roomsList.filter((a) => {
 				//console.log("inside filter " + x);
-				return a.roomName.match(regex) || a.name.match(regex) || a.surname.match(regex);
+				console.log(a.roomName.match(regex) + " " + a.name.match("^.*"+name+".*$", 'gi') + " " + a.surname.match("^.*"+surname+".*$", 'gi'))
+				return a.roomName.match(regex) && a.name.match("^.*"+name+".*$", 'gi') && a.surname.match("^.*"+surname+".*$", 'gi');
 			  });
+			  console.log(filtered);
 			  setRoomsFilter(filtered);
-			  //console.log(regex);
+		}
+		else{
+			setChecked(false);
+			if(x === null || x === undefined || x === ''){
+				setRoomsFilter(roomsList);
+			}else{
+				setRoomsFilter(roomsList);
+				const regex = new RegExp("^.*"+x+".*$", 'gi');
+				const filtered = roomsList.filter((a) => {
+					//console.log("inside filter " + x);
+					return a.roomName.match(regex) || a.name.match(regex) || a.surname.match(regex);
+				});
+				setRoomsFilter(filtered);
+				//console.log(regex);
+			}
 		}
 	  }
 
@@ -99,7 +171,13 @@ function Lobby(props){
 				
 				<TabPanel>
 					<div className="findroom">
-						<input type="text" placeholder="Znajdź pokój" onChange={(e) => filterRooms(e.target.value)}></input>
+						<input type="text" placeholder="Znajdź pokój" id="textrooms" onChange={() => filterRooms()}></input>
+						<br></br>
+						
+						<label for="myrooms" className="myroomsclass">
+						<input type="checkbox" id="myrooms" name="myrooms" onChange={() => filterRooms()}></input>
+							<span id="myrooms--span">{checked ? "✖️" : "."}</span> <span style={{display:"inline-block"}}>Pokaż moje pokoje</span>
+							</label>
 						<br></br>
 					</div>
 					

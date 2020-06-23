@@ -17,11 +17,11 @@ function App() {
   const [loaded, setLoaded] = useState(false); //zmienić na false
 
   const [access, setAccess] = useState(false);
-  const [name, setName] = useState("");
-  const [surname, setSurname] = useState("");
+  const [name, setName] = useState(false);
+  const [surname, setSurname] = useState(false);
   const [token, setToken] = useState(false);
 
-  const TITLE = 'Wykłady Webowe'
+  const TITLE = 'Wykłady Webowe';
 
   const providerValue = useMemo(() => ({
         authenticated, setAuthenticated,
