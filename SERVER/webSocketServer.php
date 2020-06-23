@@ -205,6 +205,7 @@
 
         // Send message to socket
         private function send($socket, $message){
+            //echo $message."\r\n";
             return $this->send_encoded($socket, $this->encode($message));
         }
 
@@ -242,11 +243,12 @@
                 
                 switch ($type) {
                     case 'chat':
-                        $decoded_JSON_array['name'] = $client->getName()." ".$client->getSurname()." (".$client->get_login().")";
-                        $encoded_JSON_array = json_encode($decoded_JSON_array);
-                        // echo $encoded_JSON_array."\r\n";
-                        
-                        $this->send_to_all($encoded_JSON_array, $roomClients);
+                        if(!$client->isMuted()){
+                            $decoded_JSON_array['name'] = $client->getName()." ".$client->getSurname()." (".$client->get_login().")";
+                            $encoded_JSON_array = json_encode($decoded_JSON_array);
+                            // echo $encoded_JSON_array."\r\n";
+                            $this->send_to_all($encoded_JSON_array, $roomClients);
+                        }
                         break;
                     case 'event':
                         if($client->isAdmin()){
@@ -270,6 +272,48 @@
             }
         }
 
+        //Sends initial info about room/clients/iframe
+        private function sendStartInfo($client){
+            $clientSocket = $client->get_socket();
+            $room = $client->getRoom();
+            $clientList = array();
+            $clients = $room->getClients();
+            foreach($clients as $item){
+                $json = [
+                    "login" => $item->get_login(),
+                    "name" => $item->getName()." ".$item->getSurname(),
+                    "isMuted" => $item->isMuted()
+                ];
+                $clientList[] = $json;
+            }
+
+            $url = [
+                "type" => "event",
+                "event" => "redirection",
+                "url" => $room->getUrl()
+            ];
+            $scroll = [
+                "type" => "event",
+                "event" => "scroll",
+                "x" => $room->getScrollX(),
+                "y" => $room->getScrollY()
+            ];
+            $info = [
+                "type" => "info",
+                "info" => "room",
+                "name" => $room->getRoomName(),
+                "admin" => $room->getAdminID()
+            ];
+            $clientslist= [
+                "type" => "updatelist",
+                "clients" => $clientList
+            ];
+            $this->send($clientSocket, json_encode($info));
+            $this->send($clientSocket, json_encode($clientslist));
+            $this->send($clientSocket, json_encode($url));
+            $this->send($clientSocket, json_encode($scroll));
+        }
+
         //Handles new connection (client)
         private function handleNewClient($clientSocket){
             $address = stream_socket_get_name($clientSocket, TRUE);
@@ -287,26 +331,7 @@
                     $this->rooms[$roomID] = $room;
                 }
                 $client->joinRoom($room);
-                $url = [
-                    "type" => "event",
-                    "event" => "redirection",
-                    "url" => $room->getUrl()
-                ];
-                $scroll = [
-                    "type" => "event",
-                    "event" => "scroll",
-                    "x" => $room->getScrollX(),
-                    "y" => $room->getScrollY()
-                ];
-                $info = [
-                    "type" => "info",
-                    "info" => "room",
-                    "name" => $room->getRoomName(),
-                    "admin" => $room->getAdminID()
-                ];
-                $this->send($clientSocket, json_encode($info));
-                $this->send($clientSocket, json_encode($url));
-                $this->send($clientSocket, json_encode($scroll));
+                $this->sendStartInfo($client);
             }else{
                 echo "ERROR token!\r\n";
                 $this->send_encoded($clientSocket, $this->encode("CLOSE", OPCODE::CLOSE));

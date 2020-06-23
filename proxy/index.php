@@ -55,7 +55,7 @@ if (isset($_GET['url'])) {
         header("Location: " . Config::get('index_redirect'));
 
     } else {
-        echo render_template("./templates/main.php", array('version' => Proxy::VERSION));
+        //echo render_template("./templates/main.php", array('version' => Proxy::VERSION));
     }
 
     exit;
@@ -116,12 +116,13 @@ try {
         header("Location: {$url}");
 
     } else {
-
-        echo render_template("./templates/main.php", array(
+        echo "Błąd<br>";
+        echo $ex->getMessage();
+        /*echo render_template("./templates/main.php", array(
             'url' => $url,
             'error_msg' => $ex->getMessage(),
             'version' => Proxy::VERSION
-        ));
+        ));*/
 
     }
 }

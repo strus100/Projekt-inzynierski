@@ -20,9 +20,12 @@
         private $roomID;
         private $room;
 
+        private $muted;
+
         function __construct($socket, $token){
             $this->socket = $socket;
             $this->token = htmlspecialchars($token);
+            $this->muted = false;
         }
 
         function __destruct(){
@@ -92,6 +95,18 @@
 
         public function getRoom(){
             return $this->room;
+        }
+
+        public function mute(){
+            $this->muted = true;
+        }
+
+        public function unMute(){
+            $this->muted = false;
+        }
+
+        public function isMuted(){
+            return $this->muted;
         }
     }
 ?>
