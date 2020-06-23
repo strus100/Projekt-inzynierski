@@ -16,11 +16,9 @@ function Main(props) {
   const [hoverChat, setHoverChat] = useState(false);
   const [checkedChat, setChangeChat] = useState(false);
   const [checkedIframeInputAdmin, setCheckedIframeInputAdmin] = useState(false);
-  const [messages, setMesseges] = useState([{name: "Mały Kodziarz", messagetype: "code", chat: `for (int i = 0; i < 5; i++) {
-	cout << i << "\\n";
-  }`}]);
+  const [messages, setMesseges] = useState([]);
   const [historyB, setHistoryB] = useState([{title: "strus100/Projekt-inzynierski", link: "https://github.com/strus100/Projekt-inzynierski"}, {title: "Projekt Inżynierski – Dysk Google", link: "https://drive.google.com/drive/folders/1OBH7hwjS7rxf_lPeMfBeXzLsXSPu-4sN"}]);
-  const [usersList, setUsersList] = useState([{name: "Dawid", permission: true}, {name: "Radek", permission: false}, {name: "Daniel", permission: true}]);
+  const [usersList, setUsersList] = useState([]);
   const [ws, setWebsocket] = useState(null); 
   const [iframeURL, setIframeURL] = useState("http://wmi.amu.edu.pl"); 
   const {setAuthenticated} = useContext(AContext);
@@ -40,6 +38,25 @@ function Main(props) {
   const [roomName, setRoomName] = useState("roomname");
   const [roomAdmin, setRoomAdmin] = useState(false); //zmienić na false
   const [loadingMain, setLoadingMain] = useState(false); //zmienić na false
+
+  useEffect(() => {
+	axios.post('/rooms/', {
+		roomID: id
+	  })
+	  .then(function (response) {
+		if(response.data){
+			setRoomAdmin(true);
+			//setRoomName(response.data.roomName);
+		}
+		else{
+			setRoomAdmin(false);
+		}
+		setLoadingMain(true);
+	  })
+	  .catch(function (error) {
+		console.log(error);
+	  });
+  }, [])
 
   useEffect(() => {
 	if(loadingMain){
@@ -104,7 +121,7 @@ function Main(props) {
 					break;
 				}
 				break;
-			case "updatelist": return handleUsersList(JSON.parse(message));
+			case "updatelist": return handleUsersList(JSON.parse(message).clients);
 			}
 		};
 	
@@ -296,11 +313,9 @@ function Main(props) {
 	  setUsersList(x);
   }
 
-  function changePermission(namex){
-	let copy = JSON.parse(JSON.stringify(usersList))
-	let foundIndex = copy.findIndex(x => x.name === namex);
-	copy[foundIndex].permission = !copy[foundIndex].permission
-	setUsersList(copy);
+  function changePermission(login){
+	const message = { type: "mute", login: login };
+	ws.send(JSON.stringify(message))
 	}
 
   return (

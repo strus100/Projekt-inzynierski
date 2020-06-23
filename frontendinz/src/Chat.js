@@ -60,6 +60,7 @@ function Chat(props){
                             key={index}
                             name={usersList.name}
                             permission={usersList.permission}
+                            login={usersList.login}
                             roomAdmin={props.roomAdmin}
                         />,
                         )}
