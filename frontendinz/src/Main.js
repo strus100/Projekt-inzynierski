@@ -325,7 +325,6 @@ function Main(props) {
 		  </div>
 		  {loadingMain ?
 			<div>
-				<h1>{ id }</h1>
 			{roomAdmin &&
 			<IframeInputAdmin
 				checkedIframeInputAdmin={checkedIframeInputAdmin}
