@@ -16,7 +16,9 @@ function Main(props) {
   const [hoverChat, setHoverChat] = useState(false);
   const [checkedChat, setChangeChat] = useState(false);
   const [checkedIframeInputAdmin, setCheckedIframeInputAdmin] = useState(false);
-  const [messages, setMesseges] = useState([]);
+  const [messages, setMesseges] = useState([{name: "Mały Kodziarz", messagetype: "code", chat: `for (int i = 0; i < 5; i++) {
+	cout << i << "\\n";
+  }`}]);
   const [historyB, setHistoryB] = useState([{title: "strus100/Projekt-inzynierski", link: "https://github.com/strus100/Projekt-inzynierski"}, {title: "Projekt Inżynierski – Dysk Google", link: "https://drive.google.com/drive/folders/1OBH7hwjS7rxf_lPeMfBeXzLsXSPu-4sN"}]);
   const [usersList, setUsersList] = useState([{name: "Dawid", permission: true}, {name: "Radek", permission: false}, {name: "Daniel", permission: true}]);
   const [ws, setWebsocket] = useState(null); 
@@ -30,39 +32,36 @@ function Main(props) {
   const {token, setToken} = useContext(AContext);
   
   const [iframeURLadmin, setIframeURLadmin] = useState("http://wmi.amu.edu.pl"); 
-  const URL = 'ws://localhost:3000';
+  const URL = 'ws://localhost:1111';
   const proxy = 'http://localhost/proxy/index.php?url=';
 
   const { id } = useParams();
 
-  const [roomName, setRoomName] = useState("");
+  const [roomName, setRoomName] = useState("roomname");
   const [roomAdmin, setRoomAdmin] = useState(false); //zmienić na false
-  const [loadingMain, setLoadingMain] = useState(false); //zmienić na false
-
-  useEffect(() => {
-	axios.post('/rooms/', {
-		roomID: id
-	  })
-	  .then(function (response) {
-		if(response.data){
-			setRoomAdmin(true);
-			//setRoomName(response.data.roomName);
-		}
-		else{
-			setRoomAdmin(false);
-		}
-		setLoadingMain(true);
-	  })
-	  .catch(function (error) {
-		console.log(error);
-	  });
-  }, [])
+  const [loadingMain, setLoadingMain] = useState(true); //zmienić na false
 
   useEffect(() => {
 	if(loadingMain){
 		var timeout = 1000;
 		var connectInterval;
 		var webSocket;
+
+		function checkLoadedIframe(callback){
+			var contentDocument = null;
+			if(roomAdmin){
+				contentDocument = document.getElementById("scoreboardx").contentDocument;
+			}else{
+				contentDocument = document.getElementById("scoreboard").contentDocument;
+			}
+			if(contentDocument.readyState !== "complete"){
+				setTimeout(function(){
+					checkLoadedIframe(callback);
+				}, 500);
+			}
+			else
+				callback();
+		}
 		
 		function connect(){
 		webSocket = new WebSocket(URL);
@@ -81,28 +80,11 @@ function Main(props) {
 			}
 		};
 	
-		function checkLoadedIframe(callback){
-			var contentDocument = null;
-			if(roomAdmin){
-				contentDocument = document.getElementById("scoreboardx").contentDocument;
-			}else{
-				contentDocument = document.getElementById("scoreboard").contentDocument;
-			}
-			if(contentDocument.readyState !== "complete"){
-				setTimeout(function(){
-					checkLoadedIframe(callback);
-				}, 500);
-			}
-			else
-				callback();
-		}
-	
 		webSocket.onmessage = (evt) => {
 			const message = evt.data;
 			console.log(JSON.parse(message).type);
 			switch(JSON.parse(message).type){
 			case "chat": return addMessage(JSON.parse(message));
-			case "info": return setRoomName(JSON.parse(message).name);
 			case "event":
 				var element = null;
 				if(roomAdmin){
@@ -328,6 +310,7 @@ function Main(props) {
 		  </div>
 		  {loadingMain ?
 			<div>
+				<h1>{ id }</h1>
 			{roomAdmin &&
 			<IframeInputAdmin
 				checkedIframeInputAdmin={checkedIframeInputAdmin}
