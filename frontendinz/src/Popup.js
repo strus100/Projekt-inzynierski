@@ -54,7 +54,17 @@ function Popup(props){
     function handleUploadFile(e){
         if(e.target){
             e.preventDefault();
-            axios.post('/files/upload', { /*cos*/ })
+            var formData = new FormData();
+            var file = document.getElementById("files");
+            for (var i = 0; i < file.files.length; i++) {
+                formData.append("files[]", file.files[i]);
+                console.log(file.files[i]);
+            }
+            console.log(formData.getAll('files[]'));
+            axios.post('/files/upload', formData, { 
+                    headers: {
+                    'Content-Type': 'multipart/form-data'
+                } })
                 .then(function (response) {
                     //setFiles(response.data); //lub updateFiles() jeszcze, zależy od backu
                 })
@@ -62,7 +72,7 @@ function Popup(props){
                     console.log(error);
                 });
             
-            console.log(document.getElementById("files").value);
+            //console.log(document.getElementById("files").value);
             }
     }
 
