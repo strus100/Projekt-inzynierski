@@ -32,14 +32,14 @@ function Main(props) {
   const {token, setToken} = useContext(AContext);
   
   const [iframeURLadmin, setIframeURLadmin] = useState("http://wmi.amu.edu.pl"); 
-  const URL = 'ws://localhost:1111';
-  const proxy = 'http://localhost/proxy/index.php?url=';
+  const URL = 'wss://s153070.projektstudencki.pl:3000';
+  const proxy = 'https://s153070.projektstudencki.pl/proxy/index.php?url=';
 
   const { id } = useParams();
 
   const [roomName, setRoomName] = useState("roomname");
   const [roomAdmin, setRoomAdmin] = useState(false); //zmienić na false
-  const [loadingMain, setLoadingMain] = useState(true); //zmienić na false
+  const [loadingMain, setLoadingMain] = useState(false); //zmienić na false
 
   useEffect(() => {
 	if(loadingMain){
