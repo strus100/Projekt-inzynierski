@@ -1,7 +1,23 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 function ChatInput(props){
   const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    function submitOnEnter(event){
+      if(event.which === 13 && !event.shiftKey){
+          event.target.form.dispatchEvent(new Event("submit", {cancelable: true}));
+          event.preventDefault();
+        }
+      }
+  
+      document.getElementById("sendie").addEventListener("keypress", submitOnEnter);
+
+  return () => {
+    document.getElementById("sendie").removeEventListener("keypress", submitOnEnter);
+    };
+
+  }, [])
 
   return (
     <form
