@@ -30,25 +30,18 @@
         }
 
         public function join($client){
-            /*$clientLogin = $client->get_login();
-            if(!isset($this->clients[$clientLogin])){
-                $this->clients[$clientLogin] = $client;
-            }*/
             if(!in_array($client, $this->clients)){
-                $this->clients[$client->get_login()] = $client;
+                $this->clients[spl_object_hash($client)] = $client;
 
                 if($client->get_login() == $this->adminID){
                     $this->admin = $client;
                 }
             }
-            print_r($this->clients);
         }
 
         public function leave($client){
-            // unset($this->clients[$client->get_login()]);
-            if(($key = array_search($client, $this->clients, TRUE))){
-                array_splice($this->clients, $key, 1);
-            }
+            $this->clients[spl_object_hash($client)] = null;
+            unset($this->clients[spl_object_hash($client)]);
         }
 
         //Getters

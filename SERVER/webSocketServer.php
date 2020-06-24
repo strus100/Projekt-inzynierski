@@ -159,6 +159,9 @@
                     break;
                 case OPCODE::TEXT:
                     break;
+                case OPCODE::CLOSE:
+                    return OPCODE::CLOSE;
+                    break;
                 default:
                     echo "Undefined OPCODE in decode function!\r\n\r\n";
                     break;
@@ -232,6 +235,15 @@
             $clientSocket = $client->get_socket();
             $clientRoom = $client->getRoom();
             $roomClients = $client->getRoom()->getClients();
+
+            if($message == OPCODE::CLOSE){
+                $this->clients[(string)$clientSocket] = null;
+                unset($this->clients[(string)$clientSocket]);
+                $client->leaveRoom();
+                echo "$clientSocket:\tDisconnected\r\n";
+                $this->sendClientsListToAllInRoom($clientRoom);
+                return;
+            }
 
             echo "$clientSocket:\t$message\r\n";
             if($message === "PONG"){
@@ -308,7 +320,8 @@
                 "type" => "updatelist",
                 "clients" => $list
             ];
-            // echo json_encode($clientsList);
+            //echo json_encode($clientsList);
+            // print_r($clientsList);
             $this->send_to_all(json_encode($clientsList), $roomClients);
         }
 
@@ -348,7 +361,7 @@
             $token = $this->handshake($clientSocket, $msg);
             $client = new Client($clientSocket, $token);
             if($client->authorize()){
-                $this->clients[] = $client;
+                $this->clients[(string)$clientSocket] = $client;
                 $roomID = $client->getRoomID();
                 $room = $this->rooms[$roomID];
                 if( !$room ){
@@ -379,28 +392,22 @@
                 // Reads incoming messages
                 foreach ($read as $id => $clientSocket) {
                     if($msg = fread($clientSocket, MAX_BUFFER)){
-                        $this->parse_message_from($this->clients[$id-1], $this->decode($msg));
+                        $this->parse_message_from($this->clients[(string)$clientSocket], $this->decode($msg));
                     }
                 }
 
                 // Ping every x seconds and disconnect outdated sockets
                 if($this->sleepCounter > $this->pingInterval/$this->sleepInterval*1000000){
-                    $toDelete = array();                    
                     foreach ($this->clients as $id => $client) {
-                        if(!$this->ping_socket($client->get_socket())){
-                            $room = $client->getRoom();
+                        $clientSocket = $client->get_socket();
+                        if(!$this->ping_socket($clientSocket)){
+                            $clientRoom = $client->getRoom();
+                            $this->clients[(string)$clientSocket] = null;
+                            unset($this->clients[(string)$clientSocket]);
                             $client->leaveRoom();
-                            unset($client);
-                            $this->sendClientsListToAllInRoom($room);
-                            $toDelete[] = $id;
-                            echo "Connection timeout: $id\r\n";
+                            echo "Connection timeout:\t$clientSocket\r\n";
+                            $this->sendClientsListToAllInRoom($clientRoom);
                         }
-                    }
-
-                    sort($toDelete);
-                    array_reverse($toDelete);
-                    for ($i=0; $i < count($toDelete); $i++) { 
-                        array_splice($this->clients, $toDelete[$i], 1);
                     }
 
                     $this->sleepCounter = 1;
