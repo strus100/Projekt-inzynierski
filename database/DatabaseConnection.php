@@ -164,6 +164,18 @@
 			}
 		}
 		
+		function deleteRoom($roomID){
+			$stmt = $this->conn->prepare("DELETE FROM `rooms` WHERE `id`=?");
+			$stmt->bind_param("d", $roomID);
+			$stmt->execute();
+		}
+
+		function renameRoom($id, $name){
+			$stmt = $this->conn->prepare("UPDATE `rooms` SET `roomName`=? WHERE `id`=?");
+			$stmt->bind_param("sd", $name, $id);
+			$stmt->execute();
+		}
+
 		function createFile($fileName, $fileLocation){
 			$token = htmlspecialchars($_COOKIE['token']);
 			$user = $this->getUserByToken($token);
