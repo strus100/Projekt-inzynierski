@@ -33,4 +33,33 @@
     }
 
     $dbConnection->closeConnection();
+
+
+    
+
+    function canManipulate($db, $roomID=false){
+        $token = htmlspecialchars($_COOKIE['token']);
+
+        if(!($user = $db->getUserByToken($token))){
+            return false;
+        }
+
+        if($row['role'] != "pracownik" && $row['role'] != "doktorant"){
+            return false;
+        }
+
+        $login = $user['login'];
+        $currentRoom = $row['room'];
+
+        if($roomID){
+            if(!($room = $db->getRoom($roomID))){
+                return false;
+            }
+            if($room['id'] != $currentRoom || $room['admin'] != $login){
+                return false;
+            }
+        }
+
+        return true;
+    }
 ?>
