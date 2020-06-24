@@ -27,24 +27,6 @@ function Login(props){
 
     const handleLogin = e => {
       e.preventDefault();
-        /*if (username === 'admin' && password === '123') {
-          setError(false);
-          setAuthenticated(true);
-          localStorage.setItem("authenticated", true);
-          localStorage.setItem("admin", true);
-		  setAdmin(true);
-        } 
-		else if(username === 'user' && password === '123'){
-			setError(false);
-			setAuthenticated(true);
-          localStorage.setItem("authenticated", true);
-		  localStorage.setItem("admin", false);
-		  setAdmin(false);
-		}
-		else {
-          setError(true);
-          console.log("not logged")
-        }*/
 		axios.post('/login_system/login.php', {
 			login: username,
 			pwd: password

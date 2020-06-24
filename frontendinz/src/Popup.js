@@ -1,18 +1,19 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import { useHistory } from "react-router-dom";
 import FileList from "./FileList"
 import axios from 'axios';
 import {AContext} from "./AContext"
 import './App.css'
 
 function Popup(props){   
-    const [files, setFiles] = useState(
-        [{filename: "aaa", room: "ccc", link: "cawaaaaawaaaaawaaaaawaaaaawaaaaawaaaaawaaaaawaaaaawaaaaawaaaaawaaaaawaaaaawaaaaawaaaaawaaaaawaaaaawaaaaawaaaaawaaaaawaaaaawaaaaawaaaaawaaaaawaaaaawaaaaawaaaaawaaaaawaaaaawaaaaawaaaa"},{filename: "awaaaa", room: "ccwqc", link: "cee"},{filename: "aaa", room: "cccw", link: "cq"} ])
+    const [files, setFiles] = useState([])
     const {token} = useContext(AContext);
     const [roomNameTmp, setRoomNameTmp] = useState("");
+    let history = useHistory();
 
     useEffect(() => {
-        //updateFiles();
+      updateFiles();
         
       window.onclick = function(event) {
         if (event.target == document.getElementById("myModal")) {
@@ -35,10 +36,6 @@ function Popup(props){
         setRoomNameTmp(e);
     }
 
-    function handleChangeName(){
-        console.log("click");
-    }
-
     function handleOnChangeFiles(e){
         var list = '';
         for (var i = 0; i < e.target.files.length; i++) {
@@ -46,10 +43,20 @@ function Popup(props){
         }
         document.getElementById("uploadbtn").innerHTML = "Wybrano plików: " + e.target.files.length + "<br>" + list;
         document.getElementById("uploadbtn").classList.remove("dragover");
-        console.log(e.target.files)
+        // console.log(e.target.files)
     }
 
     /* AXIOSY */
+
+    function handleChangeName(){
+        axios.post('/rooms/', { roomID: props.id, name: roomNameTmp })
+		.then(function (response) {
+			history.push("/lobby");
+		})
+		.catch(function (error) {
+			console.log(error);
+        });	
+    }
 
     function handleUploadFile(e){
         if(e.target){
@@ -58,10 +65,10 @@ function Popup(props){
             var file = document.getElementById("files");
             for (var i = 0; i < file.files.length; i++) {
                 formData.append("files[]", file.files[i]);
-                console.log(file.files[i]);
+                // console.log(file.files[i]);
             }
-            console.log(formData.getAll('files[]'));
-            axios.post('/files/upload', formData, { 
+            // console.log(formData.getAll('files[]'));
+            axios.post('/files/upload/', formData, { 
                     headers: {
                     'Content-Type': 'multipart/form-data'
                 } })
@@ -77,20 +84,33 @@ function Popup(props){
     }
 
     function removeFile(name){
-        axios.post('/files/delete', { name: name, token: token })
+        axios.post('/files/delete/', { name: name })
                 .then(function (response) {
                     //setFiles(response.data); //lub updateFiles() jeszcze, zależy od backu
+                    updateFiles();
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
-            console.log(name);
+            // console.log(name);
     }
 
     function updateFiles(){
-        axios.get('/files', { token: token })
+        axios.get('/files/', {})
 		.then(function (response) {
-			//setFiles(response.data);
+            if(Array.isArray(response.data)){
+			    setFiles(response.data);
+            }
+		})
+		.catch(function (error) {
+			console.log(error);
+        });
+    }
+
+    function handleDeleteRoom(){
+        axios.post('/rooms/', { deleteID: props.id })
+		.then(function (response) {
+			history.push("/lobby");
 		})
 		.catch(function (error) {
 			console.log(error);
@@ -115,6 +135,8 @@ function Popup(props){
                             <h2>{props.roomName}</h2>
                             <input type="text" value={roomNameTmp} onChange={(e) => handleSetRoomNameTmp(e.target.value)}></input><br></br>
                             <button className="generalbtn" onClick={() => handleChangeName()}>Zmień</button>
+                            <br></br>
+                            <button className="generalbtn" onClick={() => handleDeleteRoom()}>Delete</button>
                         </div>
                     </TabPanel>
                     }

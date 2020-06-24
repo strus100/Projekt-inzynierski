@@ -35,7 +35,7 @@ function Main(props) {
 
   const { id } = useParams();
 
-  const [roomName, setRoomName] = useState("roomname");
+  const [roomName, setRoomName] = useState("");
   const [roomAdmin, setRoomAdmin] = useState(false); //zmienić na false
   const [loadingMain, setLoadingMain] = useState(false); //zmienić na false
 
@@ -46,7 +46,7 @@ function Main(props) {
 	  .then(function (response) {
 		if(response.data){
 			setRoomAdmin(true);
-			//setRoomName(response.data.roomName);
+			setRoomName(response.data.name);
 		}
 		else{
 			setRoomAdmin(false);
@@ -99,7 +99,7 @@ function Main(props) {
 	
 		webSocket.onmessage = (evt) => {
 			const message = evt.data;
-			console.log(JSON.parse(message).type);
+			// console.log(JSON.parse(message).type);
 			switch(JSON.parse(message).type){
 			case "chat": return addMessage(JSON.parse(message));
 			case "event":
@@ -165,7 +165,7 @@ function Main(props) {
 		}
 		};
 
-		console.log('trying to connect');
+		// console.log('trying to connect');
 		connect();
 
 		function setListeners(){
@@ -188,7 +188,7 @@ function Main(props) {
 			});
 			}
 			scrollStop(function () {
-			console.log("scroll frame5");
+			// console.log("scroll frame5");
 			const message = { type: "event", event: "scroll", x: document.getElementById("scoreboardx").contentWindow.scrollX, y: document.getElementById("scoreboardx").contentWindow.scrollY };
 			if(webSocket.readyState === WebSocket.OPEN){
 				webSocket.send(JSON.stringify(message));
@@ -222,7 +222,7 @@ function Main(props) {
 	}
 
 	return () => {
-	  console.log("clear");
+	//   console.log("clear");
 	  clearInterval(connectInterval);
 	  if(roomAdmin && (document.getElementById("scoreboardx") !== null && document.getElementById("scoreboardx").contentDocument !== null && document.getElementById("scoreboardx") !== undefined && document.getElementById("scoreboardx").contentDocument !== undefined)){
 		//removeListenerScroll();
@@ -236,7 +236,7 @@ function Main(props) {
 
   function addMessage(message){
 	  setMesseges(x => [message, ...x] );
-	  beep();
+	//   beep();
   }
 
   function submitMessage(messageString){
@@ -355,6 +355,7 @@ function Main(props) {
 							fromMain={true}
 							roomName={roomName}
 							handleChangeURL={handleChangeURL}
+							id={id}
 							/>}
 			<Chat
 				roomAdmin={roomAdmin}
