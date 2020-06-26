@@ -30,6 +30,11 @@
         }
 
         public function join($client){
+            foreach($this->clients as $connectedClient){
+                if($connectedClient->get_login() == $client->get_login()){
+                    $connectedClient->leaveRoom();
+                }
+            }
             if(!in_array($client, $this->clients)){
                 $this->clients[spl_object_hash($client)] = $client;
 

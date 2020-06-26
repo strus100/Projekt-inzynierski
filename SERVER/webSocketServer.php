@@ -58,7 +58,7 @@
             $ip = isset($args['-a']) ? $args['-a'] : DEFAULT_IP;
             $port = isset($args['-p']) ? $args['-p'] : DEFAULT_PORT;
 
-            $this->socket = stream_socket_server("tls://$ip:$port", $errno, $errstr, STREAM_SERVER_BIND|STREAM_SERVER_LISTEN, $context);
+            $this->socket = stream_socket_server("tcp://$ip:$port", $errno, $errstr, STREAM_SERVER_BIND|STREAM_SERVER_LISTEN, $context);
             if($this->socket){
                 $address = stream_socket_get_name($this->socket, FALSE);
                 echo "Socket listening on $address\r\n";
@@ -400,14 +400,19 @@
                 if($this->sleepCounter > $this->pingInterval/$this->sleepInterval*1000000){
                     foreach ($this->clients as $id => $client) {
                         $clientSocket = $client->get_socket();
-                        if(!$this->ping_socket($clientSocket)){
-                            $clientRoom = $client->getRoom();
+                        $clientRoom = $client->getRoom();
+                        if(!$clientRoom){
+                            $this->send_encoded($clientSocket, $this->encode("CLOSE", OPCODE::CLOSE));
+                        }
+                        if(!$this->ping_socket($clientSocket) || !$clientRoom){
                             $this->clients[(string)$clientSocket] = null;
                             unset($this->clients[(string)$clientSocket]);
                             $client->leaveRoom();
                             echo "Connection timeout:\t$clientSocket\r\n";
-                            $this->sendClientsListToAllInRoom($clientRoom);
                         }
+                    }
+                    foreach ($this->rooms as $room) {
+                        $this->sendClientsListToAllInRoom($room);
                     }
 
                     $this->sleepCounter = 1;

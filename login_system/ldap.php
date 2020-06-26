@@ -1,6 +1,4 @@
 <?php
-    require_once __DIR__."/../database/DatabaseConnection.php";
-
     class LDAP{
         public static function login($login, $password){
             $address = "ldap://labs.wmi.amu.edu.pl";

@@ -17,7 +17,15 @@ class PostMessagePlugin extends AbstractPlugin
 
 		$output = $response->getContent();
 
-		$output .= "<style>::-webkit-scrollbar { width: 0px; height: 0px; }</style>";
+		$output .= "<style>
+		*{
+            scrollbar-width: thin; 
+            -ms-overflow-style: none;
+        }
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+		</style>";
 
         $response->setContent($output);
     }

@@ -10,14 +10,15 @@
         $data = json_decode($request_body, true);
 
         if(isset($data['roomID']) && isset($data['name'])){
-            if(canManipulate()){
-                $roomID = htmlspecialchars($data['roomID']);
-                $roomName = htmlspecialchars($data['name']);
+            $roomID = htmlspecialchars($data['roomID']);
+            $roomName = htmlspecialchars($data['name']);
+
+            if(canManipulate($dbConnection, $roomID)){
                 echo $dbConnection->renameRoom($roomID, $roomName);
             }
         }
         elseif(isset($data['name'])){
-            if(canManipulate()){
+            if(canManipulate($dbConnection)){
                 $roomName = htmlspecialchars($data['name']);
                 echo $dbConnection->createRoom($roomName);
             }
@@ -30,10 +31,10 @@
                     $roomName = $room['roomName'];
                     $json = [
                         "name" => $roomName,
-                        "admin" => canManipulate()
+                        "admin" => canManipulate($dbConnection, $roomID)
                     ];
                     echo json_encode($json);
-                    /*if(canManipulate()){
+                    /*if(canManipulate($dbConnection, $roomID)){
                         echo "{name: $roomName, admin: true}";
                     }else{
                         echo "{name: $roomName, admin: false}";
@@ -42,8 +43,9 @@
             }
         }
         elseif (isset($data['deleteID'])) {
-            if(canManipulate()){
-                $roomID = htmlspecialchars($data['deleteID']);
+            $roomID = htmlspecialchars($data['deleteID']);
+
+            if(canManipulate($dbConnection, $roomID)){
                 echo $dbConnection->deleteRoom($roomID);
             }
         }
@@ -65,12 +67,12 @@
             return false;
         }
 
-        if($row['role'] != "pracownik" && $row['role'] != "doktorant"){
+        if($user['role'] != "pracownik" && $user['role'] != "doktorant"){
             return false;
         }
 
         $login = $user['login'];
-        $currentRoom = $row['room'];
+        $currentRoom = $user['room'];
 
         if($roomID){
             if(!($room = $db->getRoom($roomID))){
