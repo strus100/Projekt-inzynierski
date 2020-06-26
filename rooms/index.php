@@ -10,21 +10,42 @@
         $data = json_decode($request_body, true);
 
         if(isset($data['roomID']) && isset($data['name'])){
-            $roomID = htmlspecialchars($data['roomID']);
-            $roomName = htmlspecialchars($data['name']);
-            echo $dbConnection->renameRoom($roomID, $roomName);
+            if(canManipulate()){
+                $roomID = htmlspecialchars($data['roomID']);
+                $roomName = htmlspecialchars($data['name']);
+                echo $dbConnection->renameRoom($roomID, $roomName);
+            }
         }
         elseif(isset($data['name'])){
-            $roomName = htmlspecialchars($data['name']);
-            echo $dbConnection->createRoom($roomName);
+            if(canManipulate()){
+                $roomName = htmlspecialchars($data['name']);
+                echo $dbConnection->createRoom($roomName);
+            }
         }
         elseif(isset($data['roomID'])){
             $roomID = htmlspecialchars($data['roomID']);
-            echo $dbConnection->selectRoom($roomID);
+            if($dbConnection->selectRoom($roomID)){
+                $room = $dbConnection->getRoom($roomID);
+                if($room){
+                    $roomName = $room['roomName'];
+                    $json = [
+                        "name" => $roomName,
+                        "admin" => canManipulate()
+                    ];
+                    echo json_encode($json);
+                    /*if(canManipulate()){
+                        echo "{name: $roomName, admin: true}";
+                    }else{
+                        echo "{name: $roomName, admin: false}";
+                    }*/
+                }
+            }
         }
         elseif (isset($data['deleteID'])) {
-            $roomID = htmlspecialchars($data['deleteID']);
-            echo $dbConnection->deleteRoom($roomID);
+            if(canManipulate()){
+                $roomID = htmlspecialchars($data['deleteID']);
+                echo $dbConnection->deleteRoom($roomID);
+            }
         }
     }
     else{
