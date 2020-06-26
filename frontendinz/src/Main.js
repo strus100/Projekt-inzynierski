@@ -354,10 +354,16 @@ function Main(props) {
 	  <div className="main">
 		  {loadingMain ?
 			<div>
-				<div className={"iframe-container-chat"}>
-					<iframe src={"https://s153070.projektstudencki.pl/WEBRTC/video-broadcasting.html"} className={"iframe-container"} allow="camera *;microphone *"/>
-				</div>
-			{roomAdmin &&
+				{ roomAdmin ?
+					<div className={"iframe-container-chat"}>
+						<iframe src={"https://s153070.projektstudencki.pl/WEBRTC/audio-admin.html"} className={"iframe-container"} allow="camera *;microphone *"/>
+					</div>
+					:
+					<div className={"iframe-container-chat"}>
+						<iframe src={"https://s153070.projektstudencki.pl/WEBRTC/audio-user.html"} className={"iframe-container"} allow="camera *;microphone *"/>
+					</div>
+				}
+				{roomAdmin &&
 			<IframeInputAdmin
 				checkedIframeInputAdmin={checkedIframeInputAdmin}
 				iframeURL={iframeURL}
