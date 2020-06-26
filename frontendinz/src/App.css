@@ -69,7 +69,7 @@ nav.menu-active {
 }
 
 nav.menu-hover {
-  transform: translateX(-7em);
+  transform: translateX(-15em);
 }
 
 nav ul {
@@ -124,7 +124,7 @@ nav ul a:hover {
 }
 
 .chat-hover {
-  transform: translateX(15em);
+  transform: translateX(19em);
 }
 
 #chat-wrap{ 
@@ -186,6 +186,7 @@ nav ul a:hover {
   float: right; 
   resize: none; 
   bottom: 0;
+  max-height: 50px;
 }
 
 #sendie::-webkit-scrollbar { width: 0 !important; }
@@ -987,10 +988,19 @@ tr:hover{
 
 .myroomsclass input:checked+#myrooms--span{
   background-color: #fff;
+  color: black;
 }
 
 .myroomsclass{
   user-select: none;
+}
+
+pre {
+  overflow-x: auto;
+}
+
+#chat-area{
+  overflow-x: hidden;
 }
 
 /* 600px */

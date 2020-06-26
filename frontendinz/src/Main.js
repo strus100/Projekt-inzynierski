@@ -14,7 +14,7 @@ function Main(props) {
   const [hoverMenu, setHoverMenu] = useState(false);
   const [checkedMenu, setChangeMenu] = useState(false);
   const [hoverChat, setHoverChat] = useState(false);
-  const [checkedChat, setChangeChat] = useState(false);
+  const [checkedChat, setChangeChat] = useState(true);
   const [checkedIframeInputAdmin, setCheckedIframeInputAdmin] = useState(false);
   const [messages, setMesseges] = useState([]);
   const [historyB, setHistoryB] = useState([{title: "strus100/Projekt-inzynierski", link: "https://github.com/strus100/Projekt-inzynierski"}, {title: "Projekt Inżynierski – Dysk Google", link: "https://drive.google.com/drive/folders/1OBH7hwjS7rxf_lPeMfBeXzLsXSPu-4sN"}]);
@@ -31,7 +31,9 @@ function Main(props) {
   
   const [iframeURLadmin, setIframeURLadmin] = useState("http://wmi.amu.edu.pl"); 
   const URL = 'wss://s153070.projektstudencki.pl:3000';
+  //const URL = 'ws://localhost:1111';
   const proxy = 'https://s153070.projektstudencki.pl/proxy/index.php?url=';
+  //const proxy = '';
 
   const { id } = useParams();
 
@@ -44,16 +46,15 @@ function Main(props) {
 		roomID: id
 	  })
 	  .then(function (response) {
-		if(response.data){
+		if(response.data.admin){ // do poprawy back
 			setRoomAdmin(true);
-			setRoomName(response.data.name);
 		}
-		else{
-			setRoomAdmin(false);
-		}
+		setRoomName(response.data.name);
+		addMessage({ type: "chat", chat: "Witaj na kanale " + roomName + " wpisz /help, aby uzyskać pomoc dotyczącą chatu.", name: "SERVER", messagetype: "chat" });
 		setLoadingMain(true);
 	  })
 	  .catch(function (error) {
+		//addMessage({ type: "chat", chat: "Witaj na kanale " + roomName + " wpisz /help, aby uzyskać pomoc dotyczącą chatu.", name: "SERVER", messagetype: "chat" });
 		console.log(error);
 	  });
   }, [])
@@ -99,7 +100,7 @@ function Main(props) {
 	
 		webSocket.onmessage = (evt) => {
 			const message = evt.data;
-			// console.log(JSON.parse(message).type);
+			console.log(JSON.parse(message).type);
 			switch(JSON.parse(message).type){
 			case "chat": return addMessage(JSON.parse(message));
 			case "event":
@@ -236,7 +237,7 @@ function Main(props) {
 
   function addMessage(message){
 	  setMesseges(x => [message, ...x] );
-	//   beep();
+	   //beep();
   }
 
   function submitMessage(messageString){
@@ -244,15 +245,40 @@ function Main(props) {
       if( ws.readyState === 1 ){
         if( messageString !== ""){
 			var message = "";
-			if(!messageString.includes("/c", 0)){
+			if(messageString[0] === "/"){
+				if(messageString[1] === "c" && messageString.trim().length !== 2 && messageString[2] === " "){
+					message = { type: "chat", chat: messageString.replace("/c ",""), name: name+" "+surname, messagetype: "code" };
+					ws.send(JSON.stringify(message));
+				}
+				else if(messageString === "/help" || messageString === "/h"){
+					message = { type: "chat", chat: "Komendy dostępne na czacie: \n\n/c tekst -> Wyświetla tekst jako kod\n\n/help -> Wyświetla pomoc\n\n//tekst -> pozwala na wypisanie wiadomości, która zaczyna się od '/' na czacie (nie będzie traktowana jako komenda), przykładowo '//c tekst' wypisze '/c tekst'", name: "SERVER", messagetype: "code" }
+					addMessage(message);
+				}
+				else if(messageString === "/c"){
+					message = { type: "chat", chat: "/c tekst -> Wyświetla tekst jako kod", name: "SERVER", messagetype: "code" }
+					addMessage(message);
+				}
+				else if(messageString[1] === "/"){
+					message = { type: "chat", chat: messageString.slice(1), name: name+" "+surname, messagetype: "chat" };
+					ws.send(JSON.stringify(message))
+				}
+				else{
+					message = { type: "chat", chat: "Nieznana komenda: " + messageString, name: "SERVER", messagetype: "chat" };
+					addMessage(message);
+				}
+			}else{
 				message = { type: "chat", chat: messageString, name: name+" "+surname, messagetype: "chat" };
+				ws.send(JSON.stringify(message))
 			}
-			else{
-				message = { type: "chat", chat: messageString.replace("/c",""), name: name+" "+surname, messagetype: "code" };
-				//message.chat.replace(/\n/g, "\\\\n").replace(/\r/g, "\\\\r").replace(/\t/g, "\\\\t");
-			}
-			//console.log(messageString);
-          	ws.send(JSON.stringify(message))
+			// if(!messageString.includes("/c", 0)){
+			// 	message = { type: "chat", chat: messageString, name: name+" "+surname, messagetype: "chat" };
+			// }
+			// else{
+			// 	message = { type: "chat", chat: messageString.replace("/c",""), name: name+" "+surname, messagetype: "code" };
+			// 	//message.chat.replace(/\n/g, "\\\\n").replace(/\r/g, "\\\\r").replace(/\t/g, "\\\\t");
+			// }
+			// //console.log(messageString);
+          	// ws.send(JSON.stringify(message))
           	//addMessage(message)
         }
       }
@@ -326,11 +352,11 @@ function Main(props) {
 
   return (
 	  <div className="main">
-		  <div className={"iframe-container-chat"}>
-			  <iframe src={"https://s153070.projektstudencki.pl/WEBRTC/video-broadcasting.html"} className={"iframe-container"} allow="camera *;microphone *"/>
-		  </div>
 		  {loadingMain ?
 			<div>
+				<div className={"iframe-container-chat"}>
+					<iframe src={"https://s153070.projektstudencki.pl/WEBRTC/video-broadcasting.html"} className={"iframe-container"} allow="camera *;microphone *"/>
+				</div>
 			{roomAdmin &&
 			<IframeInputAdmin
 				checkedIframeInputAdmin={checkedIframeInputAdmin}

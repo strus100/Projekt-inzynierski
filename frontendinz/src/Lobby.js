@@ -128,7 +128,7 @@ function Lobby(props){
 						
 						<label for="myrooms" className="myroomsclass">
 						<input type="checkbox" id="myrooms" name="myrooms" onChange={() => filterRooms()}></input>
-							<span id="myrooms--span">{checked ? "✖️" : "."}</span> <span style={{display:"inline-block"}}>Pokaż moje pokoje</span>
+							<span id="myrooms--span">{checked ? <span class='material-icons' style={{fontSize: "inherit"}}>done</span> : "."}</span> <span style={{display:"inline-block"}}>Pokaż moje pokoje</span>
 							</label>
 						<br></br>
 					</div>

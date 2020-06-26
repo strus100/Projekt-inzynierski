@@ -63,7 +63,7 @@ function Footer(props){
                 onMouseEnter={() => props.handleHoverChat(true)}
                 onMouseLeave={() => props.handleHoverChat(false)}
             >
-                <span aria-labelledby="jsx-a11y/accessible-emoji" role="img">&#128172;</span>
+                <span aria-labelledby="jsx-a11y/accessible-emoji" role="img"><i className="material-icons">chat</i></span>
             </label>
             
         </div>
