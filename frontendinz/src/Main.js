@@ -50,7 +50,7 @@ function Main(props) {
 			setRoomAdmin(true);
 		}
 		setRoomName(response.data.name);
-		addMessage({ type: "chat", chat: "Witaj na kanale " + roomName + " wpisz /help, aby uzyskać pomoc dotyczącą chatu.", name: "SERVER", messagetype: "chat" });
+		addMessage({ type: "chat", chat: "Witaj na kanale " + response.data.name + " wpisz /help, aby uzyskać pomoc dotyczącą chatu.", name: "SERVER", messagetype: "chat" });
 		setLoadingMain(true);
 	  })
 	  .catch(function (error) {
@@ -356,11 +356,11 @@ function Main(props) {
 			<div>
 				{ roomAdmin ?
 					<div className={"iframe-container-chat"}>
-						<iframe src={"https://s153070.projektstudencki.pl/WEBRTC/audio-admin.html"} className={"iframe-container"} allow="camera *;microphone *"/>
+						<iframe src={"../WEBRTC/audio-admin.html?id="+id} className={"iframe-container"} allow="camera *;microphone *"/>
 					</div>
 					:
 					<div className={"iframe-container-chat"}>
-						<iframe src={"https://s153070.projektstudencki.pl/WEBRTC/audio-user.html"} className={"iframe-container"} allow="camera *;microphone *"/>
+						<iframe src={"../WEBRTC/audio-user.html?id="+id} className={"iframe-container"} allow="camera *;microphone *"/>
 					</div>
 				}
 				{roomAdmin &&

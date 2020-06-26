@@ -1003,6 +1003,14 @@ pre {
   overflow-x: hidden;
 }
 
+input[type=text], input[type=password], textarea{ 
+  -webkit-user-select: text;
+  -khtml-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text; 
+} /* iOS browsers fix (inputs) */
+
 /* 600px */
 
 @media only screen and (max-width: 600px) {
