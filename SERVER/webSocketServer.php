@@ -58,7 +58,7 @@
             $ip = isset($args['-a']) ? $args['-a'] : DEFAULT_IP;
             $port = isset($args['-p']) ? $args['-p'] : DEFAULT_PORT;
 
-            $this->socket = stream_socket_server("tcp://$ip:$port", $errno, $errstr, STREAM_SERVER_BIND|STREAM_SERVER_LISTEN, $context);
+            $this->socket = stream_socket_server("tls://$ip:$port", $errno, $errstr, STREAM_SERVER_BIND|STREAM_SERVER_LISTEN, $context);
             if($this->socket){
                 $address = stream_socket_get_name($this->socket, FALSE);
                 echo "Socket listening on $address\r\n";

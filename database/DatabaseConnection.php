@@ -145,7 +145,7 @@
 			$stmt->bind_param("ds", $roomID, $token);
 			$stmt->execute();
 			
-			$sql = "SELECT * FROM `usertable` LEFT JOIN `rooms` ON `room`=`id` WHERE `token`='$token' AND `admin`=`login`";
+			$sql = "SELECT * FROM `usertable` LEFT JOIN `rooms` ON `room`=`id` WHERE `token`='$token'";
 			$result = $this->conn->query($sql);
 			if($result->num_rows != 1){
 				return false;

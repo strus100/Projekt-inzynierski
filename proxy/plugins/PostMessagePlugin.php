@@ -24,7 +24,12 @@ class PostMessagePlugin extends AbstractPlugin
         }
         ::-webkit-scrollbar {
             width: 5px;
+			height: 5px;
+			background: #CCC;
         }
+		::-webkit-scrollbar-thumb{
+			background: #222;
+		}
 		</style>";
 
         $response->setContent($output);
