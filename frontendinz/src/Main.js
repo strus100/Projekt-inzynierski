@@ -63,6 +63,7 @@ function Main(props) {
 	if(loadingMain){
 		var timeout = 1000;
 		var connectInterval;
+		var callbackInterval;
 		var webSocket;
 
 		function checkLoadedIframe(callback){
@@ -72,13 +73,16 @@ function Main(props) {
 			}else{
 				contentDocument = document.getElementById("scoreboard").contentDocument;
 			}
-			if(contentDocument.readyState !== "complete"){
-				setTimeout(function(){
+			if(contentDocument.readyState !== "complete" && window.location.href.indexOf("main") > -1 && contentDocument !== null){
+				callbackInterval = setTimeout(function(){
 					checkLoadedIframe(callback);
 				}, 500);
+				//console.log("scrolled");
 			}
-			else
+			else{
 				callback();
+				//console.log("callback");
+			}
 		}
 		
 		function connect(){
@@ -93,14 +97,14 @@ function Main(props) {
 			clearTimeout(connectInterval);
 			setWebsocket(webSocket);
 			if(roomAdmin){
-			setListeners();
-			//console.log("roomAdmin");
+				setListeners();
+				//console.log("roomAdmin");
 			}
 		};
 	
 		webSocket.onmessage = (evt) => {
 			const message = evt.data;
-			console.log(JSON.parse(message).type);
+			//console.log(JSON.parse(message).type);
 			switch(JSON.parse(message).type){
 			case "chat": return addMessage(JSON.parse(message));
 			case "event":
@@ -161,9 +165,9 @@ function Main(props) {
 		}
 
 		function check(){
-		if ((!ws || ws.readyState === WebSocket.CLOSED) && (window.location.href.indexOf("main") > -1)) {
-			connect();
-		}
+			if ((!ws || ws.readyState === WebSocket.CLOSED) && (window.location.href.indexOf("main") > -1)) {
+				connect();
+			}
 		};
 
 		// console.log('trying to connect');
@@ -225,6 +229,7 @@ function Main(props) {
 	return () => {
 	//   console.log("clear");
 	  clearInterval(connectInterval);
+	  clearInterval(callbackInterval);
 	  if(roomAdmin && (document.getElementById("scoreboardx") !== null && document.getElementById("scoreboardx").contentDocument !== null && document.getElementById("scoreboardx") !== undefined && document.getElementById("scoreboardx").contentDocument !== undefined)){
 		//removeListenerScroll();
 	  }

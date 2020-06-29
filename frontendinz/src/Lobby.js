@@ -159,8 +159,8 @@ function Lobby(props){
 				}
 			</Tabs>
 			{admin && <Popup
-									fromMain={false}
-									/>}
+							fromMain={false}
+							/>}
 				<Footer
 					lobby={true}
 					handlePopupLobby={handlePopupLobby}

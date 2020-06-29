@@ -30,10 +30,10 @@ function Chat(props){
               <Tabs>
                 <div className="chat-tabs">
                     <TabList>
-                        <Tab>&#9776;</Tab>
+                        <Tab><i className="material-icons">chat</i></Tab>
                         <Tab><i className="material-icons">person</i></Tab>
                         {props.roomAdmin &&
-                        <Tab>&#9851;</Tab>
+                        <Tab><i className="material-icons">history</i></Tab>
                         }
                     </TabList>
                 </div>

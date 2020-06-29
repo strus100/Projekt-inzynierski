@@ -21,6 +21,8 @@ function App() {
   const [surname, setSurname] = useState(false);
   const [token, setToken] = useState(false);
 
+  const [error, setError] = useState(false);
+
   const TITLE = 'Wykłady Webowe';
 
   const providerValue = useMemo(() => ({
@@ -69,6 +71,7 @@ function App() {
 		})
 		.catch(function (error) {
 			console.log(error);
+			setError(true);
 		});
       }, []);
 	  
@@ -92,7 +95,7 @@ function App() {
 		  </Router>
 		  :
 		  <div style={{margin: 0 + " auto", height: 100+"vh", lineHeight: 100+"vh", width: 100+"%"}}>
-		  	<h1 style={{textAlign: "center", margin: 0}}>Łączenie z serwerem...</h1>
+		  	<h1 style={{textAlign: "center", margin: 0}}>{error ? "Błąd łączenia z serwerem" : "Łączenie z serwerem..."}</h1>
 		  </div>
 		}
 		</div>
