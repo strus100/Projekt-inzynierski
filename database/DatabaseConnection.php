@@ -178,23 +178,20 @@
 
 		function createFile($fileName, $fileLocation){
 			$token = htmlspecialchars($_COOKIE['token']);
+			//Uncomment if you want test this by test.html
+			$token = "token1";
 			$user = $this->getUserByToken($token);
 			$login = $user['login'];
-
 			$stmt = $this->conn->prepare("INSERT INTO `files` VALUES (NULL, ?, ?, ?)");
-			$stmt->bind_param("ss", $fileName, $fileLocation, $login);
+			$stmt->bind_param("sss", $fileName, $fileLocation, $login);
 			$stmt->execute();
 
 			return $this->conn->insert_id;
 		}
 		
 		function removeFile($fileName){
-			$token = htmlspecialchars($_COOKIE['token']);
-			$user = $this->getUserByToken($token);
-			$login = $user['login'];
-
-			$stmt = $this->conn->prepare("DELETE FROM `files` WHERE `fileName`=?");
-			$stmt->bind_param("ss", $fileName);
+			$stmt = $this->conn->prepare("DELETE FROM `files` WHERE `name`=?");
+			$stmt->bind_param("s", $fileName);
 			$stmt->execute();
 
 			return $this->conn->insert_id;
@@ -207,6 +204,24 @@
 				return false;
 			}else{
 				return $result->fetch_assoc();
+			}
+		}
+		
+		function isOwner($fileName){
+			$token = htmlspecialchars($_COOKIE['token']);
+			//Uncomment if you want test this by test.html
+			$token = "token1";
+			$user = $this->getUserByToken($token);
+			$login = $user['login'];
+			
+			$sql = "SELECT login FROM `files` WHERE `name`='$fileName'";
+			$result = $this->conn->query($sql);
+			$result = $result->fetch_assoc();
+			
+			if($result['login'] == $login){
+				return true;
+			} else {
+				return false;
 			}
 		}
 	}

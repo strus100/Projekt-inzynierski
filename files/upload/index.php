@@ -1,31 +1,21 @@
-<?php 
+<?php
 	require_once __DIR__."/../../database/DatabaseConnection.php";
 
     $dbConnection = new DatabaseConnection();
     $dbConnection->connect();
 	
-	// Set Upload Path
-	$target_dir = './../uploaded_files/';
+$total = count($_FILES['files']['name']);
+for( $i=0 ; $i < $total ; $i++ ) {
+  $tmpFilePath = $_FILES['files']['tmp_name'][$i];
 
-	
-    if($_SERVER['REQUEST_METHOD'] == "POST"){
-	
-	$request_body = file_get_contents('php://input');
-		  
-	$data = json_decode($request_body, true);
-		
-		if(isset($data['file'])){
-			$countfiles = count($data['file']);
-			for($i=0;$i<$countfiles;$i++){
-				$original_filename = $data['file']['name'][$key];
-				$target = $target_dir . basename($original_filename);
-				$tmp  = $data['fileUpload']['tmp_name'][$key];
-				move_uploaded_file($tmp, $target);
-		
-				$dbConnection->createFile($original_filename, $target);
-			}
+  if ($tmpFilePath != ""){
+    $newFilePath = "../uploads/" . $_FILES['files']['name'][$i];
+	$databasePath = "/files/uploads/".$_FILES['files']['name'][$i];
+
+    if(move_uploaded_file($tmpFilePath, $newFilePath)) {
+		$dbConnection->createFile($_FILES['files']['name'][$i], $databasePath);
+		echo "Plik został przesłany na serwer";
 		}
 	}
-
-
- ?>
+}
+?>
