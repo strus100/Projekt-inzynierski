@@ -6,9 +6,9 @@ function Iframe(props){
         <div>
             <div className="iframeURLinfo">
 			{ props.roomAdmin ?
-				<h1>{props.iframeURLadmin}</h1>
+				<h1>{decodeURIComponent(props.iframeURLadmin)}</h1>
 				:
-				<h1>{props.iframeURL}</h1>
+                <h1>{decodeURIComponent(props.iframeURL)}</h1>
 			}
             </div>
             { ! props.roomAdmin ? 
