@@ -19,6 +19,9 @@ function Popup(props){
         if (event.target == document.getElementById("myModal")) {
             document.getElementById("myModal").style.display = "none";
         }
+        if (event.target == document.getElementsByClassName("close")[0]) {
+            document.getElementById("myModal").style.display = "none";
+        }
       }
       var rname = props.roomName; 
       setRoomNameTmp(rname);
@@ -120,7 +123,7 @@ function Popup(props){
     return(
         <div id="myModal" className="modal">
             <div className="modal-content">
-            {/*<span className="close">&times;</span>*/}
+            <span className="close">&times;</span>
                 <div className="modal-inside">
                 <Tabs>
                     <TabList>

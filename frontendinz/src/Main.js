@@ -51,7 +51,7 @@ function Main(props) {
 		}
 		setRoomName(response.data.name);
 		addMessage({ type: "chat", chat: "Witaj na kanale " + response.data.name + " wpisz /help, aby uzyskać pomoc dotyczącą chatu.", name: "SERVER", messagetype: "chat" });
-		setLoadingMain(true);
+		if(response) setLoadingMain(true);
 	  })
 	  .catch(function (error) {
 		//addMessage({ type: "chat", chat: "Witaj na kanale " + roomName + " wpisz /help, aby uzyskać pomoc dotyczącą chatu.", name: "SERVER", messagetype: "chat" });
