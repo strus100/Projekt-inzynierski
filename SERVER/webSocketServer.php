@@ -369,6 +369,12 @@
                     $this->rooms[$roomID] = $room;
                 }
                 $client->joinRoom($room);
+
+                $auth = [
+                    "type" => "auth",
+                    "auth" => "true"
+                ];
+                $this->send($clientSocket, json_encode($auth));
                 $this->sendStartInfo($client);
             }else{
                 echo "ERROR token!\r\n";
