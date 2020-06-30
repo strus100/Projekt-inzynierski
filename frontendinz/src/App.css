@@ -32,13 +32,14 @@ body {
 }
 
 .main{
-  padding: 20px;
+  padding: 0px;
 }
 
 .appdiv{
   min-height: 100vh;
   background-image: linear-gradient(to top,rgba(0,0,0,.8) 0,rgba(0,0,0,0) 60%,rgba(0,0,0,.8) 100%);
   height: auto;
+  padding-bottom: 100px;
 }
 
 .clear{
@@ -1103,7 +1104,9 @@ input[type=text], input[type=password], textarea{
 .iframe-container-chat iframe {
   border: 0;
   left: 0;
-  position: absolute;
+  position: relative;
   top: 0;
   width: 100%;
+  margin-bottom: 20px;
+  height: 100px;
 }

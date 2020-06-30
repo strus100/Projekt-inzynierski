@@ -10,6 +10,9 @@ function Popup(props){
     const [files, setFiles] = useState([])
     const {token} = useContext(AContext);
     const [roomNameTmp, setRoomNameTmp] = useState("");
+    const [disabledButton, setDisabledButton] = useState(false);
+    const [disabledButton2, setDisabledButton2] = useState(false);
+    const [disabledButton3, setDisabledButton3] = useState(false);
     let history = useHistory();
 
     useEffect(() => {
@@ -52,17 +55,21 @@ function Popup(props){
     /* AXIOSY */
 
     function handleChangeName(){
+        setDisabledButton(true);
         axios.post('/rooms/', { roomID: props.id, name: roomNameTmp })
 		.then(function (response) {
+            setDisabledButton(false);
 			history.push("/lobby");
 		})
 		.catch(function (error) {
+            setDisabledButton(false);
 			console.log(error);
         });	
     }
 
     function handleUploadFile(e){
         if(e.target){
+            setDisabledButton3(true);
             e.preventDefault();
             var formData = new FormData();
             var file = document.getElementById("files");
@@ -81,8 +88,10 @@ function Popup(props){
                     document.getElementById("files").value = "";
                     document.getElementById("uploadbtn").innerHTML = "Wybierz plik";
                     updateFiles();
+                    setDisabledButton3(false);
                 })
                 .catch(function (error) {
+                    setDisabledButton3(false);
                     console.log(error);
                 });
             
@@ -115,11 +124,14 @@ function Popup(props){
     }
 
     function handleDeleteRoom(){
+        setDisabledButton2(true);
         axios.post('/rooms/', { deleteID: props.id })
 		.then(function (response) {
+            setDisabledButton2(false);
 			history.push("/lobby");
 		})
 		.catch(function (error) {
+            setDisabledButton2(false);
 			console.log(error);
         });
     }
@@ -141,9 +153,9 @@ function Popup(props){
                             <h1 style={{marginTop: 10 + "px"}}>Nazwa pokoju</h1>
                             <h2>{props.roomName}</h2>
                             <input type="text" value={roomNameTmp} onChange={(e) => handleSetRoomNameTmp(e.target.value)}></input><br></br>
-                            <button className="generalbtn" onClick={() => handleChangeName()}>Zmień</button>
+                            <button className="generalbtn" onClick={() => handleChangeName()} disabled={disabledButton}>Zmień</button>
                             <br></br>
-                            <button className="generalbtn" onClick={() => handleDeleteRoom()}>Delete</button>
+                            <button className="generalbtn" onClick={() => handleDeleteRoom()} disabled={disabledButton2}>Delete</button>
                         </div>
                     </TabPanel>
                     }
@@ -171,7 +183,7 @@ function Popup(props){
                                         
                                         </input>
                                 </label>*/}
-                                <button className="filesbtn" onClick={(e) => handleUploadFile(e)}>Potwierdź</button>
+                                <button className="filesbtn" onClick={(e) => handleUploadFile(e)} disabled={disabledButton3}>Potwierdź</button>
                             </form>
                             <h1>Lista plików użytkownika</h1>
                             <div style={{overflowX: "auto"}}>

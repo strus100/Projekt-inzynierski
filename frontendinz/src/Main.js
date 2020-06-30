@@ -14,7 +14,7 @@ function Main(props) {
   const [hoverMenu, setHoverMenu] = useState(false);
   const [checkedMenu, setChangeMenu] = useState(false);
   const [hoverChat, setHoverChat] = useState(false);
-  const [checkedChat, setChangeChat] = useState(true);
+  const [checkedChat, setChangeChat] = useState(false);
   const [checkedIframeInputAdmin, setCheckedIframeInputAdmin] = useState(false);
   const [messages, setMesseges] = useState([]);
   const [historyB, setHistoryB] = useState([{title: "strus100/Projekt-inzynierski", link: "https://github.com/strus100/Projekt-inzynierski"}, {title: "Projekt Inżynierski – Dysk Google", link: "https://drive.google.com/drive/folders/1OBH7hwjS7rxf_lPeMfBeXzLsXSPu-4sN"}]);
@@ -90,16 +90,10 @@ function Main(props) {
 	
 		webSocket.onopen = () => {
 			//console.log('connected');
-			const message = { type: "chat", chat: `Połączono z chatem.`, name: "SERVER" }
-			addMessage(message);
 			//webSocket.send(token);
 			//webSocket.send("1"); //debug
 			clearTimeout(connectInterval);
 			setWebsocket(webSocket);
-			if(roomAdmin){
-				setListeners();
-				//console.log("roomAdmin");
-			}
 		};
 	
 		webSocket.onmessage = (evt) => {
@@ -107,6 +101,7 @@ function Main(props) {
 			//console.log(JSON.parse(message).type);
 			switch(JSON.parse(message).type){
 			case "chat": return addMessage(JSON.parse(message));
+			case "auth": return connected();
 			case "event":
 				var element = null;
 				if(roomAdmin){
@@ -132,20 +127,21 @@ function Main(props) {
 	
 		webSocket.onclose = e => {
 			if(window.location.href.indexOf("main") > -1){
-			console.log(
-				`Socket is closed. Reconnect will be attempted in ${Math.min(
-					10000 / 1000,
-					(timeout + timeout) / 1000
-				)} second.`,
-				e.reason
-			);
-			const message = { type: "chat", chat: `Nie połączono z chatem, ponowna próba połączenia za ${Math.min(10000 / 1000, (timeout + timeout) / 1000)} sekund.`, name: "SERVER" }
-			addMessage(message);
-			timeout = timeout + timeout;
-			connectInterval = setTimeout(check, Math.min(10000, timeout));
-			if(roomAdmin && (document.getElementById("scoreboardx") !== null && document.getElementById("scoreboardx").contentDocument !== null && document.getElementById("scoreboardx") !== undefined && document.getElementById("scoreboardx").contentDocument !== undefined)){
-				//removeListenerScroll();
-			}
+				setWebsocket(null);
+				console.log(
+					`Socket is closed. Reconnect will be attempted in ${Math.min(
+						10000 / 1000,
+						(timeout + timeout) / 1000
+					)} second.`,
+					e.reason
+				);
+				const message = { type: "chat", chat: `Nie połączono z chatem, ponowna próba połączenia za ${Math.min(10000 / 1000, (timeout + timeout) / 1000)} sekund.`, name: "SERVER" }
+				addMessage(message);
+				timeout = timeout + timeout;
+				connectInterval = setTimeout(check, Math.min(10000, timeout));
+				if(roomAdmin && (document.getElementById("scoreboardx") !== null && document.getElementById("scoreboardx").contentDocument !== null && document.getElementById("scoreboardx") !== undefined && document.getElementById("scoreboardx").contentDocument !== undefined)){
+					//removeListenerScroll();
+				}
 			}
 		};
 	
@@ -224,6 +220,15 @@ function Main(props) {
 				})
 			}
 		}
+
+		function connected(){
+			if(roomAdmin){
+				setListeners();
+				//console.log("roomAdmin");
+			}
+			const message = { type: "chat", chat: `Połączono z chatem.`, name: "SERVER" }
+			addMessage(message);
+		  }
 	}
 
 	return () => {
