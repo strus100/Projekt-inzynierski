@@ -79,6 +79,7 @@ function Popup(props){
                     //setFiles(response.data); //lub updateFiles() jeszcze, zależy od backu
                     formData = null;
                     document.getElementById("files").value = "";
+                    document.getElementById("uploadbtn").innerHTML = "Wybierz plik";
                     updateFiles();
                 })
                 .catch(function (error) {
