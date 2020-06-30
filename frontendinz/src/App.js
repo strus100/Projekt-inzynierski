@@ -67,6 +67,7 @@ function App() {
 			}else{
 				setAuthenticated(false);
 			}
+			if(response)
 			setLoaded(true);
 		})
 		.catch(function (error) {
