@@ -219,7 +219,7 @@
 			$result = $this->conn->query($sql);
 			
 			if($result->num_rows <= 0){
-				return false;
+				return [];
 			}else{
 				return $result -> fetch_all(MYSQLI_ASSOC);
 			}
