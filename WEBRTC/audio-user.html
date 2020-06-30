@@ -45,6 +45,11 @@
 <link rel="stylesheet" href="https://rtcmulticonnection.herokuapp.com/dev/getHTMLMediaElement.css">
 <script src="https://rtcmulticonnection.herokuapp.com/dev/getHTMLMediaElement.js"></script>
 <script>
+	var url_string = window.location.href;
+	var url = new URL(url_string);
+	var id = url.searchParams.get("id");
+	console.log(document.getElementById('room-id').value = id);
+
 // ......................................................
 // .......................UI Code........................
 // ......................................................

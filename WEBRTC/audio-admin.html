@@ -22,11 +22,14 @@
 		display:none!important;
 	}
 			</style>
+			
+	<script>
+	</script>
 </head>
 <body>
 
 <section class="make-center">
-    <input type="text" id="room-id" value="ahu75fn9fh64" autocorrect=off autocapitalize=off size=20 disabled>
+    <input type="text" id="room-id" value="ahu75fn9fh64" autocorrect=off autocapitalize=off size=20 disabled >
     <button id="open-room">Rozpocznij transmisję audio</button>
 	<button id="join-room">Join Room</button>
 	<button id="open-or-join-room">Auto Open Or Join Room</button>
@@ -45,11 +48,16 @@
 <script src="https://rtcmulticonnection.herokuapp.com/dev/getHTMLMediaElement.js"></script>
 
 <script>
+	var url_string = window.location.href;
+	var url = new URL(url_string);
+	var id = url.searchParams.get("id");
+	console.log(document.getElementById('room-id').value = id);
 // ......................................................
 // .......................UI Code........................
 // ......................................................
 document.getElementById('open-room').onclick = function() {
  //   disableInputButtons();
+	
     connection.open(document.getElementById('room-id').value, function() {
         showRoomURL(connection.sessionid);
     });
