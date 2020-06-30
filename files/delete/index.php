@@ -7,9 +7,9 @@ require_once __DIR__."/../../database/DatabaseConnection.php";
 	$json = file_get_contents('php://input');
 	$data = json_decode($json);
 	
-	$fileName = $data->fileName;
-	$token = $data->token;
-	//$token = htmlspecialchars($_COOKIE['token']);
+	$fileName = $data->name;
+	// $token = $data->token;
+	$token = htmlspecialchars($_COOKIE['token']);
 			
 	if($dbConnection->isOwner($fileName, $token)){
 		if(unlink("../uploads/".$fileName)){
