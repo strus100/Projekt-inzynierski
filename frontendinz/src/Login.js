@@ -15,7 +15,7 @@ function Login(props){
     const {setName} = useContext(AContext);
     const {setSurname} = useContext(AContext);
     const {setToken} = useContext(AContext);
-	const {setLoaded} = useContext(AContext);
+	  //const {setLoaded} = useContext(AContext);
 
     useEffect(() => {
         if (username.trim() && password.trim()) {
@@ -27,47 +27,31 @@ function Login(props){
 
     const handleLogin = e => {
       e.preventDefault();
-        /*if (username === 'admin' && password === '123') {
-          setError(false);
-          setAuthenticated(true);
-          localStorage.setItem("authenticated", true);
-          localStorage.setItem("admin", true);
-		  setAdmin(true);
-        } 
-		else if(username === 'user' && password === '123'){
-			setError(false);
-			setAuthenticated(true);
-          localStorage.setItem("authenticated", true);
-		  localStorage.setItem("admin", false);
-		  setAdmin(false);
-		}
-		else {
-          setError(true);
-          console.log("not logged")
-        }*/
 		axios.post('/login_system/login.php', {
 			login: username,
 			pwd: password
 		  })
 		  .then(function (response) {
-			if(response.data.login == 1){
+			if(response.data.login !== 0){
 				setAccess(response.data.access);
 				setName(response.data.name);
 				setSurname(response.data.surname);
 				setToken(response.data.token);
 				setAuthenticated(true);
-				if(response.data.access == "pracownik" || response.data.access == "doktorant"){
+				if(response.data.access === "pracownik" || response.data.access === "doktorant"){
 					setAdmin(true);
 				}else{
 					setAdmin(false);
 				}
-				setLoaded(true);
+				//setLoaded(true);
 			}else{
-				setAuthenticated(false);
+        setAuthenticated(false);
+        setError(true);
 			}
 		  })
 		  .catch(function (error) {
-			console.log(error);
+        setError(true);
+        console.log(error);
 		  });
       };
     
@@ -106,7 +90,7 @@ function Login(props){
                         required></input>
                 </div>
 
-                {error && <h1 id="error-msg">Nie udało się zalogować.</h1>}
+                <h1 id="error-msg">{error ? "Błąd logowania." : <span style={{color: "white", userSelect: "none"}}>.</span>}</h1>
 
                 <button 
                     type="submit" 

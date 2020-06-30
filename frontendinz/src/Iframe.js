@@ -1,28 +1,23 @@
-import React, { useContext, useEffect, useState } from 'react';
-import {AContext} from "./AContext"
+import React from 'react';
 import './App.css'
 
 function Iframe(props){
-    
-    const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-    const {admin} = useContext(AContext);
-
     return(
         <div>
             <div className="iframeURLinfo">
-			{admin ?
-				<h1>{props.iframeURLadmin}</h1>
+			{ props.roomAdmin ?
+				<h1>{decodeURIComponent(props.iframeURLadmin)}</h1>
 				:
-				<h1>{props.iframeURL}</h1>
+                <h1>{decodeURIComponent(props.iframeURL)}</h1>
 			}
             </div>
-            { !admin ? 
+            { ! props.roomAdmin ? 
                 <div className="iframediv">
-                    <iframe id="scoreboard" scrolling="no" src={props.proxy + props.iframeURL} title="iframe-title"></iframe>
+                    <iframe id="scoreboard" sandbox="allow-same-origin allow-scripts allow-forms allow-pointer-lock" scrolling="no" src={props.proxy + props.iframeURL} title="iframe-title"></iframe>
                 </div>
                 :
                 <div className="iframediv">
-                    <iframe id="scoreboardx" scrolling="yes" src={props.proxy + props.iframeURL} title="iframe-title"></iframe>
+                    <iframe id="scoreboardx" sandbox="allow-same-origin allow-scripts allow-forms allow-pointer-lock" scrolling="yes" src={props.proxy + props.iframeURL} title="iframe-title"></iframe>
                 </div>
             }
         </div>
