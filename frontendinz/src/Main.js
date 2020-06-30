@@ -336,6 +336,7 @@ function Main(props) {
 		e.preventDefault();
 		setIframeURL(url);
 		if(roomAdmin){
+			setIframeURLadmin(url);
 			document.getElementById("scoreboardx").contentDocument.location.reload(true);
 		}
 	  }

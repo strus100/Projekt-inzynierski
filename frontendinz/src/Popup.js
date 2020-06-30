@@ -77,6 +77,9 @@ function Popup(props){
                 } })
                 .then(function (response) {
                     //setFiles(response.data); //lub updateFiles() jeszcze, zależy od backu
+                    formData = null;
+                    document.getElementById("files").value = "";
+                    updateFiles();
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -173,16 +176,17 @@ function Popup(props){
                             <div style={{overflowX: "auto"}}>
                                 <table className="filestable">
                                     <thead>
-                                        <tr><th>Nazwa pliku</th><th>Pokój</th><th>Link</th><th></th></tr>
+                                        <tr><th>ID</th><th>Plik</th><th></th></tr>
                                     </thead>
                                     <tbody>
                                         {files.map((files, index) =>
                                         <FileList
                                             removeFile={removeFile}
                                             key={index}
-                                            filename={files.filename}
-                                            room={files.room}
-                                            link={files.link}
+                                            id={files.id}
+                                            name={files.name}
+                                            fromMain={props.fromMain}
+                                            locationx={files.location}
                                             handleChangeURL={props.handleChangeURL}
                                         />,
                                         )}

@@ -19,7 +19,6 @@ h1{
 
 body {
   font-family: 'Roboto Condensed', sans-serif;
-  line-height: 1.375em;
   background: #c31432;  /* fallback for old browsers */
   background: -webkit-linear-gradient(to right, #240b36, #c31432);  /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(to right, #240b36, #c31432); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */    
@@ -856,7 +855,6 @@ button{
 
 th{
   text-align: center;
-  width: 60%;
   padding: 8px;
   border-bottom: 1px solid lightgrey;
   background-color: #2e2f3e;
@@ -869,7 +867,15 @@ tr td {
   color: #000;
 }
 
-td:first-child, td:nth-child(2), td:nth-child(3){
+td:first-child, td:nth-child(3){
+  width: 10%;
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+} 
+
+td:nth-child(2){
   width: 25%;
   max-width: 300px;
   overflow: hidden;

@@ -87,9 +87,6 @@ function App() {
 				<Route path="/main/:id" render={() => (authenticated ? <Main/> : <Redirect to='/login' />)}></Route>
 				<Route path="/lobby" render={() => (authenticated ? <Lobby/> : <Redirect to='/login' />)}></Route>
 				<Route path="/login" render={() => (!authenticated ? <Login/> : <Redirect to='/lobby' />)}></Route>
-				<Route path="*">
-					<Redirect to='/login' />
-				</Route>
 			  </Switch>
 			</AContext.Provider>
 		  </Router>
