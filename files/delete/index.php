@@ -8,8 +8,8 @@ require_once __DIR__."/../../database/DatabaseConnection.php";
 	$data = json_decode($json);
 	
 	$fileName = $data->fileName;
-	$token = $data->token;
-	//$token = htmlspecialchars($_COOKIE['token']);
+	//$token = $data->token;
+	$token = htmlspecialchars($_COOKIE['token']);
 			
 	if($dbConnection->isOwner($fileName, $token)){
 		if(unlink("../uploads/".$fileName)){
