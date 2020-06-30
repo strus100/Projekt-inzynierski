@@ -14,13 +14,17 @@
         private $permission;
         private $nick;
 
+        private $muted;
+
         function __construct($socket, $token){
             $this->socket = $socket;
             $this->token = htmlspecialchars($token);
+            $this->muted = false;
         }
 
         function __destruct(){
-            socket_close($this->socket);
+            $this->leaveRoom();
+            fclose($this->socket);
         }
 
         // Checks if user has admin privileges and gets user infos
@@ -46,12 +50,52 @@
             return $this->nick;
         }
 
+        public function getName(){
+            return $this->name;
+        }
+
+        public function getSurname(){
+            return $this->surname;
+        }
+
         public function get_socket(){
             return $this->socket;
         }
 
         public function isAdmin(){
-            return $permission === PERMISSION::ADMIN;
+            return $this->permission == PERMISSION::ADMIN;
+        }
+
+        public function joinRoom($room){
+            $this->room = $room;
+            $room->join($this);
+        }
+
+        public function leaveRoom(){
+            if($this->room){
+                $this->room->leave($this);
+                $this->room = null;
+            }
+        }
+
+        public function getRoomID(){
+            return $this->roomID;
+        }
+
+        public function getRoom(){
+            return $this->room;
+        }
+
+        public function mute(){
+            $this->muted = true;
+        }
+
+        public function unMute(){
+            $this->muted = false;
+        }
+
+        public function isMuted(){
+            return $this->muted;
         }
     }
 ?>

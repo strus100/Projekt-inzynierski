@@ -10,9 +10,9 @@
 
     require_once "Client.php";
 
-    define("DEFAULT_IP", "127.0.0.1");
-    define("DEFAULT_PORT", 1111);
-    define("MAX_BUFFER", 100000);
+    define("DEFAULT_IP", "0.0.0.0");
+    define("DEFAULT_PORT", 3000);
+    define("MAX_BUFFER", 10000000);
 
     // Arguments parsing
     if($argc>1 && $argv[1]=="start"){
@@ -47,17 +47,39 @@
         private $pingInterval = 5;  //Seconds
         
         function __construct($args){
-            $this->socket = socket_create(AF_INET, SOCK_STREAM, 0);
-            socket_bind($this->socket, (isset($args['-a']) ? $args['-a'] : DEFAULT_IP), (isset($args['-p']) ? $args['-p'] : DEFAULT_PORT));
-            socket_listen($this->socket);
-            socket_getsockname($this->socket, $address, $port);
-            echo "Socket listening on $address:$port\r\n";
-            $this->main();
+            $context = stream_context_create();
+            stream_context_set_option($context, 'ssl', 'local_cert', "/etc/letsencrypt/live/s153070.projektstudencki.pl/fullchain.pem");
+            stream_context_set_option($context, 'ssl', 'local_pk', "/etc/letsencrypt/live/s153070.projektstudencki.pl/privkey.pem");
+            stream_context_set_option($context, 'ssl', 'allow_self_signed', false);
+            stream_context_set_option($context, 'ssl', 'verify_peer', false);
+
+            $ip = isset($args['-a']) ? $args['-a'] : DEFAULT_IP;
+            $port = isset($args['-p']) ? $args['-p'] : DEFAULT_PORT;
+
+            $this->socket = stream_socket_server("tls://$ip:$port", $errno, $errstr, STREAM_SERVER_BIND|STREAM_SERVER_LISTEN, $context);
+            if($this->socket){
+                $address = stream_socket_get_name($this->socket, FALSE);
+                echo "Socket listening on $address\r\n";
+                echo "Server socket: $this->socket\r\n";
+                $this->main();
+            }
         }
 
         function __destruct(){
-            socket_close($this->socket);
+            if($this->socket){
+                fclose($this->socket);
+            }
             echo "Socket closed\r\n";
+        }
+
+        private function getCookies($httpCookie){
+            $cookies = array();
+            $cookiesTMP = explode("; ", $httpCookie);
+            foreach ($cookiesTMP as $key => $value) {
+                $tmp = explode("=", trim($value));
+                $cookies[$tmp[0]] = $tmp[1];
+            }
+            return $cookies;
         }
 
         // WebSocket Handshake returns TOKEN
@@ -77,14 +99,16 @@
             $shaArray = str_split($sha, 2);
             $hexArray = array_map('hexdec', $shaArray);
             $chrArray = array_map('chr', $hexArray);
-            $token = implode($chrArray);
-            $keyHash = base64_encode($token);
+            $key = implode($chrArray);
+            $keyHash = base64_encode($key);
             $response = "HTTP/1.1 101 Switching Protocols\r\n"
                         ."Upgrade: websocket\r\n"
                         ."Connection: Upgrade\r\n"
                         ."Sec-Websocket-Accept: $keyHash\r\n\r\n";
-            socket_write($socket, $response, strlen($response));
-            return $this->decode(socket_read($socket, MAX_BUFFER));
+            fwrite($socket, $response);
+            
+            $cookies = $this->getCookies($HTTPdata['Cookie']);
+            return $cookies['token'];;
         }
 
         // Websocket frame encoding
@@ -121,6 +145,9 @@
                     return "PONG";
                     break;
                 case OPCODE::TEXT:
+                    break;
+                case OPCODE::CLOSE:
+                    return OPCODE::CLOSE;
                     break;
                 default:
                     echo "Undefined OPCODE in decode function!\r\n\r\n";
@@ -163,29 +190,23 @@
 
         private function ping_socket($socket){
             echo "ping $socket\r\n";
-            $request = $this->encode("send BASS", OPCODE::PING);
-            /*if(@socket_write($client, $request, strlen($request)) === false){
-                return false;
-            }
-            else{
-                return true;
-            }*/
-            // return @socket_write($client, $request, strlen($request));
+            $request = $this->encode("", OPCODE::PING);
             return $this->send_encoded($socket, $request);
         }
 
         // Send message to socket
         private function send($socket, $message){
+            //echo $message."\r\n";
             return $this->send_encoded($socket, $this->encode($message));
         }
 
         // Send encoded frame message to socket
         private function send_encoded($socket, $encoded_message){
-            return @socket_write($socket, $encoded_message, strlen($encoded_message));
+            return fwrite($socket, $encoded_message);
         }
 
-        // Send message to all clients except
-        private function send_to_all($message, $except = false){
+        // Send message to all clients except (socket)
+        private function send_to_all($message, $clientsArray, $except = [false]){
             $encoded_message = $this->encode($message);
 
             foreach ($this->clients as $client) {
@@ -196,7 +217,22 @@
         }
 
         private function parse_message_from($client, $message){
+            if(!isset($client) || !$client->getRoom()){
+                return;
+            }
             $clientSocket = $client->get_socket();
+            $clientRoom = $client->getRoom();
+            $roomClients = $client->getRoom()->getClients();
+
+            if($message == OPCODE::CLOSE){
+                $this->clients[(string)$clientSocket] = null;
+                unset($this->clients[(string)$clientSocket]);
+                $client->leaveRoom();
+                echo "$clientSocket:\tDisconnected\r\n";
+                $this->sendClientsListToAllInRoom($clientRoom);
+                return;
+            }
+
             echo "$clientSocket:\t$message\r\n";
             if($message === "PONG"){
                 // echo "$client:\t$message\r\n";
@@ -213,17 +249,46 @@
                 $type = $decoded_JSON_array['type'];
                 switch ($type) {
                     case 'chat':
-                        $decoded_JSON_array['name'] = $client->get_nick();
-                        $encoded_JSON_array = json_encode($decoded_JSON_array);
-                        // echo $encoded_JSON_array."\r\n";
-                        $this->send_to_all($message, [$clientSocket]);
+                        if(!$client->isMuted()){
+                            $decoded_JSON_array['name'] = $client->getName()." ".$client->getSurname()." (".$client->get_login().")";
+                            $encoded_JSON_array = json_encode($decoded_JSON_array);
+                            // echo $encoded_JSON_array."\r\n";
+                            $this->send_to_all($encoded_JSON_array, $roomClients);
+                        }else{
+                            $muted = [
+                                "type" => "chat",
+                                "chat" => "Zostałeś zablokowany",
+                                "name" => "SERVER"
+                            ];
+                            $this->send($clientSocket, json_encode($muted));
+                        }
                         break;
                     case 'event':
                         if($client->isAdmin()){
-
+                            $this->send_to_all($message, $roomClients, [$clientSocket]);
+                            if($decoded_JSON_array['event']=="redirection"){
+                                $clientRoom->setUrl($decoded_JSON_array['url']);
+                                echo "URL changed: ".$clientRoom->getUrl()."\r\n";
+                            }
+                            if($decoded_JSON_array['event']=="scroll"){
+                                $clientRoom->setScrollX($decoded_JSON_array['x']);
+                                $clientRoom->setScrollY($decoded_JSON_array['y']);
+                                echo "Scroll changed: ".$clientRoom->getScrollX()." | ".$clientRoom->getScrollY()."\r\n";
+                            }
                         }
-                        echo "$clientSocket: event: $decoded_JSON_array[$type]\r\n";
+                        echo "$clientSocket: event: ".$decoded_JSON_array[$type]."\r\n";
                         break;
+                    case 'mute':
+                        if($client->isAdmin()){
+                            if(($clientToMute = $clientRoom->getClientByLogin($decoded_JSON_array['login']))){
+                                if($clientToMute->isMuted()){
+                                    $clientToMute->unMute();
+                                }else{
+                                    $clientToMute->mute();
+                                }
+                                $this->sendClientsListToAllInRoom($clientRoom);
+                            }
+                        }
                     default:
                         echo "Undefined JSON type received: $type\r\n";
                         break;
@@ -231,54 +296,117 @@
             }
         }
 
+        private function sendClientsListToAllInRoom($room){
+            if(!isset($room)){
+                return;
+            }
+            $list = array();
+            $roomClients = $room->getClients();
+            foreach($roomClients as $item){
+                $list[] = [
+                    "login" => $item->get_login(),
+                    "name" => $item->getName()." ".$item->getSurname()." (".$item->get_login().")",
+                    "permission" => ($item->isMuted()) ? false : true
+                ];
+            }
+
+            $clientsList = [
+                "type" => "updatelist",
+                "clients" => $list
+            ];
+            //echo json_encode($clientsList);
+            // print_r($clientsList);
+            $this->send_to_all(json_encode($clientsList), $roomClients);
+        }
+
+        //Sends initial info about room/clients/iframe
+        private function sendStartInfo($client){
+            $clientSocket = $client->get_socket();
+            $room = $client->getRoom();
+            $url = [
+                "type" => "event",
+                "event" => "redirection",
+                "url" => $room->getUrl()
+            ];
+            $scroll = [
+                "type" => "event",
+                "event" => "scroll",
+                "x" => $room->getScrollX(),
+                "y" => $room->getScrollY()
+            ];
+            $info = [
+                "type" => "info",
+                "info" => "room",
+                "name" => $room->getRoomName(),
+                "admin" => $room->getAdminID()
+            ];
+            $this->sendClientsListToAllInRoom($room);
+            $this->send($clientSocket, json_encode($info));
+            $this->send($clientSocket, json_encode($url));
+            $this->send($clientSocket, json_encode($scroll));
+        }
+
+        //Handles new connection (client)
+        private function handleNewClient($clientSocket){
+            $address = stream_socket_get_name($clientSocket, TRUE);
+            echo "New connection: $address\r\n";
+
+            $msg = fread($clientSocket, MAX_BUFFER);
+            $token = $this->handshake($clientSocket, $msg);
+            $client = new Client($clientSocket, $token);
+            if($client->authorize()){
+                $this->clients[(string)$clientSocket] = $client;
+                $roomID = $client->getRoomID();
+                $room = $this->rooms[$roomID];
+                if( !$room ){
+                    $room = new Room($roomID);
+                    $this->rooms[$roomID] = $room;
+                }
+                $client->joinRoom($room);
+                $this->sendStartInfo($client);
+            }else{
+                echo "ERROR token!\r\n";
+                $this->send_encoded($clientSocket, $this->encode("CLOSE", OPCODE::CLOSE));
+            }
+        }
+
         // Main Server function/loop
         private function main(){
             while($this->running==true){
                 $read = array_merge([$this->socket], array_map(function($client){ return $client->get_socket(); }, $this->clients));
-                @socket_select($read, $write, $except, 0, 1);   //Select sockets that status has changed
+                stream_select($read, $write, $except, 0, 1);
 
                 // If main server socket is in selected sockets array, then there is a new connection incoming
                 if(in_array($this->socket, $read)){
-                    $clientSocket = socket_accept($this->socket);
-                    // socket_set_nonblock($clientSocket);
-                    socket_getpeername($clientSocket, $address, $port);
-                    echo "New connection: $address:$port\r\n";
-
-                    $msg = @socket_read($clientSocket, MAX_BUFFER);
-                    $token = $this->handshake($clientSocket, $msg);
-                    $client = new Client($clientSocket, $token);
-                    if($client->authorize()){
-                        $this->clients[] = $client;
-                    }else{
-                        echo "ERROR token!\r\n";
-                        $this->send_encoded($clientSocket, $this->encode("CLOSE", OPCODE::CLOSE));
-                    }
+                    $clientSocket = stream_socket_accept($this->socket);
+                    $this->handleNewClient($clientSocket);
+                    array_splice($read, 0, 1);
                 }
 
                 // Reads incoming messages
                 foreach ($read as $id => $clientSocket) {
-                    if($msg = @socket_read($clientSocket, MAX_BUFFER)){
-                        $this->parse_message_from($this->clients[$id-1], $this->decode($msg));
-                        // echo "Message from $client:\t$decodedMSG\r\n";
+                    if($msg = fread($clientSocket, MAX_BUFFER)){
+                        $this->parse_message_from($this->clients[(string)$clientSocket], $this->decode($msg));
                     }
                 }
 
                 // Ping every x seconds and disconnect outdated sockets
                 if($this->sleepCounter > $this->pingInterval/$this->sleepInterval*1000000){
-                    $toDelete = array();
-                    
                     foreach ($this->clients as $id => $client) {
-                        if($this->ping_socket($client->get_socket()) === false){
-                            unset($client);
-                            $toDelete[] = $id;
-                            echo "Connection timeout: $id\r\n";
+                        $clientSocket = $client->get_socket();
+                        $clientRoom = $client->getRoom();
+                        if(!$clientRoom){
+                            $this->send_encoded($clientSocket, $this->encode("CLOSE", OPCODE::CLOSE));
+                        }
+                        if(!$this->ping_socket($clientSocket) || !$clientRoom){
+                            $this->clients[(string)$clientSocket] = null;
+                            unset($this->clients[(string)$clientSocket]);
+                            $client->leaveRoom();
+                            echo "Connection timeout:\t$clientSocket\r\n";
                         }
                     }
-
-                    sort($toDelete);
-                    array_reverse($toDelete);
-                    for ($i=0; $i < count($toDelete); $i++) { 
-                        array_splice($this->clients, $toDelete[$i], 1);
+                    foreach ($this->rooms as $room) {
+                        $this->sendClientsListToAllInRoom($room);
                     }
 
                     $this->sleepCounter = 1;

@@ -1,21 +1,15 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './App.css'
 import axios from 'axios'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import ChatMessage from "./ChatMessage";
 import ChatInput from "./ChatInput";
+import HistoryMessage from "./HistoryMessage"
+import UsersListChat from "./UsersListChat"
 
 const URL = 'ws://localhost:1111';
 
-class Chat extends Component{
-    constructor(props) {
-        super(props);
-        this.state = {
-            name: 'Bob',
-            messages: [],
-            ws: null,
-        }
-        this.getDataAxios = this.getDataAxios.bind(this);
+function Chat(props){
 
         this.timeout = 1000;
       }
@@ -70,69 +64,22 @@ class Chat extends Component{
       };
     }
 
-    check = () => {
-      const { ws } = this.state;
-      if (!ws || ws.readyState == WebSocket.CLOSED) this.connect();
-    };
+    if(props.roomAdmin){
+        className += ' chat-admin';
+    }
 
-    async getDataAxios(){
-        const response =
-          await axios.get("https://randomuser.me/api");
-        const user = response.data.results[0];
-        console.log(user);
-        this.setState({name: user.name.first});
-      }
-
-    addMessage = message => {
-        this.setState(state => ({ messages: [message, ...state.messages] }))
-        }
-  
-    submitMessage = messageString => {
-          if(this.state.ws != null){
-            if(this.state.ws.readyState === 1){
-              if( messageString !== ""){
-                const message = { type: "chat", chat: messageString, name: this.state.name }
-                this.state.ws.send(JSON.stringify(message))
-                this.addMessage(message)
-                console.log(this.state.ws.readyState)
-                console.log(this.state.user)
-              }
-            }
-            else{
-              this.addMessage({ type: "chat", chat: "Nie połączono z chatem", name: "SERVER" })
-            }
-          }
-          else{
-            this.addMessage({ type: "chat", chat: "Nie połączono z chatem", name: "SERVER"  })
-          }
-        }
-
-    createChat = () => { //chwilowo niepotrzebne
-        let chat = []
-        for (let i = 0; i < 100; i++) {
-            chat.push(<span className="chat-line"><span className="nickname">{this.nickname}</span>: <span className="message">aaa</span><br></br></span>)
-          }
-        return chat
-      }
-
-    render(){
-        let className = 'chat-activea';
-
-        if(this.props.checkedChat){
-            className += ' chat-active';
-        }
-
-        return(
-        <div className={className}>            
-            <div className="chat">
-                <p id="name-area">Witaj {this.state.name}</p>
-                
-                <Tabs>
+    return(
+      <div className={className}>            
+          <div className="chat">
+            <p id="name-area">Witaj { props.name } { props.surname }</p>
+              <Tabs>
                 <div className="chat-tabs">
                     <TabList>
-                        <Tab>&#9776;</Tab>
+                        <Tab><i className="material-icons">chat</i></Tab>
                         <Tab><i className="material-icons">person</i></Tab>
-                        <Tab>&#9851;</Tab>
+                        {props.roomAdmin &&
+                        <Tab><i className="material-icons">history</i></Tab>
+                        }
                     </TabList>
                 </div>
                 <TabPanel>
@@ -142,8 +89,8 @@ class Chat extends Component{
                         <ChatMessage
                             key={index}
                             message={message.chat}
-                            name={message.name} //dodane
-                            //name={this.state.name}
+                            name={message.name}
+                            messagetype={message.messagetype}
                         />,
                         )}
                     </div>
@@ -151,7 +98,18 @@ class Chat extends Component{
                 </TabPanel>
                 <TabPanel>
                 <div className="wrap-users">
-                    <div className="wrap-users-area">wrap-users-area</div>
+                    <div className="wrap-users-area">
+                        {props.usersList.map((usersList, index) =>
+                        <UsersListChat
+                            changePermission={props.changePermission}
+                            key={index}
+                            name={usersList.name}
+                            permission={usersList.permission}
+                            login={usersList.login}
+                            roomAdmin={props.roomAdmin}
+                        />,
+                        )}
+                        </div>
                 </div>
                 </TabPanel>
                 <TabPanel>

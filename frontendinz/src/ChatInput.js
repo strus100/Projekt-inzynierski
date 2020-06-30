@@ -1,5 +1,4 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import React, { useState, useEffect } from 'react'
 
 class ChatInput extends Component {
   static propTypes = {
@@ -9,27 +8,43 @@ class ChatInput extends Component {
     message: '',
   }
 
-  render() {
-    return (
-      <form
-        action="."
-        onSubmit={e => {
-          e.preventDefault()
-          this.props.onSubmitMessage(this.state.message)
-          this.setState({ message: '' })
-        }}
-      >
-        <input
+  useEffect(() => {
+    function submitOnEnter(event){
+      if(event.which === 13 && !event.shiftKey){
+          event.target.form.dispatchEvent(new Event("submit", {cancelable: true}));
+          event.preventDefault();
+        }
+      }
+  
+      document.getElementById("sendie").addEventListener("keypress", submitOnEnter);
+
+  return () => {
+    document.getElementById("sendie").removeEventListener("keypress", submitOnEnter);
+    };
+
+  }, [])
+
+  return (
+    <form
+      action="."
+      onSubmit={e => {
+        e.preventDefault()
+        props.onSubmitMessage(message)
+        setMessage('')
+      }}
+    >
+      <div className="textarea-wrapper">
+        <textarea
           type="text"
-          placeholder={'Enter message...'}
+          placeholder={'Wpisz wiadomość...'}
           id="sendie"
-          value={this.state.message}
-          onChange={e => this.setState({ message: e.target.value })}
+          value={message}
+          onChange={e => setMessage(e.target.value)}
         />
-        <input id="chat-button" type="submit" value={'Send'} />
-      </form>
-    )
-  }
+      </div> 
+      <input id="chat-button" type="submit" value={'Wyślij'} />
+    </form>
+  )
 }
 
 export default ChatInput
