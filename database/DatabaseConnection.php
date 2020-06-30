@@ -179,7 +179,7 @@
 		function createFile($fileName, $fileLocation){
 			$token = htmlspecialchars($_COOKIE['token']);
 			//Uncomment if you want test this by test.html
-			$token = "token1";
+			//$token = "token1";
 			$user = $this->getUserByToken($token);
 			$login = $user['login'];
 			$stmt = $this->conn->prepare("INSERT INTO `files` VALUES (NULL, ?, ?, ?)");
@@ -198,8 +198,9 @@
 		}
 		
 		function getFile($fileName){
-			$sql = "SELECT * FROM `files` WHERE `fileName`=$fileName";
+			$sql = "SELECT * FROM `files` WHERE `fileName`='$fileName'";
 			$result = $this->conn->query($sql);
+			
 			if($result->num_rows != 1){
 				return false;
 			}else{
@@ -207,10 +208,27 @@
 			}
 		}
 		
+		function getFileByOwner(){
+			$token = htmlspecialchars($_COOKIE['token']);
+			//Uncomment if you want test this by test.html
+			//$token = "token1";
+			$user = $this->getUserByToken($token);
+			$owner = $user['login'];
+		
+			$sql = "SELECT * FROM `files` WHERE `login`='$owner'";
+			$result = $this->conn->query($sql);
+			
+			if($result->num_rows <= 0){
+				return false;
+			}else{
+				return $result -> fetch_all(MYSQLI_ASSOC);
+			}
+		}
+		
 		function isOwner($fileName){
 			$token = htmlspecialchars($_COOKIE['token']);
 			//Uncomment if you want test this by test.html
-			$token = "token1";
+			//$token = "token1";
 			$user = $this->getUserByToken($token);
 			$login = $user['login'];
 			
