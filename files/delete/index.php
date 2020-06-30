@@ -7,8 +7,8 @@ require_once __DIR__."/../../database/DatabaseConnection.php";
 	$json = file_get_contents('php://input');
 	$data = json_decode($json);
 	
-	$fileName = $data->name;
-	// $token = $data->token;
+	$fileName = $data->fileName;
+	//$token = $data->token;
 	$token = htmlspecialchars($_COOKIE['token']);
 			
 	if($dbConnection->isOwner($fileName, $token)){
