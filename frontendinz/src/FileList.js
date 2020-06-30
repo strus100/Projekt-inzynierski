@@ -13,5 +13,5 @@ export default ({ name, locationx, id, removeFile, handleChangeURL, fromMain }) 
         {!fromMain && 
             <td title={name}><span>{name}</span></td>
         }
-        <td><span onClick={() => removeFile({name})} style={{cursor: "pointer"}}>X</span></td>
+        <td><span onClick={() => removeFile(name)} style={{cursor: "pointer"}}>X</span></td>
     </tr>

@@ -99,8 +99,8 @@ function Popup(props){
             }
     }
 
-    function removeFile(name){
-        axios.post('/files/delete/', { name: name })
+    function removeFile(argName){
+        axios.post('/files/delete/', { name: argName })
                 .then(function (response) {
                     //setFiles(response.data); //lub updateFiles() jeszcze, zależy od backu
                     updateFiles();
