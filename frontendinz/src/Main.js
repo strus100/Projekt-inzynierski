@@ -14,32 +14,35 @@ function Main(props) {
   const [hoverMenu, setHoverMenu] = useState(false);
   const [checkedMenu, setChangeMenu] = useState(false);
   const [hoverChat, setHoverChat] = useState(false);
-  const [checkedChat, setChangeChat] = useState(false);
+  const [checkedChat, setChangeChat] = useState(true);
   const [checkedIframeInputAdmin, setCheckedIframeInputAdmin] = useState(false);
   const [messages, setMesseges] = useState([]);
   const [historyB, setHistoryB] = useState([{title: "strus100/Projekt-inzynierski", link: "https://github.com/strus100/Projekt-inzynierski"}, {title: "Projekt Inżynierski – Dysk Google", link: "https://drive.google.com/drive/folders/1OBH7hwjS7rxf_lPeMfBeXzLsXSPu-4sN"}]);
   const [usersList, setUsersList] = useState([]);
   const [ws, setWebsocket] = useState(null); 
-  const [iframeURL, setIframeURL] = useState("http://wmi.amu.edu.pl"); 
+  const [iframeURL, setIframeURL] = useState(""); 
+  const [blockChat, setBlockChat] = useState(false);
+  //console.log('in render:', blockChat)
+  
   const {setAuthenticated} = useContext(AContext);
   const {setAdmin} = useContext(AContext);
   
   const {name, setName} = useContext(AContext);
   const {surname, setSurname} = useContext(AContext);
   const {setAccess} = useContext(AContext);
-  const {token, setToken} = useContext(AContext);
+  const {setToken} = useContext(AContext);
   
-  const [iframeURLadmin, setIframeURLadmin] = useState("http://wmi.amu.edu.pl"); 
-  const URL = 'wss://s153070.projektstudencki.pl:3000';
-  //const URL = 'ws://localhost:1111';
-  const proxy = 'https://s153070.projektstudencki.pl/proxy/index.php?url=';
-  //const proxy = '';
+  const [iframeURLadmin, setIframeURLadmin] = useState(""); 
+  //const URL = 'wss://s153070.projektstudencki.pl:3000';
+  const URL = 'ws://localhost:1111';
+  //const proxy = 'https://s153070.projektstudencki.pl/proxy/index.php?url=';
+  const proxy = '';
 
   const { id } = useParams();
 
   const [roomName, setRoomName] = useState("");
-  const [roomAdmin, setRoomAdmin] = useState(false); //zmienić na false
-  const [loadingMain, setLoadingMain] = useState(false); //zmienić na false
+  const [roomAdmin, setRoomAdmin] = useState(true); //zmienić na false
+  const [loadingMain, setLoadingMain] = useState(true); //zmienić na false
 
   useEffect(() => {
 	axios.post('/rooms/', {
@@ -127,7 +130,7 @@ function Main(props) {
 	
 		webSocket.onclose = e => {
 			if(window.location.href.indexOf("main") > -1){
-				setWebsocket(null);
+				//setWebsocket(null); //do przetestowania - możliwy błąd uncomment jeśli wina backu
 				console.log(
 					`Socket is closed. Reconnect will be attempted in ${Math.min(
 						10000 / 1000,
@@ -245,8 +248,33 @@ function Main(props) {
 	};
   }, [loadingMain]);
 
+  function scrollToBottom (id) {
+	var div = document.getElementById(id);
+	if(div)	div.scrollTop = div.scrollHeight - div.clientHeight;
+	//console.log("dol " + blockChat); a może tylko na moje wiadomości?
+ }
+
+  /*function scrollToPos (id, pos) {
+	var div = document.getElementById(id);
+	if(div)	div.scrollTop = pos;
+ }*/
+
+ function handleAddMessage(message){
+	setMesseges(x => [...x, message] );
+ }
+
+ function addMessageCallback(x, callback){
+	 callback(x);
+	 const timer = setTimeout(() => {
+		if(!blockChat) scrollToBottom("chat-area");
+	  }, 100);
+
+	  return () => clearTimeout(timer); 
+ }
+
   function addMessage(message){
-	  setMesseges(x => [message, ...x] );
+	 // setMesseges(x => [message, ...x] );
+	 addMessageCallback(message, handleAddMessage);
 	   //beep();
   }
 
@@ -363,6 +391,10 @@ function Main(props) {
 
   return (
 	  <div className="main">
+		  <span style={{zIndex: 150, position: "fixed", height: 70+"px", width: 70+"px", clipPath: "circle(50px at 7px 7px)"}}>		
+				<div className="circle2">{props.lightMode ? <span className="material-icons themebutton" onClick={props.lightModeHandler}>bedtime</span>: <span className="material-icons themebutton" onClick={props.lightModeHandler} style={{color: "#fff"}}>brightness_4</span>
+				}</div>
+			</span>
 		  {loadingMain ?
 			<div>
 				{ roomAdmin ?
@@ -413,6 +445,7 @@ function Main(props) {
 				changePermission={changePermission}
 				submitMessage={submitMessage}
 				handleChangeURL={handleChangeURL}
+				scrollToBottom={scrollToBottom}
 				/>
 			<Footer 
 				lobby={false}
@@ -429,7 +462,7 @@ function Main(props) {
 			</div>
 			:
 			<div>
-				<h1>Loading</h1>
+				<div class="loader">Loading...</div>
 				<Menu 
 					checkedMenu={checkedMenu} 
 					hoverMenu={hoverMenu}
