@@ -23,6 +23,14 @@ function Chat(props){
         className += ' chat-admin';
     }
 
+    function handleChatScroll(){
+        const timer = setTimeout(() => {
+            props.scrollToBottom("chat-area");
+          }, 100);
+    
+          return () => clearTimeout(timer); 
+    }
+
     return(
       <div className={className}>            
           <div className="chat">
@@ -30,7 +38,7 @@ function Chat(props){
               <Tabs>
                 <div className="chat-tabs">
                     <TabList>
-                        <Tab><i className="material-icons">chat</i></Tab>
+                        <Tab onClick={handleChatScroll}><i className="material-icons">chat</i></Tab>
                         <Tab><i className="material-icons">person</i></Tab>
                         {props.roomAdmin &&
                         <Tab><i className="material-icons">history</i></Tab>
@@ -48,6 +56,12 @@ function Chat(props){
                             messagetype={message.messagetype}
                         />,
                         )}
+                    </div>
+                    <div id="send-message-area">
+                        <ChatInput
+                            ws={props.ws}
+                            onSubmitMessage={messageString => props.submitMessage(messageString)}
+                            />
                     </div>
                 </div>
                 </TabPanel>
@@ -84,12 +98,6 @@ function Chat(props){
                 </TabPanel>
                 }
               </Tabs>
-              <div id="send-message-area">
-              <ChatInput
-                  ws={props.ws}
-                  onSubmitMessage={messageString => props.submitMessage(messageString)}
-                  />
-              </div>
           </div>
       </div>
       )

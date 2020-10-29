@@ -1,6 +1,9 @@
 import React, { useContext } from 'react';
 import './App.css'
 import {AContext} from "./AContext";
+import {
+    Link
+  } from "react-router-dom";
 
 function Footer(props){
     const {admin} = useContext(AContext);
@@ -12,14 +15,21 @@ function Footer(props){
         {admin && <label 
         htmlFor="tooglemenu"
         onClick={(e) => props.handlePopupLobby(e)}
-        style={{position: "absolute", left: 0+"px", width: 25+"%", borderRight: 1+"px solid #fff"}}
-        ><span aria-labelledby="jsx-a11y/accessible-emoji" role="img">Moje pliki</span></label>
+        className="tooltip footer--span-files"
+        ><span className="tooltiptext tooltipfiles" style={{width: 150+"px", marginLeft: -5 + "%"}}>Przeglądaj pliki</span>
+        <span aria-labelledby="jsx-a11y/accessible-emoji" role="img"><i className="material-icons">insert_drive_file</i></span></label>
         }
+
+        
+        <Link to="/"><label style={{width:"auto"}}><span class="material-icons footer--span-home">home</span></label></Link>
+        
+
         <label 
         htmlFor="tooglemenu"
         onClick={() => props.handleLogout()}
-        style={{position: "absolute", right: 0+"px",width: 25+"%", borderLeft: 1+"px solid #fff"}}
-        ><span aria-labelledby="jsx-a11y/accessible-emoji" role="img">Wyloguj</span></label>
+        className="tooltip footer--span-logout"
+        >{/*<span class="tooltiptext">Wyloguj się</span>*/}
+        <span aria-labelledby="jsx-a11y/accessible-emoji" role="img">WYLOGUJ</span></label>
         </div>
         :
         <div>        
@@ -33,7 +43,10 @@ function Footer(props){
                 htmlFor="tooglemenu"
                 onMouseEnter={() => props.handleHoverMenu(true)}
                 onMouseLeave={() => props.handleHoverMenu(false)}
+                className="tooltip footer--span-menu"
+                style={{position:"absolute", left: 0}}
                 >
+                    <span className="tooltiptext">Menu</span>
                 <span aria-labelledby="jsx-a11y/accessible-emoji" role="img">&#9776;</span>
             </label>
 
@@ -48,7 +61,9 @@ function Footer(props){
             {props.roomAdmin &&
             <label 
                 htmlFor="toogleiframeinputadmin"
+                className="tooltip footer--span-http"
             >
+                <span className="tooltiptext">URL</span>
                 <span aria-labelledby="jsx-a11y/accessible-emoji" role="img"><i className="material-icons">http</i></span></label>
             }
 
@@ -62,7 +77,10 @@ function Footer(props){
                 htmlFor="tooglechat"
                 onMouseEnter={() => props.handleHoverChat(true)}
                 onMouseLeave={() => props.handleHoverChat(false)}
+                className="tooltip footer--span-chat"
+                style={{position:"absolute", right: 0}}
             >
+                <span className="tooltiptext">Chat</span>
                 <span aria-labelledby="jsx-a11y/accessible-emoji" role="img"><i className="material-icons">chat</i></span>
             </label>
             

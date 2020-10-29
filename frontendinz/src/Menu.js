@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link } from "react-router-dom";
 import './App.css'
 
@@ -24,6 +24,7 @@ function Menu(props){
             <nav className={className}>
                 <ul>
                     {props.roomAdmin && <li onClick={(e) => handleClick(e) }><a href="#">Ustawienia</a></li>}
+                    <li><Link to="/">Strona główna</Link></li>
                     <li><Link to="/lobby">Lobby</Link></li>
                     <li onClick={() => props.handleLogout()}><a href="#">WYLOGUJ</a></li>
                 </ul>

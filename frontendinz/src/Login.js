@@ -8,6 +8,7 @@ function Login(props){
     const [password, setPassword] = useState('');
     const [isButtonDisabled, setIsButtonDisabled] = useState(true);
     const [error, setError] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const {setAuthenticated} = useContext(AContext);
     const {setAdmin} = useContext(AContext);
 	
@@ -61,13 +62,16 @@ function Login(props){
         }
       };
 
+      function passwordVisibilityChange(e){
+        setShowPassword(showPassword => !showPassword);
+      }
+
       return(
         <div className="login_form">
           <div className="form-div">
             <h1>Zaloguj się</h1>
             <form>        
                 <div className="form-field">
-                    <label className="user" htmlFor="login-username"><span className="hidden">Login LDAP</span></label>
                     <input 
                         id="login-username" 
                         type="text" 
@@ -76,18 +80,20 @@ function Login(props){
                         onChange={(e)=>setUsername(e.target.value)}
                         onKeyPress={(e)=>handleKeyPress(e)}
                         required></input>
+                      <label className="user" htmlFor="login-username"><span className="hidden">Login LDAP</span></label>
                 </div>
 
                 <div className="form-field">
-                    <label className="lock" htmlFor="login-password"><span className="hidden">Hasło LDAP</span></label>
                     <input 
                         id="login-password" 
-                        type="password" 
+                        type={showPassword ? "input" : "password"} 
                         className="login--input" 
                         placeholder="" 
                         onChange={(e)=>setPassword(e.target.value)}
                         onKeyPress={(e)=>handleKeyPress(e)}
                         required></input>
+                        <span onClick={(e)=>passwordVisibilityChange(e)} className="material-icons" id="password_visibility_switcher">{showPassword ? "visibility_off" : "visibility"}</span>
+                        <label className="lock" htmlFor="login-password"><span className="hidden">Hasło LDAP</span></label>
                 </div>
 
                 <h1 id="error-msg">{error ? "Błąd logowania." : <span style={{color: "white", userSelect: "none"}}>.</span>}</h1>

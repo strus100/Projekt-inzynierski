@@ -1,14 +1,12 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { useHistory } from "react-router-dom";
 import FileList from "./FileList"
 import axios from 'axios';
-import {AContext} from "./AContext"
 import './App.css'
 
 function Popup(props){   
     const [files, setFiles] = useState([])
-    const {token} = useContext(AContext);
     const [roomNameTmp, setRoomNameTmp] = useState("");
     const [disabledButton, setDisabledButton] = useState(false);
     const [disabledButton2, setDisabledButton2] = useState(false);
@@ -18,14 +16,14 @@ function Popup(props){
     useEffect(() => {
       updateFiles();
         
-      window.onclick = function(event) {
-        if (event.target == document.getElementById("myModal")) {
+      window.addEventListener('click', function(event) {
+        if (event.target === document.getElementById("myModal")) {
             document.getElementById("myModal").style.display = "none";
         }
-        if (event.target == document.getElementsByClassName("close")[0]) {
+        if (event.target === document.getElementsByClassName("close")[0]) {
             document.getElementById("myModal").style.display = "none";
         }
-      }
+      })
       var rname = props.roomName; 
       setRoomNameTmp(rname);
     }, [])
@@ -150,12 +148,13 @@ function Popup(props){
                     {props.fromMain &&
                     <TabPanel>
                         <div className="general-area">
-                            <h1 style={{marginTop: 10 + "px"}}>Nazwa pokoju</h1>
+                            <h1 style={{marginTop: 40 + "px"}}>Nazwa pokoju</h1>
                             <h2>{props.roomName}</h2>
                             <input type="text" value={roomNameTmp} onChange={(e) => handleSetRoomNameTmp(e.target.value)}></input><br></br>
                             <button className="generalbtn" onClick={() => handleChangeName()} disabled={disabledButton}>Zmień</button>
-                            <br></br>
-                            <button className="generalbtn" onClick={() => handleDeleteRoom()} disabled={disabledButton2}>Delete</button>
+                            <br></br><hr style={{marginTop: 50+"px", backgroundImage: "linear-gradient(to right, #ccc, #333, #ccc)", height: 1+"px", border: "0", background: "#333", width: 70+"%"}}></hr>
+                            <h1 style={{marginTop: 40 + "px"}}>Usuwanie pokoju</h1>
+                            <button className="generalbtn" onClick={() => handleDeleteRoom()} disabled={disabledButton2}>Usuń pokój</button>
                         </div>
                     </TabPanel>
                     }

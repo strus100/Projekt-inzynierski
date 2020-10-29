@@ -231,7 +231,11 @@ function Lobby(props){
 	  }
 
         return(
-        <div className={classNameLobby}>
+        <div className={classNameLobby}>   
+			<span style={{zIndex: 150, position: "fixed", height: 70+"px", width: 70+"px", clipPath: "circle(50px at 7px 7px)"}}>		
+				<div className="circle2">{props.lightMode ? <span className="material-icons themebutton" onClick={props.lightModeHandler}>bedtime</span>: <span className="material-icons themebutton" onClick={props.lightModeHandler} style={{color: "#fff"}}>brightness_4</span>
+				}</div>
+			</span>
 			<Tabs>
 				<TabList>
 				<Tab onClick={() => handleCurrentTab(1)}>Znajdź pokój</Tab>
