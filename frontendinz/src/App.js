@@ -1,8 +1,9 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import Main from "./Main"
-import Login from "./Login"
-import Lobby from "./Lobby"
-import HomePage from "./HomePage"
+import Main from "./Main";
+import Login from "./Login";
+import Lobby from "./Lobby";
+import FAQ from "./FAQ";
+import HomePage from "./HomePage";
 import {AContext} from "./AContext";
 import axios from 'axios';
 import {
@@ -162,6 +163,7 @@ function App() {
 				<Route path="/main/:id" render={() => (authenticated ? <Main lightMode={lightMode} lightModeHandler={lightModeHandler}/> : <Redirect to='/login' />)}/>
 				<Route path="/lobby" render={() => (authenticated ? <Lobby lightMode={lightMode} lightModeHandler={lightModeHandler}/> : <Redirect to='/login' />)}/>
 				<Route path="/login" render={() => (!authenticated ? <Login/> : <Redirect to='/lobby' />)}/>
+				<Route path="/faq" render={() => <FAQ/>}/>
 			  </Switch>
 			</AContext.Provider>
 		  </Router>

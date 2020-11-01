@@ -2098,7 +2098,84 @@ input[type=text], input[type=password], textarea{
     width: 32px;
 }
 
-@media (max-width: 800px)  {
+/* FAQ */
+
+.faq--div-main{
+  display: flex;
+  justify-content: center;
+  padding-top: 30px;
+  background-color: #fff;
+  min-height: 100vh;
+}
+
+.faq--div-container{
+  width: 80%;
+}
+
+/* Style the buttons that are used to open and close the accordion panel */
+.faq--button-accordion {
+  background-color: dodgerblue;
+  color: #fff;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  text-align: left;
+  border: none;
+  outline: none;
+  transition: 0.4s;
+  border-bottom: 1px solid lightgrey;
+  font-weight: 500;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.accordion--button-active, .faq--button-accordion:hover {
+  background-color: rgb(0, 100, 201);
+  color: #fff;
+  font-weight: 500;
+}
+
+/* Style the accordion panel. Note: hidden by default */
+.faq--panel-accordion {
+  padding: 0 18px;
+  background-color: #eee;
+  display: none;
+  overflow: hidden;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 10px;
+}
+
+.faq--button-accordion::before {
+  content: "+";
+  margin-right: 10px;
+  font-weight: 1000;
+  position: relative;
+}
+
+.accordion--button-active:before{
+  content: "-";
+}
+
+.faq--image{
+  width: 100%;
+}
+
+.faq--image-narrow{
+  width: unset;
+}
+
+.faq--panel-accordion-container{
+  ;
+}
+
+@media (min-width: 850px){
+  .main--span-labeled{
+    display: none;
+  }
+}
+
+@media (max-width: 850px)  {
   .main--navbar-fixed{
     transform: translateY(-400px);
     transition: 1s;

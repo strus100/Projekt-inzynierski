@@ -79,6 +79,9 @@ function HomePage(props){
                 <Link to="/lobby">Lobby</Link>
               </li>
               <li>
+                <Link to="/faq" target="_blank">FAQ</Link>
+              </li>
+              <li>
                 <a onClick={() => props.handleLogout()}>Wyloguj</a>
               </li>
             </ul>
@@ -92,6 +95,9 @@ function HomePage(props){
               </li>
               <li>
                 <a href="#section--2">ARCHITEKTURA</a>
+              </li>
+              <li>
+                <Link to="/faq" target="_blank">FAQ</Link>
               </li>
               <li>
                 <Link to="/login">login</Link>

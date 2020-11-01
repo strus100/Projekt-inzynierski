@@ -21,7 +21,7 @@ function Footer(props){
         }
 
         
-        <Link to="/"><label style={{width:"auto"}}><span class="material-icons footer--span-home">home</span></label></Link>
+        <Link to="/"><label style={{width:"auto"}}><span className="material-icons footer--span-home">home</span></label></Link>
         
 
         <label 

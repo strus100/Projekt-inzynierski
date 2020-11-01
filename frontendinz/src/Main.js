@@ -288,7 +288,7 @@ function Main(props) {
 					message = { type: "chat", chat: messageString.replace("/c ",""), name: name+" "+surname, messagetype: "code" };
 					ws.send(JSON.stringify(message));
 				}
-				else if(messageString === "/help" || messageString === "/h"){
+				else if(messageString === "/help" || messageString === "/h" || messageString === "/pomoc"){
 					message = { type: "chat", chat: "Komendy dostępne na czacie: \n\n/c tekst -> Wyświetla tekst jako kod\n\n/help -> Wyświetla pomoc\n\n//tekst -> pozwala na wypisanie wiadomości, która zaczyna się od '/' na czacie (nie będzie traktowana jako komenda), przykładowo '//c tekst' wypisze '/c tekst'", name: "SERVER", messagetype: "code" }
 					addMessage(message);
 				}
