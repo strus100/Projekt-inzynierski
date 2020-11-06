@@ -12,6 +12,6 @@
             $this->room = $room;
         }
 
-        
+
     }
 ?>
