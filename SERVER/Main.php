@@ -10,10 +10,7 @@
     date_default_timezone_set("Europe/Warsaw");
 
     require_once __DIR__."/Infrastructure/WebSocket.php";
-
-    define("DEFAULT_IP", "0.0.0.0");
-    define("DEFAULT_PORT", 3000);
-    define("MAX_BUFFER", 10000000);
+    require_once __DIR__."/Config.php";
 
     // Arguments parsing
     if($argc>1 && $argv[1]=="start"){
@@ -27,6 +24,6 @@
         $server = new WebSocket($parameters);
     }
     else{
-        die("Usage: start [,-a=<ip>] [,-p=<port>]\r\n\tDefault: ip:".DEFAULT_IP." port:".DEFAULT_PORT);
+        die("Usage: start [,-a=<ip>] [,-p=<port>]\r\n\tDefault: ip:".Config::DEFAULT_IP." port:".Config::DEFAULT_PORT);
     }
 ?>
