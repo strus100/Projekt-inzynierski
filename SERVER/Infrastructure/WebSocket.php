@@ -85,6 +85,8 @@
                         ."Upgrade: websocket\r\n"
                         ."Connection: Upgrade\r\n"
                         ."Sec-Websocket-Accept: $keyHash\r\n\r\n";
+
+            //Send handshake response to client
             fwrite($socket, $response);
             
             $cookies = $this->getCookies($HTTPdata['Cookie']);
@@ -97,7 +99,12 @@
 
             $msg = fread($clientSocket, MAX_BUFFER);
             $token = $this->handshake($clientSocket, $msg);
+            
+            
+            
             $client = new Client($clientSocket, $token);
+
+
             if($client->authorize()){
                 $this->clients[(string)$clientSocket] = $client;
                 $roomID = $client->getRoomID();

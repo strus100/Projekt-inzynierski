@@ -6,7 +6,7 @@
         private static $rooms=[];
 
         public static function createRoom(){
-            $rooms[] = new Room();
+            //$rooms[] = new Room();
         }
 
         public static function getRoomByID($roomID){
