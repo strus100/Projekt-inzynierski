@@ -5,11 +5,11 @@
     require_once __DIR__."/../Entities/ClientEntity.php";
 
     class DatabaseService{
-        public static function getRoomInfo($roomID){
+        public static function getRoomByID($roomID){
             $roomID = htmlspecialchars($roomID);
 
             $db = new Database();
-            $result = $db->query("SELECT * FROM 'rooms' WHERE `id` = '$roomID';");
+            $result = $db->query("SELECT * FROM `rooms` WHERE `id` = '$roomID';");
             $db->close();
 
             $array = null;
@@ -29,13 +29,13 @@
             $token = htmlspecialchars($token);
 
             $db = new Database();
-            $result = $db->query("SELECT * FROM 'usertable' WHERE `token` = '$token';");
+            $result = $db->query("SELECT * FROM `usertable` WHERE `token` = '$token';");
             $db->close();
 
             $array = null;
             if($result->num_rows == 1){
                 while($row = $result->fetch_assoc()){
-                    $client = new ClientEntity($row['login'], $row['permission'], $row['name'], $row['surname'], $row['role']);
+                    $client = new ClientEntity($row['login'], $row['role'], $row['name'], $row['surname'], $row['room']);
                     $array = $client;
                 }
             }else{

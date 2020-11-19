@@ -6,7 +6,7 @@
         public $name;
         public $surname;
         
-        public $room;
+        public $roomID;
 
         function __construct($login, $permission, $name, $surname, $room){
             $this->login = $login;
@@ -15,7 +15,7 @@
             $this->name = $name;
             $this->surname = $surname;
 
-            $this->room = $room;
+            $this->roomID = $room;
         }
     }
 ?>

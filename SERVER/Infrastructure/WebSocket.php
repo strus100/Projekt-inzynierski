@@ -5,6 +5,7 @@
     // probably later uncomment:    extension=openssl
 
     require_once __DIR__."/../Application/LoggerService.php";
+    require_once __DIR__."/../Application/ClientService.php";
     require_once __DIR__."/../Config.php";
 
     // First octet -> flags with OPCODE
@@ -27,15 +28,16 @@
 
         function __construct($args){
             $context = stream_context_create();
-            stream_context_set_option($context, 'ssl', 'local_cert', "/etc/letsencrypt/live/s153070.projektstudencki.pl/fullchain.pem");
-            stream_context_set_option($context, 'ssl', 'local_pk', "/etc/letsencrypt/live/s153070.projektstudencki.pl/privkey.pem");
-            stream_context_set_option($context, 'ssl', 'allow_self_signed', false);
-            stream_context_set_option($context, 'ssl', 'verify_peer', false);
+            // stream_context_set_option($context, 'ssl', 'local_cert', "/etc/letsencrypt/live/s153070.projektstudencki.pl/fullchain.pem");
+            // stream_context_set_option($context, 'ssl', 'local_pk', "/etc/letsencrypt/live/s153070.projektstudencki.pl/privkey.pem");
+            // stream_context_set_option($context, 'ssl', 'allow_self_signed', false);
+            // stream_context_set_option($context, 'ssl', 'verify_peer', false);
 
             $ip = isset($args['-a']) ? $args['-a'] : Config::DEFAULT_IP;
             $port = isset($args['-p']) ? $args['-p'] : Config::DEFAULT_PORT;
 
-            $this->socket = stream_socket_server("tls://$ip:$port", $errno, $errstr, STREAM_SERVER_BIND|STREAM_SERVER_LISTEN, $context);
+            //$this->socket = stream_socket_server("tls://$ip:$port", $errno, $errstr, STREAM_SERVER_BIND|STREAM_SERVER_LISTEN, $context);
+            $this->socket = stream_socket_server("tcp://$ip:$port", $errno, $errstr, STREAM_SERVER_BIND|STREAM_SERVER_LISTEN, $context);
             if($this->socket){
                 $address = stream_socket_get_name($this->socket, FALSE);
                 LoggerService::log("Server socket: $this->socket");
@@ -97,12 +99,12 @@
             $address = stream_socket_get_name($clientSocket, TRUE);
             LoggerService::log("New connection from: $address");
 
-            $msg = fread($clientSocket, MAX_BUFFER);
+            $msg = fread($clientSocket, Config::MAX_BUFFER);
             $token = $this->handshake($clientSocket, $msg);
             
+            ClientService::createClient((string)$clientSocket, $token);
             
-            
-            $client = new Client($clientSocket, $token);
+            //$client = new Client($clientSocket, $token);
 
 
             if($client->authorize()){

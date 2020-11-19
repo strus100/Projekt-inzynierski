@@ -44,5 +44,9 @@
         public function isAdmin(){
             return $this->permission == PERMISSION::ADMIN;
         }
+
+        public function getLogin(){
+            return $this->login;
+        }
     }
 ?>

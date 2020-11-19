@@ -5,12 +5,27 @@
     class RoomService{
         private static $rooms=[];
 
-        public static function createRoom(){
-            //$rooms[] = new Room();
+        public static function createRoom($roomID){
+            $roomEntity = DatabaseService::getRoomByID($roomID);
+
+            if(!empty($roomEntity)){
+                if(!empty(self::$rooms[$roomID])){
+                    LoggerService::warn("Room already exists!\tID: $roomID");
+                    return null;
+                }
+
+                $room = new Room($roomID, $roomEntity->roomName, $roomEntity->admin);
+                self::$rooms[$roomID] = $room;
+
+                unset($roomEntity);
+                LoggerService::log("Room created.\tID: $roomID");
+            }else{
+                LoggerService::error("Cannot create new room id: $roomID");
+            }
         }
 
         public static function getRoomByID($roomID){
-            if(self::$rooms[$roomID]){
+            if(!empty(self::$rooms[$roomID])){
                 return self::$rooms[$roomID];
             }else{
                 LoggerService::warn("Room not found: $roomID");
@@ -18,8 +33,12 @@
             }
         }
 
+        public static function isRoomCreated($roomID){
+            return !empty(self::$rooms[$roomID]);
+        }
+
         public static function deleteRoom($roomID){
-            if(self::$rooms[$roomID]){
+            if(!empty(self::$rooms[$roomID])){
                 //room delete
             }else{
                 LoggerService::warn("Room not found: $roomID");
