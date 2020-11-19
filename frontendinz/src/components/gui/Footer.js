@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
-import './App.css'
-import {AContext} from "./AContext";
+import '../../css/App.css'
+import {AContext} from "../../context/AContext";
 import {
     Link
   } from "react-router-dom";

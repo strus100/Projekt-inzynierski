@@ -1,13 +1,13 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { useHistory } from "react-router-dom";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import {AContext} from "./AContext";
+import {AContext} from "../../context/AContext";
 import axios from 'axios';
 import RoomInfo from "./RoomInfo";
-import Footer from "./Footer";
-import Popup from "./Popup";
-import PopupQuestion from "./PopupQuestion";
-import './App.css'
+import Footer from "../gui/Footer";
+import Popup from "../gui/Popup";
+import PopupQuestion from "../gui/PopupQuestion";
+import '../../css/App.css'
 
 function Lobby(props){
 	const [roomsList, setRoomsList] = useState([

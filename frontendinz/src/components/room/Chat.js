@@ -1,5 +1,5 @@
 import React from 'react';
-import './App.css'
+import '../../css/App.css';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import ChatMessage from "./ChatMessage";
 import ChatInput from "./ChatInput";

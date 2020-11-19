@@ -1481,16 +1481,16 @@ input[type=text], input[type=password], textarea{
 }
 
 .parallax1 {
-  background-image: url("./img/nathan-thomassin-PTLof___Ig4-unsplash-min.jpg");
+  background-image: url("../img/nathan-thomassin-PTLof___Ig4-unsplash-min.jpg");
 }
 
 .parallax3, .parallax4 {
-  background-image: url("./img/ezgif.com-gif-maker.webp");
+  background-image: url("../img/ezgif.com-gif-maker.webp");
 }
 
 .parallax2 {
     background-color: hsla(200,40%,30%,.4);
-    background-image:	url("./img/nathan-thomassin-PTLof___Ig4-unsplash-min.jpg");		
+    background-image:	url("../img/nathan-thomassin-PTLof___Ig4-unsplash-min.jpg");		
     background-repeat: repeat-x;
     background-size: 100% 300%;
     background-position: center;
@@ -1989,7 +1989,7 @@ input[type=text], input[type=password], textarea{
 }
 .main--card-image {
   grid-area: image;
-  background: url("img/pobrane.jfif");
+  background: url("../img/pobrane.jfif");
   border-top-left-radius: 7px;
   border-top-right-radius: 7px;
   background-size: 110% 110%;
@@ -2054,23 +2054,23 @@ input[type=text], input[type=password], textarea{
 }
 
 .main--card-technology:nth-child(1) .main--card-image-technology{
-  background-image: url("./img/websocket.svg");
+  background-image: url("../img/websocket.svg");
 }
 
 .main--card-technology:nth-child(2) .main--card-image-technology{
-  background-image: url("./img/react.svg");
+  background-image: url("../img/react.svg");
 }
 
 .main--card-technology:nth-child(3) .main--card-image-technology{
-  background-image: url("./img/php-1.svg");
+  background-image: url("../img/php-1.svg");
 }
 
 .main--card-technology:nth-child(4) .main--card-image-technology{
-  background-image: url("./img/webrtc.svg");
+  background-image: url("../img/webrtc.svg");
 }
 
 .main--card-technology:nth-child(5) .main--card-image-technology{
-  background-image: url("./img/mysql.svg");
+  background-image: url("../img/mysql.svg");
 }
 
 .main--card-text-technology{
@@ -2177,7 +2177,7 @@ input[type=text], input[type=password], textarea{
 
 @media (max-width: 850px)  {
   .main--navbar-fixed{
-    transform: translateY(-400px);
+    transform: translateY(-450px);
     transition: 1s;
     background-color: #23232b!important;
   }

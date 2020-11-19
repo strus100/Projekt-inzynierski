@@ -1,12 +1,11 @@
 import React, {useState, useEffect, useContext} from 'react';
-import { AContext } from "./AContext"
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   Link
 } from "react-router-dom";
-import './App.css'
+import '../../css/App.css'
 
 function HomePage(props){
   const [cn, setCn] = useState("main--navbar-fixed");

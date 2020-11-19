@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useContext} from 'react';
-import { AContext } from "./AContext"
-import './App.css'
+import { AContext } from "../../context/AContext"
+import '../../css/App.css'
 import axios from 'axios';
 
 function Login(props){

@@ -1,14 +1,14 @@
 import React, { useState, useContext, useEffect } from 'react';
-import Menu from "./Menu"
+import Menu from "../gui/Menu"
 import Chat from "./Chat"
-import Footer from "./Footer"
+import Footer from "../gui/Footer"
 import Iframe from "./Iframe"
 import IframeInputAdmin from "./IframeInputAdmin"
-import Popup from "./Popup"
-import {AContext} from "./AContext"
+import Popup from "../gui/Popup"
+import {AContext} from "../../context/AContext"
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import './App.css';
+import '../../css/App.css';
 
 function Main(props) {
   const [hoverMenu, setHoverMenu] = useState(false);

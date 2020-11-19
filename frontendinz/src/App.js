@@ -1,10 +1,10 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import Main from "./Main";
-import Login from "./Login";
-import Lobby from "./Lobby";
-import FAQ from "./FAQ";
-import HomePage from "./HomePage";
-import {AContext} from "./AContext";
+import Main from "./components/room/Main";
+import Login from "./components/login/Login";
+import Lobby from "./components/lobby/Lobby";
+import FAQ from "./components/faq/FAQ";
+import HomePage from "./components/mainpage/HomePage";
+import {AContext} from "./context/AContext";
 import axios from 'axios';
 import {
   BrowserRouter as Router,

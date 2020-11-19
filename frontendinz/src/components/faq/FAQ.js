@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { Link } from "react-router-dom";
-import './App.css'
-import lobby_tutorial_1 from "./img/lobby_tutorial_1.png";
-import lobby_tutorial_2 from "./img/lobby_tutorial_2.png";
+import '../../css/App.css'
+import lobby_tutorial_1 from "../../img/lobby_tutorial_1.png";
+import lobby_tutorial_2 from "../../img/lobby_tutorial_2.png";
 
 function FAQ(props){   
 
@@ -49,9 +49,9 @@ function FAQ(props){
                     <div className="faq--panel-accordion">
                         <div className="faq--panel-accordion-container">
                             Komendy dostępne na czacie: <br/><br/>
-                            /c tekst -> Wyświetla tekst jako kod<br/><br/>
-                            /pomoc (alias: /h, /help) -> Wyświetla pomoc<br/><br/>
-                            //tekst -> pozwala na wypisanie wiadomości, która zaczyna się od '/' na czacie (nie będzie traktowana jako komenda), przykładowo '//c tekst' wypisze '/c tekst'
+                            /c tekst {"->"} Wyświetla tekst jako kod<br/><br/>
+                            /pomoc (alias: /h, /help) {"->"}  Wyświetla pomoc<br/><br/>
+                            //tekst {"->"}  pozwala na wypisanie wiadomości, która zaczyna się od '/' na czacie (nie będzie traktowana jako komenda), przykładowo '//c tekst' wypisze '/c tekst'
                         </div>
                     </div>
                 </div>

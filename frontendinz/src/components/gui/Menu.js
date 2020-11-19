@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from "react-router-dom";
-import './App.css'
+import '../../css/App.css'
 
 function Menu(props){   
         var className = 'menu-activea';

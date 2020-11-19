@@ -3,7 +3,7 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { useHistory } from "react-router-dom";
 import FileList from "./FileList"
 import axios from 'axios';
-import './App.css'
+import '../../css/App.css'
 
 function Popup(props){   
     const [files, setFiles] = useState([])
