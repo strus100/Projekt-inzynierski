@@ -120,7 +120,8 @@
 					"id" => $row['id'],
 					"roomName" => $row['roomName'],
 					"name" => $row['name'],
-					"surname" => $row['surname']
+					"surname" => $row['surname'],
+					"login" => $row['admin']
 				];
 				$rooms[] = $room;
 			}
