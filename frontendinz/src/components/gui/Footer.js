@@ -66,7 +66,15 @@ function Footer(props){
                 <span className="tooltiptext">URL</span>
                 <span aria-labelledby="jsx-a11y/accessible-emoji" role="img"><i className="material-icons">http</i></span></label>
             }
-
+            {!props.roomAdmin &&
+                <a href="#" target="_blank"><label
+                    className="tooltip footer--span-consultation"
+                >
+                <span className="tooltiptext tooltiptext--long">Umów się na konsultację z IMIĘ NAZWISKO</span>
+                <span aria-labelledby="jsx-a11y/accessible-emoji" role="img">Konsultacja</span></label>
+                </a>
+            }
+            <Link to="/"><label style={{width:"auto"}}><span className="material-icons footer--span-home">home</span></label></Link>
             <input 
                 type="checkbox" 
                 id="tooglechat"

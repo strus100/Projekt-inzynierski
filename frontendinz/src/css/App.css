@@ -7,7 +7,7 @@ html, body {
 * {
   box-sizing: border-box;
   padding: 0;
-  scroll-behavior: smooth;
+  /* scroll-behavior: smooth; to fix*/
   outline: none;
   font-family: 'Poppins', sans-serif;
 }
@@ -485,6 +485,15 @@ input:checked + label{
 
 .footer--span-chat, .footer--span-menu, .footer--span-http{
   padding: 0 25px;
+}
+
+.footer--span-http, .footer--span-consultation{
+  position: absolute!important;
+  left: 60px;
+}
+
+.footer--span-consultation{
+  padding: 0 30px;
 }
 
 /* LOGIN */
@@ -1409,6 +1418,10 @@ input[type=text], input[type=password], textarea{
   box-shadow: 0 15px 25px rgba(0,0,0,0.2);
 }
 
+.tooltiptext--long{
+  width: 250px!important;
+}
+
 /* Show the tooltip text when you mouse over the tooltip container */
 .tooltip:hover .tooltiptext {
   visibility: visible;
@@ -1433,6 +1446,10 @@ input[type=text], input[type=password], textarea{
   box-shadow: 0 15px 25px rgba(0,0,0,0.2);
 }
 
+.tooltip .tooltiptext--long::after{
+  left: 10%!important;
+}
+
 .tooltip .tooltipfiles::after{
   left: 20px;
 }
@@ -1444,6 +1461,7 @@ input[type=text], input[type=password], textarea{
   margin: 0;
   padding: 0;
   background-color: #fff;
+  scroll-behavior: smooth;
 }
 
 .main--section{
@@ -2103,7 +2121,7 @@ input[type=text], input[type=password], textarea{
 .faq--div-main{
   display: flex;
   justify-content: center;
-  padding-top: 30px;
+  padding: 30px 0;
   background-color: #fff;
   min-height: 100vh;
 }
@@ -2163,10 +2181,6 @@ input[type=text], input[type=password], textarea{
 
 .faq--image-narrow{
   width: unset;
-}
-
-.faq--panel-accordion-container{
-  ;
 }
 
 @media (min-width: 850px){

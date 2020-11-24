@@ -76,6 +76,7 @@ function Lobby(props){
 	const [popupRoomname, setPopupRoomname] = useState("");
 
 	const [currentTab, setCurrentTab] = useState(1);
+	const [currentLobbyMode, setCurrentLobbyMode] = useState(1);
 	
     const createLobby = e => {
 		var name = createRoomName;
@@ -105,6 +106,10 @@ function Lobby(props){
 			console.log(error);
 		  });
 	  }, [])
+
+	  useEffect(() => {
+		window.scrollTo(0,0);
+	}, [])
 
 	  function handleLogout(){
 		axios.get('/login_system/login.php?logout', {  })
@@ -230,6 +235,26 @@ function Lobby(props){
 		classNameLobby += " adminlobby";
 	  }
 
+	  function createLobbyUncategorized(){
+		  return(
+			roomsFilter.map((room, index) =>
+				<RoomInfo
+					key={index}
+					id={room.id}
+					name={room.name}
+					surname={room.surname}
+					roomName={room.roomName}
+					login={room.login}
+					handlePopupQ={handlePopupQ}
+				/>
+				)
+		  )
+	  }
+
+	  function createLobbyCategorizedByUser(){
+		return console.log("test");
+	}
+
         return(
         <div className={classNameLobby}>   
 			<span style={{zIndex: 150, position: "fixed", height: 70+"px", width: 70+"px", clipPath: "circle(50px at 7px 7px)"}}>		
@@ -253,20 +278,17 @@ function Lobby(props){
 							</label>
 						<br></br>
 					</div>
-					
-					<div className="roominfo--div">       
-						{roomsFilter.map((room, index) =>
-						<RoomInfo
-							key={index}
-							id={room.id}
-							name={room.name}
-							surname={room.surname}
-							roomName={room.roomName}
-							login={room.login}
-							handlePopupQ={handlePopupQ}
-						/>
-						)}
-					</div>
+
+					{currentLobbyMode === 1 &&
+						<div className="roominfo--div">       
+							{createLobbyUncategorized()};
+						</div>
+					}
+					{currentLobbyMode === 2 &&
+						<div className="roominfo--div">  
+							{createLobbyCategorizedByUser()};
+						</div>
+					}
 				</TabPanel>
 				
 				{admin &&  

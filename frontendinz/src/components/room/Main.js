@@ -63,6 +63,10 @@ function Main(props) {
   }, [])
 
   useEffect(() => {
+	  window.scrollTo(0,0);
+  }, [])
+
+  useEffect(() => {
 	if(loadingMain){
 		var timeout = 1000;
 		var connectInterval;

@@ -158,13 +158,13 @@ function App() {
 		{loaded ?
 		  <Router onChange={testUrl()}>
 			<AContext.Provider value={providerValue}>
-			  <Switch>
-				<Route exact path="/" render={() => <HomePage authenticated={authenticated} handleLogout={handleLogout}/>}/>
-				<Route path="/main/:id" render={() => (authenticated ? <Main lightMode={lightMode} lightModeHandler={lightModeHandler}/> : <Redirect to='/login' />)}/>
-				<Route path="/lobby" render={() => (authenticated ? <Lobby lightMode={lightMode} lightModeHandler={lightModeHandler}/> : <Redirect to='/login' />)}/>
-				<Route path="/login" render={() => (!authenticated ? <Login/> : <Redirect to='/lobby' />)}/>
-				<Route path="/faq" render={() => <FAQ/>}/>
-			  </Switch>
+				<Switch>
+					<Route exact path="/" render={() => <HomePage authenticated={authenticated} handleLogout={handleLogout}/>}/>
+					<Route path="/main/:id" render={() => (authenticated ? <Main lightMode={lightMode} lightModeHandler={lightModeHandler}/> : <Redirect to='/login' />)}/>
+					<Route path="/lobby" render={() => (authenticated ? <Lobby lightMode={lightMode} lightModeHandler={lightModeHandler}/> : <Redirect to='/login' />)}/>
+					<Route path="/login" render={() => (!authenticated ? <Login/> : <Redirect to='/lobby' />)}/>
+					<Route path="/faq" render={() => <FAQ/>}/>
+				</Switch>
 			</AContext.Provider>
 		  </Router>
 		  :

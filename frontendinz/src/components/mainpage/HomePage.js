@@ -27,6 +27,10 @@ function HomePage(props){
         //document.getElementById("main--container-slider").removeEventListener("mousemove", handleSlider);
     };
   }, [])
+
+  useEffect(() => {
+	  window.scrollTo(0,0);
+  }, [])
   
   function handleSlider(e){
 		cntWd = document.getElementById("main--container-slider").clientWidth;
