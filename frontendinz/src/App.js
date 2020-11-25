@@ -4,6 +4,8 @@ import Login from "./components/login/Login";
 import Lobby from "./components/lobby/Lobby";
 import FAQ from "./components/faq/FAQ";
 import HomePage from "./components/mainpage/HomePage";
+import Cookie from "./components/other/Cookie";
+import Loader from "./components/other/Loader";
 import {AContext} from "./context/AContext";
 import axios from 'axios';
 import {
@@ -28,8 +30,6 @@ function App() {
   const [cookieDecision, setCookieDecision] = useState(JSON.parse(localStorage.getItem('cookies')) || false);
   const [cookieDecisionVal, setCookieDecisionVal] = useState(JSON.parse(localStorage.getItem('cookies')) ? "none" : "block" );
 
-  const [homePageCheck, setHomePageCheck] = useState("");
-
   const [error, setError] = useState(false);
 
   const TITLE = 'Wykłady Webowe';
@@ -50,10 +50,6 @@ function App() {
 			let vh = window.innerHeight * 0.01;
 			document.documentElement.style.setProperty('--vh', `${vh}px`);
 		  });
-
-		window.addEventListener("hashchange", () => {
-			console.log("hash changed");
-		})
 
 		  return () => {
 			window.removeEventListener('resize', () => {
@@ -113,14 +109,6 @@ function App() {
 	}
 
 	function cookieOK(){
-		/*if(cookieDecision){
-			setCookieDecisionVal("none");
-			setCookieDecision(true);
-		}
-		else{
-			setCookieDecisionVal("block");
-		}*/
-		//console.log(cookieDecision + cookieDecisionVal);
 		setCookieDecision(true);
 		setCookieDecisionVal("none");
 	}
@@ -139,24 +127,13 @@ function App() {
 		setAdmin(false);
 		setAuthenticated(false);
 	  }
-
-	function testUrl(){
-		console.log("detected");
-	}
-	  
+  
     return (
 		<div className={classApp}>
+			<Cookie cookieOK={cookieOK} cookieDecisionVal={cookieDecisionVal}/>
 			
-			<div id="simplecookienotification_v01" style={{display: cookieDecisionVal}}>
-			<div>
-			<span id="simplecookienotification_v01_powiadomienie">Ta strona używa plików cookies.</span><span id="br_pc_title_html"><br></br></span>
-			<a id="simplecookienotification_v01_polityka" href="http://jakwylaczyccookie.pl/polityka-cookie/">Polityka Prywatności</a><span id="br_pc2_title_html"> &nbsp;&nbsp; </span>
-			<a id="simplecookienotification_v01_info" href="http://jakwylaczyccookie.pl/jak-wylaczyc-pliki-cookies/">Jak wyłączyć cookies?</a><div id="jwc_hr1"></div>
-			<a id="okbutton" onClick={cookieOK}>ROZUMIEM</a><div id="jwc_hr2"></div>
-			</div>
-			</div>
 		{loaded ?
-		  <Router onChange={testUrl()}>
+		  <Router>
 			<AContext.Provider value={providerValue}>
 				<Switch>
 					<Route exact path="/" render={() => <HomePage authenticated={authenticated} handleLogout={handleLogout}/>}/>
@@ -168,10 +145,7 @@ function App() {
 			</AContext.Provider>
 		  </Router>
 		  :
-		  <div style={{margin: 0 + " auto", height: 100+"vh", lineHeight: 100+"vh", width: 100+"%"}}>
-			  <div class="loader">Loading...</div>
-		  	<h1 style={{textAlign: "center", margin: 0}}>{error ? "Błąd łączenia z serwerem" : "Łączenie z serwerem..."}</h1>
-		  </div>
+		  <Loader error={error}/>
 		}
 		</div>
     );

@@ -6,6 +6,14 @@ import {
   Link
 } from "react-router-dom";
 import '../../css/App.css'
+import AboutCards from './components/AboutCards';
+import AboutCardsWrapper from './components/AboutCardsWrapper';
+import HomepageMenu from './components/HomepageMenu';
+import HomepageMenuLogged from './components/HomepageMenuLogged';
+import MainPageSection from './components/MainPageSection';
+import ParallaxContainer from './components/ParallaxContainer';
+import TechCards from './components/TechCards';
+import TechCardsWrapper from './components/TechCardsWrapper';
 
 function HomePage(props){
   const [cn, setCn] = useState("main--navbar-fixed");
@@ -66,50 +74,20 @@ function HomePage(props){
         <div className="main--page" id="homepage">
           <input type="checkbox" id="mainpage--checkbox" onClick={() => handleCheckbox()}></input>
           <label htmlFor="mainpage--checkbox"><span className="main--span-labeled"></span></label>
+          
           <nav className={cn + " " + styleUl}>
-          {props.authenticated ?
-            <ul>
-              <li>
-                <a href="#section--start">Strona Główna</a>
-              </li>
-              <li>
-                <a href="#section--onas">O projekcie</a>
-              </li>
-              <li>
-                <a href="#section--2">Architektura</a>
-              </li>
-              <li>
-                <Link to="/lobby">Lobby</Link>
-              </li>
-              <li>
-                <Link to="/faq" target="_blank">FAQ</Link>
-              </li>
-              <li>
-                <a onClick={() => props.handleLogout()}>Wyloguj</a>
-              </li>
-            </ul>
-            :
-            <ul>
-              <li>
-                <a href="#section--start">Strona Główna</a>
-              </li>
-              <li>
-                <a href="#section--onas">O nas</a>
-              </li>
-              <li>
-                <a href="#section--2">ARCHITEKTURA</a>
-              </li>
-              <li>
-                <Link to="/faq" target="_blank">FAQ</Link>
-              </li>
-              <li>
-                <Link to="/login">login</Link>
-              </li>
-            </ul>
-          }
-        </nav>
-          <div className="parallax-container parallax1" id="section--start"><h1 className="header--main">Wykłady Webowe</h1></div>
-          <div className="main--section" id="section--onas">
+            {props.authenticated ?
+              <HomepageMenuLogged logout={props.handleLogout}/>
+              :
+              <HomepageMenu/>
+            }
+          </nav>
+
+          <ParallaxContainer classAdditional="parallax1" id="section--start">
+            <h1 className="header--main">Wykłady Webowe</h1>
+          </ParallaxContainer>
+
+          <MainPageSection id="section--onas">
               <h1 style={{textTransform: "uppercase", textAlign: "center"}}>O Wykładach Webowych</h1>
               <p>Aplikacja "Wykłady Webowe" pozwala na przeprowadzanie zajęć lub prezentacji online bez konieczności instalacji dodatkowego oprogramowania.</p>
               <p>Nasza aplikacja cechuje się niskim obciążeniem sieci, w przypadku znanych rozwiązań przeprowadzenie prezentacji online jest to proces, w którym użytkownik
@@ -120,77 +98,37 @@ function HomePage(props){
                 <p>Do komunikacji pozostałych osób z osobą prowadzącą mogą służyć indywidualne dla każdego pokoju chaty tekstowe.</p> 
                 <p>Aplikacja ta pozwala również na tworzenie swoich własych pokoi w nieograniczonej liczbie.</p> 
                 <a href="https://github.com/strus100/Projekt-inzynierski" id="main--a" target="_blank">Strona projektu</a>
-              </div>
-          <div className="parallax-container parallax2" id="particles-js"></div>
-          <div className="main--section" id="section--2">
-          <h1 style={{textTransform: "uppercase", textAlign: "center"}}>Architektura systemu</h1>
-          <div className="main--wrapper-grid-technology">
-          <div className="main--wrapper-card-technology">
-               <div className="main--card-technology">
-                    <div className="main--card-image-technology"></div>
-                    <div className="main--card-text-technology">
-                      <h2>Websockety</h2>
-                    </div>
-                </div>
-                <div className="main--card-technology">
-                    <div className="main--card-image-technology"></div>
-                    <div className="main--card-text-technology">
-                      <h2>ReactJS</h2>
-                    </div>
-                </div>
-                <div className="main--card-technology">
-                    <div className="main--card-image-technology"></div>
-                    <div className="main--card-text-technology">
-                      <h2>PHP</h2>
-                    </div>
-                </div>
-                <div className="main--card-technology">
-                    <div className="main--card-image-technology"></div>
-                    <div className="main--card-text-technology">
-                      <h2>WebRTC</h2>
-                    </div>
-                </div>
-                <div className="main--card-technology">
-                    <div className="main--card-image-technology"></div>
-                    <div className="main--card-text-technology">
-                      <h2>SQL</h2>
-                    </div>
-                </div>
-                </div>
-          </div></div>
-          <div className="parallax-container parallax3"></div>
-          <div className="main--section" id="section--3">
+          </MainPageSection>
+
+          <ParallaxContainer classAdditional="parallax2" id="particles-js"/>
+
+          <MainPageSection id="section--2">
+            <h1 style={{textTransform: "uppercase", textAlign: "center"}}>Architektura systemu</h1>
+            <TechCardsWrapper>
+                  <TechCards text="Websockety"/>
+                  <TechCards text="ReactJS"/>
+                  <TechCards text="PHP"/>
+                  <TechCards text="WebRTC"/>
+                  <TechCards text="SQL"/>
+            </TechCardsWrapper>
+          </MainPageSection>  
+
+          <ParallaxContainer classAdditional="parallax3"/>
+
+          <MainPageSection id="section--3">
             <h1 style={{textTransform: "uppercase", textAlign: "center"}}>Nasz zespół</h1>
-            <div id="main--container-slider">
-                <div id="thumbs">
-                  <div className="main--card">
-                    <div className="main--card-image"></div>
-                    <div className="main--card-text">
-                      <h2>Radosław</h2>
-                      <h2>Fiweg</h2>
-                      <h3>Backend</h3>
-                    </div>
-                  </div>
-                  <div className="main--card">
-                    <div className="main--card-image"></div>
-                    <div className="main--card-text">
-                      <h2>Dawid</h2>
-                      <h2>Krause</h2>
-                      <h3>Frontend</h3>
-                    </div>
-                  </div>
-                  <div className="main--card">
-                    <div className="main--card-image"></div>
-                    <div className="main--card-text">
-                      <h2>Daniel</h2>
-                      <h2>Matuszewski</h2>
-                      <h3>Backend</h3>
-                    </div>
-                  </div>
-                </div>
-              </div>
-          </div>
-          <div className="parallax-container parallax4"></div>
+
+            <AboutCardsWrapper>
+                  <AboutCards name="Radosław" surname="Fiweg" role="Backend"/>
+                  <AboutCards name="Dawid" surname="Krause" role="Frontend"/>
+                  <AboutCards name="Daniel" surname="Matuszewski" role="Backend"/>
+                  <AboutCards name="Paweł" surname="Rozpłochowski" role="Podwykonawca"/>
+            </AboutCardsWrapper>
+
+          </MainPageSection>
+
+          <ParallaxContainer classAdditional="parallax4"/>
+
           <div id="main--footer">Wykłady Webowe 2020 - </div>
         </div>
       )

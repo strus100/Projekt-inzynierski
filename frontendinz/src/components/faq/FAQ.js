@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { Link } from "react-router-dom";
 import '../../css/App.css'
 import lobby_tutorial_1 from "../../img/lobby_tutorial_1.png";
 import lobby_tutorial_2 from "../../img/lobby_tutorial_2.png";
@@ -16,11 +15,7 @@ function FAQ(props){
     
         for (i = 0; i < acc.length; i++) {
         acc[i].addEventListener("click", function() {
-            /* Toggle between adding and removing the "active" class,
-            to highlight the button that controls the panel */
             this.classList.toggle("accordion--button-active");
-    
-            /* Toggle between hiding and showing the active panel */
             var panel = this.nextElementSibling;
             if (panel.style.display === "flex") {
             panel.style.display = "none";
@@ -30,10 +25,6 @@ function FAQ(props){
         });
         }
     }, [])
-
-    var content = {
-        "accordion2": ""
-    };
 
     useEffect(() => {
         window.scrollTo(0,0);

@@ -1,11 +1,12 @@
 import React, { useState, useContext, useEffect } from 'react';
-import Menu from "../gui/Menu"
-import Chat from "./Chat"
-import Footer from "../gui/Footer"
-import Iframe from "./Iframe"
-import IframeInputAdmin from "./IframeInputAdmin"
-import Popup from "../gui/Popup"
-import {AContext} from "../../context/AContext"
+import Menu from "../gui/Menu";
+import Chat from "./Chat";
+import Footer from "../gui/Footer";
+import Iframe from "./Iframe";
+import IframeInputAdmin from "./IframeInputAdmin";
+import Popup from "../gui/Popup";
+import Loader from "../other/Loader";
+import {AContext} from "../../context/AContext";
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import '../../css/App.css';
@@ -42,7 +43,7 @@ function Main(props) {
 
   const [roomName, setRoomName] = useState("");
   const [roomAdmin, setRoomAdmin] = useState(true); //zmienić na false
-  const [loadingMain, setLoadingMain] = useState(true); //zmienić na false
+  const [loadingMain, setLoadingMain] = useState(false); //zmienić na false
 
   useEffect(() => {
 	axios.post('/rooms/', {
@@ -466,7 +467,7 @@ function Main(props) {
 			</div>
 			:
 			<div>
-				<div class="loader">Loading...</div>
+				<Loader/>
 				<Menu 
 					checkedMenu={checkedMenu} 
 					hoverMenu={hoverMenu}
