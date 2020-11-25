@@ -16,14 +16,14 @@ import {
 } from "react-router-dom";
 
 function App() {
-  const [authenticated, setAuthenticated] = useState(true); //zmienić na false
-  const [admin, setAdmin] = useState(true);
-  const [loaded, setLoaded] = useState(true); //zmienić na false
+  const [authenticated, setAuthenticated] = useState(false); //zmienić na false
+  const [admin, setAdmin] = useState(false);
+  const [loaded, setLoaded] = useState(false); //zmienić na false
 
   const [access, setAccess] = useState(false);
-  const [name, setName] = useState("Dawid");
-  const [surname, setSurname] = useState("Krause");
-  const [login, setLogin] = useState("s434729");
+  const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
+  const [login, setLogin] = useState("");
   const [token, setToken] = useState(false);
 
   const [lightMode, setLightMode] = useState(JSON.parse(localStorage.getItem('lightMode')) || false); //experimental

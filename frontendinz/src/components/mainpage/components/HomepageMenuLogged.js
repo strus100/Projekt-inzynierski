@@ -19,7 +19,7 @@ function HomepageMenuLogged(props){
                 <a href="#section--2">Architektura</a>
               </li>
               <li>
-                <Link to="/lobby">Lobby</Link>
+                <Link to="/lobby" className="homepage--menu-a-pokoje">Pokoje</Link>
               </li>
               <li>
                 <Link to="/faq" target="_blank">FAQ</Link>

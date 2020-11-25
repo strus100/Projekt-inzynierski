@@ -2118,6 +2118,10 @@ input[type=text], input[type=password], textarea{
     width: 32px;
 }
 
+.homepage--menu-a-pokoje{
+  font-weight: 900!important;
+}
+
 /* FAQ */
 
 .faq--div-main{

@@ -26,7 +26,7 @@ function Menu(props){
                     {props.roomAdmin && <li onClick={(e) => handleClick(e) }><a href="#">Ustawienia</a></li>}
                     <li><Link to="/">Strona główna</Link></li>
                     <li><Link to="/faq" target="_blank">FAQ</Link></li>
-                    <li><Link to="/lobby">Lobby</Link></li>
+                    <li><Link to="/lobby">POKOJE</Link></li>
                     <li onClick={() => props.handleLogout()}><a href="#">WYLOGUJ</a></li>
                 </ul>
             </nav>
