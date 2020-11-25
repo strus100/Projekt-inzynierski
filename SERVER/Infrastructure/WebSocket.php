@@ -100,8 +100,37 @@
             return fwrite($socket, $msg);
         }
 
-        private function sendStartInfoToClient($client){
-            
+        private function sendStartInfoToSocket($socket){
+            $roomVO = ClientService::getClientsRoomInfo((string)$socket);
+            $auth = [
+                "type" => "auth",
+                "auth" => "true"
+            ];
+            $url = [
+                "type" => "event",
+                "event" => "redirection",
+                "url" => $roomVO->url
+            ];
+            $scroll = [
+                "type" => "event",
+                "event" => "scroll",
+                "x" => $roomVO->scrollX,
+                "y" => $roomVO->scrollY
+            ];
+            $info = [
+                "type" => "info",
+                "info" => "room",
+                "name" => $roomVO->roomName,
+                "admin" => $roomVO->adminID
+            ];
+            $authMSG = MessageService::createMessage(null, OPCODE::TEXT, json_encode($auth));
+            $urlMSG = MessageService::createMessage(null, OPCODE::TEXT, json_encode($url));
+            $scrollMSG = MessageService::createMessage(null, OPCODE::TEXT, json_encode($scroll));
+            $infoMSG = MessageService::createMessage(null, OPCODE::TEXT, json_encode($info));
+            $this->sendMessageToSocket($socket, $authMSG->encode());
+            $this->sendMessageToSocket($socket, $urlMSG->encode());
+            $this->sendMessageToSocket($socket, $scrollMSG->encode());
+            $this->sendMessageToSocket($socket, $infoMSG->encode());
         }
 
         private function handleNewClient($clientSocket){
@@ -113,15 +142,7 @@
             
             if(ClientService::createClient((string)$clientSocket, $token)){
                 $this->clientSockets[(string)$clientSocket] = $clientSocket;
-
-                $auth = [
-                    "type" => "auth",
-                    "auth" => "true"
-                ];
-
-                $msg = MessageService::createMessage(null, OPCODE::TEXT, json_encode($auth));
-                $this->sendMessageToSocket($clientSocket, $msg->encode());
-                $this->sendStartInfo();
+                $this->sendStartInfoToSocket($clientSocket);
             }else{
                 $msg = MessageService::createCloseSignalMessage();
                 $this->sendMessageToSocket($clientSocket, $msg->encode());
@@ -133,12 +154,14 @@
                 $read = array_merge([$this->masterSocket], $this->clientSockets);
                 stream_select($read, $write, $except, 0, 1);
 
+                // If master server socket is in selected sockets array, then there is a new connection incoming
                 if(in_array($this->masterSocket, $read)){
                     $clientSocket = stream_socket_accept($this->masterSocket);
                     $this->handleNewClient($clientSocket);
                     array_splice($read, 0, 1);
                 }
 
+                // Reads incoming messages
                 foreach ($read as $id => $clientSocket) {
                     if($data = fread($clientSocket, Config::MAX_BUFFER)){
                         $messageAuthor = ClientService::getClientBySocketID((string)$clientSocket);
@@ -147,6 +170,8 @@
                         LoggerService::log("New message from: ".$messageAuthor->getLogin()." | Message: ".$text);
                     }
                 }
+                usleep($this->sleepInterval);
+                $this->sleepCounter++;
             }
         }
     }

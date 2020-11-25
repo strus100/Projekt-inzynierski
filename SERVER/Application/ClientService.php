@@ -61,5 +61,14 @@
                 return null;
             }
         }
+        
+        public static function getClientsRoomInfo($socketID){
+            $client = self::getClientBySocketID($socketID);
+            if($client){
+                return $client->getRoom()->getRoomVO();
+            }else{
+                return null;
+            }
+        }
     }
 ?>

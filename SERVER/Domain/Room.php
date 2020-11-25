@@ -1,5 +1,6 @@
 <?php
     require_once __DIR__."/../Application/LoggerService.php";
+    require_once __DIR__."/../ValueObjects/RoomVO.php";
 
     class Room{
         private $roomID;
@@ -60,6 +61,10 @@
 
         public function getClients(){
             return $this->clients;
+        }
+
+        public function getRoomVO(){
+            return new RoomVO($this->title, $this->url, $this->scrollPositionX, $this->scrollPositionY, $this->adminID);
         }
     }
 ?>

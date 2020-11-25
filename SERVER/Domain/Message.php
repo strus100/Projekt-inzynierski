@@ -122,6 +122,18 @@
         }
 
         public function getText(){
+            if($this->type == OPCODE::PING){
+                return "PING";
+            }
+            elseif($this->type == OPCODE::PONG){
+                return "PONG";
+            }
+            elseif($this->type == OPCODE::CLOSE){
+                return "CLOSE";
+            }
+            else{
+                return $this->type;
+            }
             return $this->text;
         }
     }
