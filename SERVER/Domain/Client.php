@@ -45,8 +45,21 @@
             return $this->permission == PERMISSION::ADMIN;
         }
 
+        // Getters
         public function getLogin(){
             return $this->login;
+        }
+
+        public function getName(){
+            return $this->name;
+        }
+
+        public function getSurname(){
+            return $this->surname;
+        }
+
+        public function getRoom(){
+            return $this->room;
         }
     }
 ?>

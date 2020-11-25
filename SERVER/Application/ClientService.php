@@ -16,8 +16,10 @@
 
                 if(empty($room)){
                     LoggerService::log("Creating room id: $roomID");
-                    RoomService::createRoom($roomID);
-                    RoomService::getRoomByID($roomID);
+                    if(!RoomService::createRoom($roomID)){
+                        return false;
+                    }
+                    $room = RoomService::getRoomByID($roomID);
                 }
 
                 if(!empty(self::$clients[$socketID])){
@@ -40,11 +42,14 @@
                                             $room);
                 }
                 self::$clients[$socketID] = $client;
+                $room->joinClient($client);
 
                 unset($clientEntity);
-                LoggerService::log("Client created.\tLogin: ".$client->getLogin()." \tSocketID: ".$socketID);
+                LoggerService::log("Client created | Login: ".$client->getLogin()." | Admin: ".($client->isAdmin() ? "1" : "0")." | SocketID: ".$socketID);
+                return true;
             }else{
-                LoggerService::warn("Cannot create new user.\tInvalid token!");
+                LoggerService::warn("Cannot create new user. \tInvalid token!");
+                return false;
             }
         }
 

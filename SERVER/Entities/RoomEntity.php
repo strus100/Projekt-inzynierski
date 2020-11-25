@@ -2,12 +2,12 @@
     final class RoomEntity{
         public $id;
         public $roomName;
-        public $admin;
+        public $adminID;
 
-        function __construct($id, $roomName, $admin){
+        function __construct($id, $roomName, $adminID){
             $this->id = $id;
             $this->roomName = $roomName;
-            $this->admin = $admin;
+            $this->adminID = $adminID;
         }
     }
 ?>

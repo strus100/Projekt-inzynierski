@@ -14,13 +14,15 @@
                     return null;
                 }
 
-                $room = new Room($roomID, $roomEntity->roomName, $roomEntity->admin);
+                $room = new Room($roomID, $roomEntity->roomName, $roomEntity->adminID);
                 self::$rooms[$roomID] = $room;
 
                 unset($roomEntity);
                 LoggerService::log("Room created.\tID: $roomID");
+                return true;
             }else{
                 LoggerService::error("Cannot create new room id: $roomID");
+                return false;
             }
         }
 

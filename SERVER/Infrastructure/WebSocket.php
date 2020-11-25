@@ -6,20 +6,21 @@
 
     require_once __DIR__."/../Application/LoggerService.php";
     require_once __DIR__."/../Application/ClientService.php";
+    require_once __DIR__."/../Application/MessageService.php";
     require_once __DIR__."/../Config.php";
 
     // First octet -> flags with OPCODE
-    abstract class OPCODE{
-        const TEXT = 129;   //1000 0001 (FIN RSV1 RSV2 RSV3 4*opcode) TEXT frame opcode-%x1
-        const CLOSE = 136;  //1000 1000 (FIN RSV1 RSV2 RSV3 4*opcode) CLOSE opcode-%x8
-        const PING = 137;   //1000 1001 (FIN RSV1 RSV2 RSV3 4*opcode) PING opcode-%x9
-        const PONG = 138;   //1000 1010 (FIN RSV1 RSV2 RSV3 4*opcode) PONG opcode-%xA
-    }
+    // abstract class OPCODE{
+    //     const TEXT = 129;   //1000 0001 (FIN RSV1 RSV2 RSV3 4*opcode) TEXT frame opcode-%x1
+    //     const CLOSE = 136;  //1000 1000 (FIN RSV1 RSV2 RSV3 4*opcode) CLOSE opcode-%x8
+    //     const PING = 137;   //1000 1001 (FIN RSV1 RSV2 RSV3 4*opcode) PING opcode-%x9
+    //     const PONG = 138;   //1000 1010 (FIN RSV1 RSV2 RSV3 4*opcode) PONG opcode-%xA
+    // }
 
     class WebSocket{
         public $running = true;
 
-        private $socket;
+        private $masterSocket;
         private $clientSockets = array();
 
         private $sleepCounter = 1;
@@ -36,11 +37,11 @@
             $ip = isset($args['-a']) ? $args['-a'] : Config::DEFAULT_IP;
             $port = isset($args['-p']) ? $args['-p'] : Config::DEFAULT_PORT;
 
-            //$this->socket = stream_socket_server("tls://$ip:$port", $errno, $errstr, STREAM_SERVER_BIND|STREAM_SERVER_LISTEN, $context);
-            $this->socket = stream_socket_server("tcp://$ip:$port", $errno, $errstr, STREAM_SERVER_BIND|STREAM_SERVER_LISTEN, $context);
-            if($this->socket){
-                $address = stream_socket_get_name($this->socket, FALSE);
-                LoggerService::log("Server socket: $this->socket");
+            //$this->masterSocket = stream_socket_server("tls://$ip:$port", $errno, $errstr, STREAM_SERVER_BIND|STREAM_SERVER_LISTEN, $context);
+            $this->masterSocket = stream_socket_server("tcp://$ip:$port", $errno, $errstr, STREAM_SERVER_BIND|STREAM_SERVER_LISTEN, $context);
+            if($this->masterSocket){
+                $address = stream_socket_get_name($this->masterSocket, FALSE);
+                LoggerService::log("Server socket: $this->masterSocket");
                 LoggerService::log("Socket listening on $address");
                 $this->main();
             }else{
@@ -49,8 +50,8 @@
         }
 
         function __destruct(){
-            if($this->socket){
-                fclose($this->socket);
+            if($this->masterSocket){
+                fclose($this->masterSocket);
             }
             LoggerService::log("Socket closed");
         }
@@ -92,7 +93,15 @@
             fwrite($socket, $response);
             
             $cookies = $this->getCookies($HTTPdata['Cookie']);
-            return $cookies['token'];;
+            return $cookies['token'];
+        }
+
+        private function sendMessageToSocket($socket, $msg){
+            return fwrite($socket, $msg);
+        }
+
+        private function sendStartInfoToClient($client){
+            
         }
 
         private function handleNewClient($clientSocket){
@@ -102,47 +111,40 @@
             $msg = fread($clientSocket, Config::MAX_BUFFER);
             $token = $this->handshake($clientSocket, $msg);
             
-            ClientService::createClient((string)$clientSocket, $token);
-            
-            //$client = new Client($clientSocket, $token);
-
-
-            if($client->authorize()){
-                $this->clients[(string)$clientSocket] = $client;
-                $roomID = $client->getRoomID();
-                $room = $this->rooms[$roomID];
-                if( !$room ){
-                    $room = new Room($roomID);
-                    $this->rooms[$roomID] = $room;
-                }
-                $client->joinRoom($room);
+            if(ClientService::createClient((string)$clientSocket, $token)){
+                $this->clientSockets[(string)$clientSocket] = $clientSocket;
 
                 $auth = [
                     "type" => "auth",
                     "auth" => "true"
                 ];
-                $this->send($clientSocket, json_encode($auth));
-                $this->sendStartInfo($client);
+
+                $msg = MessageService::createMessage(null, OPCODE::TEXT, json_encode($auth));
+                $this->sendMessageToSocket($clientSocket, $msg->encode());
+                $this->sendStartInfo();
             }else{
-                echo "ERROR token!\r\n";
-                $this->send_encoded($clientSocket, $this->encode("CLOSE", OPCODE::CLOSE));
+                $msg = MessageService::createCloseSignalMessage();
+                $this->sendMessageToSocket($clientSocket, $msg->encode());
             }
         }
 
         private function main(){
             while($this->running == true){
-                $read = array_merge([$this->socket], $this->clientSockets);
+                $read = array_merge([$this->masterSocket], $this->clientSockets);
                 stream_select($read, $write, $except, 0, 1);
 
-                if(in_array($this->socket, $read)){
-                    $clientSocket = stream_socket_accept($this->socket);
+                if(in_array($this->masterSocket, $read)){
+                    $clientSocket = stream_socket_accept($this->masterSocket);
                     $this->handleNewClient($clientSocket);
                     array_splice($read, 0, 1);
                 }
 
                 foreach ($read as $id => $clientSocket) {
-                    if($msg = fread($clientSocket, MAX_BUFFER)){
-                        $this->parse_message_from($this->clients[(string)$clientSocket], $this->decode($msg));
+                    if($data = fread($clientSocket, Config::MAX_BUFFER)){
+                        $messageAuthor = ClientService::getClientBySocketID((string)$clientSocket);
+                        $message = MessageService::createMessageFromIncomingData($messageAuthor, $data);
+                        $text = $message->getText();
+                        LoggerService::log("New message from: ".$messageAuthor->getLogin()." | Message: ".$text);
                     }
                 }
             }
