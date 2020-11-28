@@ -89,9 +89,9 @@
 			return $row;
 		}
 
-		function insertUser($login, $name, $surname, $role, $token=NULL){
-			$stmt = $this->conn->prepare("INSERT INTO `usertable` VALUES (?, ?, ?, ?, ?, NULL)");
-			$stmt->bind_param('sssss', $login, $name, $surname, $role, $token);
+		function insertUser($login, $name, $surname, $role, $token=NULL, $email){
+			$stmt = $this->conn->prepare("INSERT INTO `usertable` VALUES (?, ?, ?, ?, ?, NULL, ?)");
+			$stmt->bind_param('ssssss', $login, $name, $surname, $role, $token, $email);
 			$stmt->execute();
 		}
 

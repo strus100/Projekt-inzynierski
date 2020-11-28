@@ -29,7 +29,8 @@
 				"access" => $user['role'],
 				"name" => $user['name'],
 				"surname" => $user['surname'],
-				"token" => $refreshToken
+				"token" => $refreshToken,
+				"email" => $user['email']
 			];
             die(json_encode($return));
         }else{
@@ -44,19 +45,22 @@
     else{
         $request_body = file_get_contents('php://input');
         $data = json_decode($request_body, true);
-        if(isset($data['login']) && isset($data['pwd'])){
-            $login = htmlspecialchars($data['login']);
+
+		$fakeBool = true;
+		if(isset($data['login']) && isset($data['pwd'])){
+			$login = htmlspecialchars($data['login']);
             $password = htmlspecialchars($data['pwd']);
             $result = null;
-            
+        
             if(!$TEST){
-                if($login=="student1" || $login=="student2" || $login=="student3" || $login=="student4" || $login=="student5"){
+				if($login=="student1" || $login=="student2" || $login=="student3" || $login=="student4" || $login=="student5"){
                     $result = [
                         "type" => "login",
                         "login" => $login,
                         "access" => "student",
                         "name" => "Student",
-                        "surname" => "Student"
+                        "surname" => "Student",
+						"email" => $login."@test.pl"
                     ];
                 }
                 elseif($login=="pracownik1" || $login=="pracownik2" || $login=="pracownik3" || $login=="pracownik4" || $login=="pracownik5"){
@@ -65,10 +69,11 @@
                         "login" => $login,
                         "access" => "pracownik",
                         "name" => "Pracownik",
-                        "surname" => "Admin"
+                        "surname" => "Admin",
+						"email" => $login."@test.pl"
                     ];
                 }else{
-                    $result = LDAP::login($login, $password);
+					$result = LDAP::login($login, $password);
                 }
             }
             else{
@@ -78,7 +83,8 @@
                         "login" => $login,
                         "access" => "pracownik",
                         "name" => "Pracownik",
-                        "surname" => "Admin"
+                        "surname" => "Admin",
+						"email" => $login."@test.pl"
                     ];
                 }
                 elseif ($login=="doktorant") {
@@ -87,7 +93,8 @@
                         "login" => $login,
                         "access" => "doktorant",
                         "name" => "Doktorant",
-                        "surname" => "Admin"
+                        "surname" => "Admin",
+						"email" => $login."@test.pl"
                     ];
                 }
                 elseif ($login=="user" || $login=="student") {
@@ -96,7 +103,8 @@
                         "login" => $login,
                         "access" => "student",
                         "name" => "Student",
-                        "surname" => "Admin"
+                        "surname" => "Admin",
+						"email" => $login."@test.pl"
                     ];
                 }
                 else{
@@ -114,7 +122,7 @@
                 if($user){
                     $dbConnection->updateUserToken($user['login'], $refreshToken);
                 }else{
-                    $dbConnection->insertUser($login, $result['name'], $result['surname'], $result['access'], $refreshToken);
+                    $dbConnection->insertUser($login, $result['name'], $result['surname'], $result['access'], $refreshToken, $result['email']);
                 }
                 setcookie("token", $refreshToken, time()+3600, "/", $domain, false, true);
                 $result['token'] = $refreshToken;

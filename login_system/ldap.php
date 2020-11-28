@@ -21,7 +21,8 @@
             if($bind){
                 $result = ldap_search($conn, $root, $filter);
                 $data = ldap_get_entries($conn, $result);
-                if($data["count"] != 1){
+				
+				if($data["count"] != 1){
                     $return = [
                         "type" => "login",
                         "login" => 0,
@@ -35,8 +36,9 @@
                             "login" => 1,
                             "access" => "student",
                             "name" => $data[0]["givenname"][0],
-                            "surname" => $data[0]["sn"][0]
-                        ];
+                            "surname" => $data[0]["sn"][0],
+							"email" => $data[0]["mail"][0]	
+						];
                         break;
                     case 'doktorant':
                         $return = [
@@ -44,7 +46,8 @@
                             "login" => 1,
                             "access" => "doktorant",
                             "name" => $data[0]["givenname"][0],
-                            "surname" => $data[0]["sn"][0]
+                            "surname" => $data[0]["sn"][0],
+							"email" => $data[0]["mail"][0]	
                         ];
                         break;
                     case 'pracownik':
@@ -53,7 +56,8 @@
                             "login" => 1,
                             "access" => "pracownik",
                             "name" => $data[0]["givenname"][0],
-                            "surname" => $data[0]["sn"][0]
+                            "surname" => $data[0]["sn"][0],
+							"email" => $data[0]["mail"][0]	
                         ];
                         break;
                     default:
