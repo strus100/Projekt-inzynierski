@@ -977,6 +977,13 @@ h2, h4, h5{
   margin: 0;
 }
 
+_:-ms-lang(x), .circle { height: 0; clip-path: unset; } /* fix old edge, and maybe some ie versions, lobby clip path */
+
+@supports (-ms-ime-align:auto) { .circle { height: 0; clip-path: unset; } } /* Microsoft Edge 12-18 (all EdgeHTML) Not Chromium */
+
+
+
+
 /* POPUP */
 
 .modal {
