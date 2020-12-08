@@ -24,10 +24,17 @@ function Main(props) {
   const [iframeURL, setIframeURL] = useState(""); 
   const [blockChat, setBlockChat] = useState(false);
   //console.log('in render:', blockChat)
-  
+
+  const [roomAPILogin, setRoomAPILogin] = useState("");
+  const [roomAPIToken, setRoomAPIToken] = useState("");
+
+  const [userAPILogin, setUserAPILogin] = useState("");
+  const [userAPIToken, setUserAPIToken] = useState("");
+
   const {setAuthenticated} = useContext(AContext);
   const {setAdmin} = useContext(AContext);
   
+  const {login} = useContext(AContext);
   const {name, setName} = useContext(AContext);
   const {surname, setSurname} = useContext(AContext);
   const {setAccess} = useContext(AContext);
@@ -43,7 +50,7 @@ function Main(props) {
 
   const [roomName, setRoomName] = useState("");
   const [roomAdmin, setRoomAdmin] = useState(false); //zmienić na false
-  const [loadingMain, setLoadingMain] = useState(false); //zmienić na false
+  const [loadingMain, setLoadingMain] = useState(true); //zmienić na false
 
   useEffect(() => {
 	axios.post('/rooms/', {
@@ -61,6 +68,29 @@ function Main(props) {
 		//addMessage({ type: "chat", chat: "Witaj na kanale " + roomName + " wpisz /help, aby uzyskać pomoc dotyczącą chatu.", name: "SERVER", messagetype: "chat" });
 		console.log(error);
 	  });
+
+	// możliwe że się przyda
+
+	//   axios.all([
+	// 	  	axios.post('/API/UsersByRoom.php', {
+	// 			roomID: id 	
+	// 		}),
+	// 		axios.post("/API/user.php", {
+	// 			login: userLogin  
+	// 		})
+	// 	])
+	// 	.then(axios.spread((usersByRoomAPI, userAPI) => {
+	// 		if(usersByRoomAPI && userAPI){
+	// 			setRoomAPILogin(usersByRoomAPI.data.login);
+	// 			setRoomAPIToken(usersByRoomAPI.data.token);
+	// 			setUserAPILogin(userAPI.data.login);
+	// 			setUserAPIToken(userAPI.data.token);
+	// 		}
+	// 	}))
+	// 	.catch(function (error){
+	// 		console.log(error);
+	// 	});
+
   }, [])
 
   useEffect(() => {
@@ -453,6 +483,12 @@ function Main(props) {
 				handleHoverChat={handleHoverChat}
 				handleHoverMenu={handleHoverMenu}
 				handleChangeIframeInputAdmin={handleChangeIframeInputAdmin}
+				// roomAPILogin={roomAPILogin}
+				// roomAPIToken={roomAPIToken}
+				// userAPILogin={userAPILogin}
+				// userAPIToken={userAPIToken}
+				id={id}
+				login={login}
 				/>
 			</div>
 			:

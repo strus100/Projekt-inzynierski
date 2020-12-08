@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import '../../css/App.css'
 import {AContext} from "../../context/AContext";
 import {
@@ -7,6 +7,7 @@ import {
 
 function Footer(props){
     const {admin} = useContext(AContext);
+    const [linkPawel, setLinkPawel] = useState("jakislink/");
 
     return(
     <div className="footer">
@@ -67,7 +68,7 @@ function Footer(props){
                 <span aria-labelledby="jsx-a11y/accessible-emoji" role="img"><i className="material-icons">http</i></span></label>
             }
             {!props.roomAdmin &&
-                <a href="#" target="_blank"><label
+                <a href={linkPawel+"?roomID="+props.id+"&login="+props.login} target="_blank"><label
                     className="tooltip footer--span-consultation"
                 >
                 <span className="tooltiptext tooltiptext--long">Umów się na konsultację z IMIĘ NAZWISKO</span>
