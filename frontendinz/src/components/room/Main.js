@@ -18,18 +18,18 @@ function Main(props) {
   const [checkedChat, setChangeChat] = useState(true);
   const [checkedIframeInputAdmin, setCheckedIframeInputAdmin] = useState(false);
   const [messages, setMesseges] = useState([]);
-  const [historyB, setHistoryB] = useState([{title: "strus100/Projekt-inzynierski", link: "https://github.com/strus100/Projekt-inzynierski"}, {title: "Projekt Inżynierski – Dysk Google", link: "https://drive.google.com/drive/folders/1OBH7hwjS7rxf_lPeMfBeXzLsXSPu-4sN"}]);
+  const [historyB, setHistoryB] = useState([{title: "strus100/Projekt-inzynierski", link: "https://github.com/strus100/Projekt-inzynierski", date: "2020-12-10 20:00"}, {title: "Projekt Inżynierski – Dysk Google", link: "https://drive.google.com/drive/folders/1OBH7hwjS7rxf_lPeMfBeXzLsXSPu-4sN", date: "2020-12-10 20:00"}]);
   const [usersList, setUsersList] = useState([]);
   const [ws, setWebsocket] = useState(null); 
   const [iframeURL, setIframeURL] = useState(""); 
   const [blockChat, setBlockChat] = useState(false);
   //console.log('in render:', blockChat)
 
-  const [roomAPILogin, setRoomAPILogin] = useState("");
-  const [roomAPIToken, setRoomAPIToken] = useState("");
+//   const [roomAPILogin, setRoomAPILogin] = useState("");
+//   const [roomAPIToken, setRoomAPIToken] = useState("");
 
-  const [userAPILogin, setUserAPILogin] = useState("");
-  const [userAPIToken, setUserAPIToken] = useState("");
+//   const [userAPILogin, setUserAPILogin] = useState("");
+//   const [userAPIToken, setUserAPIToken] = useState("");
 
   const {setAuthenticated} = useContext(AContext);
   const {setAdmin} = useContext(AContext);
@@ -398,7 +398,7 @@ function Main(props) {
 	  if(url){
 		e.preventDefault();
 		setIframeURL(url);
-		if(roomAdmin){
+		if(roomAdmin && document.getElementById("scoreboardx").contentDocument){ // jak wywali coś złego to trzeba inaczej załatwić url change
 			setIframeURLadmin(url);
 			document.getElementById("scoreboardx").contentDocument.location.reload(true);
 		}

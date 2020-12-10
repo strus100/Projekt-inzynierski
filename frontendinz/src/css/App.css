@@ -214,7 +214,7 @@ nav ul a:hover {
 #chat-area p{ 
   padding: 5px 0; 
   margin: 3px 0;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 #chat-area .nickname{
@@ -359,7 +359,7 @@ nav ul a:hover {
 }
 
 .wrap-additional-area .history-line{
-  color: #000; 
+  color: #555; 
   margin: 0 5px 0 0; 
   overflow-wrap: break-word;
   word-wrap: break-word;
@@ -374,6 +374,7 @@ nav ul a:hover {
 .wrap-additional-area p{ 
   padding: 8px 0; 
   border-bottom: 1px solid #ddd;
+  font-size: 14px;
 }
 
 .wrap-additional-area p span{ 
@@ -383,7 +384,7 @@ nav ul a:hover {
 }
 
 .wrap-additional-area p .history-line span{
-  color: dodgerblue;
+  color: #111;
 }
 
 span[role="img"]{
@@ -2481,9 +2482,9 @@ input[type=text], input[type=password], textarea{
   }
 }
 
-/* width 613 */
+/* width 650 */
 
-@media (max-width: 613px){
+@media (max-width: 650px){
   .card{
     width: 300px;
     margin: 0 auto;

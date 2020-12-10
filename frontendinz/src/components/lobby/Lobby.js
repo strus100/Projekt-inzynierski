@@ -10,48 +10,52 @@ import PopupQuestion from "../gui/PopupQuestion";
 import '../../css/App.css'
 
 function Lobby(props){
-	const [roomsList, setRoomsList] = useState([
-		{"id":"1","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
-		{"id":"2","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
-		{"id":"32","roomName":"Nie wiem","name":"Dawid","surname":"Krause", "login":"s434729"},
-		{"id":"3","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
-		{"id":"4","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
-		{"id":"5","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
-		{"id":"6","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
-		{"id":"7","roomName":"Wst\u0119p do Śniadania","name":"Admin","surname":"Adminowski", "login":"admin"},
-		{"id":"8","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
-		{"id":"9","roomName":"Wst\u0119p do Biedronka","name":"Admin","surname":"Adminowski", "login":"admin"},
-		{"id":"10","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
-		{"id":"11","roomName":"Wst\u0119p do Kanapki","name":"Admin","surname":"Adminowski", "login":"admin"},
-		{"id":"12","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
-		{"id":"13","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
-		{"id":"14","roomName":"Wst\u0119p do Czegoś","name":"Admin","surname":"Adminowski", "login":"admin"},
-		{"id":"15","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
-		{"id":"16","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
-		{"id":"17","roomName":"Wst\u0119p do Wstępu","name":"Admin","surname":"Adminowski", "login":"admin"},
-		{"id":"18","roomName":"Wst\u0119p do Informatyki","name":"Admin","surname":"Adminowski", "login":"admin"}
-		]);	
-	const [roomsFilter, setRoomsFilter] = useState([
-		{"id":"1","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
-		{"id":"2","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
-		{"id":"32","roomName":"Nie wiem","name":"Dawid","surname":"Krause", "login":"s434729"},
-		{"id":"3","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
-		{"id":"4","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
-		{"id":"5","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
-		{"id":"6","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
-		{"id":"7","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
-		{"id":"8","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
-		{"id":"9","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
-		{"id":"10","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
-		{"id":"11","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
-		{"id":"12","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
-		{"id":"13","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
-		{"id":"14","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
-		{"id":"15","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
-		{"id":"16","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
-		{"id":"17","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
-		{"id":"18","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"}
-		]);	
+	const [roomsList, setRoomsList] = useState([]);	
+	const [roomsFilter, setRoomsFilter] = useState([]);	
+
+	//dane do testów
+	// const [roomsList, setRoomsList] = useState([
+	// 	{"id":"1","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
+	// 	{"id":"2","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
+	// 	{"id":"32","roomName":"Nie wiem","name":"Dawid","surname":"Krause", "login":"s434729"},
+	// 	{"id":"3","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
+	// 	{"id":"4","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
+	// 	{"id":"5","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
+	// 	{"id":"6","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
+	// 	{"id":"7","roomName":"Wst\u0119p do Śniadania","name":"Admin","surname":"Adminowski", "login":"admin"},
+	// 	{"id":"8","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
+	// 	{"id":"9","roomName":"Wst\u0119p do Biedronka","name":"Admin","surname":"Adminowski", "login":"admin"},
+	// 	{"id":"10","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
+	// 	{"id":"11","roomName":"Wst\u0119p do Kanapki","name":"Admin","surname":"Adminowski", "login":"admin"},
+	// 	{"id":"12","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
+	// 	{"id":"13","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
+	// 	{"id":"14","roomName":"Wst\u0119p do Czegoś","name":"Admin","surname":"Adminowski", "login":"admin"},
+	// 	{"id":"15","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
+	// 	{"id":"16","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
+	// 	{"id":"17","roomName":"Wst\u0119p do Wstępu","name":"Admin","surname":"Adminowski", "login":"admin"},
+	// 	{"id":"18","roomName":"Wst\u0119p do Informatyki","name":"Admin","surname":"Adminowski", "login":"admin"}
+	// 	]);	
+	// const [roomsFilter, setRoomsFilter] = useState([
+	// 	{"id":"1","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
+	// 	{"id":"2","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
+	// 	{"id":"32","roomName":"Nie wiem","name":"Dawid","surname":"Krause", "login":"s434729"},
+	// 	{"id":"3","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
+	// 	{"id":"4","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
+	// 	{"id":"5","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
+	// 	{"id":"6","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
+	// 	{"id":"7","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
+	// 	{"id":"8","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
+	// 	{"id":"9","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
+	// 	{"id":"10","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
+	// 	{"id":"11","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
+	// 	{"id":"12","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
+	// 	{"id":"13","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
+	// 	{"id":"14","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
+	// 	{"id":"15","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
+	// 	{"id":"16","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
+	// 	{"id":"17","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"},
+	// 	{"id":"18","roomName":"Wst\u0119p do Matematyki","name":"Admin","surname":"Adminowski", "login":"admin"}
+	// 	]);	
 	let history = useHistory();
 	const {admin, setAdmin} = useContext(AContext);
     const {setAuthenticated} = useContext(AContext);
@@ -281,12 +285,12 @@ function Lobby(props){
 
 					{currentLobbyMode === 1 &&
 						<div className="roominfo--div">       
-							{createLobbyUncategorized()};
+							{createLobbyUncategorized()}
 						</div>
 					}
 					{currentLobbyMode === 2 &&
 						<div className="roominfo--div">  
-							{createLobbyCategorizedByUser()};
+							{createLobbyCategorizedByUser()}
 						</div>
 					}
 				</TabPanel>
