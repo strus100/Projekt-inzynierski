@@ -1,29 +1,36 @@
 <?php
-    require_once __DIR__."/LoggerService.php";
-    require_once __DIR__."/DatabaseService.php";
-    require_once __DIR__."/RoomService.php";
     require_once __DIR__."/../Domain/Client.php";
 
     class ClientService{
-        private static $clients;
+        private $loggerService;
+        private $databaseService;
+        private $roomService;
 
-        public static function createClient($socketID, $token){
-            $clientEntity = DatabaseService::getClientByToken(htmlspecialchars($token));
+        private $clients;
+
+        function __construct($logger, $database, $client){
+            $this->loggerService = $logger;
+            $this->databaseService = $database;
+            $this->roomService = $client;
+        }
+
+        public function createClient($socketID, $token){
+            $clientEntity = $this->databaseService->getClientByToken(htmlspecialchars($token));
 
             if(!empty($clientEntity)){
                 $roomID = $clientEntity->roomID;
-                $room = RoomService::getRoomByID($roomID);
+                $room = $this->roomService->getRoomByID($roomID);
 
                 if(empty($room)){
-                    LoggerService::log("Creating room id: $roomID");
-                    if(!RoomService::createRoom($roomID)){
+                    $this->loggerService->log("Creating room id: $roomID");
+                    if(!$this->roomService->createRoom($roomID)){
                         return false;
                     }
-                    $room = RoomService::getRoomByID($roomID);
+                    $room = $this->roomService->getRoomByID($roomID);
                 }
 
-                if(!empty(self::$clients[$socketID])){
-                    LoggerService::warn("Client already exists!\tLogin: ".$clientEntity->login." \tSocketID: ".$socketID);
+                if(!empty($this->clients[$socketID])){
+                    $this->loggerService->warn("Client already exists!\tLogin: ".$clientEntity->login." \tSocketID: ".$socketID);
                     return null;
                 }
 
@@ -41,29 +48,29 @@
                                             $clientEntity->surname,
                                             $room);
                 }
-                self::$clients[$socketID] = $client;
+                $this->clients[$socketID] = $client;
                 $room->joinClient($client);
 
                 unset($clientEntity);
-                LoggerService::log("Client created | Login: ".$client->getLogin()." | Admin: ".($client->isAdmin() ? "1" : "0")." | SocketID: ".$socketID);
+                $this->loggerService->log("Client created | Login: ".$client->getLogin()." | Admin: ".($client->isAdmin() ? "TRUE" : "FALSE")." | SocketID: ".$socketID);
                 return true;
             }else{
-                LoggerService::warn("Cannot create new user. \tInvalid token!");
+                $this->loggerService->warn("Cannot create new user. \tInvalid token!");
                 return false;
             }
         }
 
-        public static function getClientBySocketID($socketID){
-            if(!empty(self::$clients[$socketID])){
-                return self::$clients[$socketID];
+        public function getClientBySocketID($socketID){
+            if(!empty($this->clients[$socketID])){
+                return $this->clients[$socketID];
             }else{
-                LoggerService::warn("Cannot find user.\tID: $socketID");
+                $this->loggerService->warn("Cannot find user.\tID: $socketID");
                 return null;
             }
         }
         
-        public static function getClientsRoomInfo($socketID){
-            $client = self::getClientBySocketID($socketID);
+        public function getClientsRoomInfo($socketID){
+            $client = $this->getClientBySocketID($socketID);
             if($client){
                 return $client->getRoom()->getRoomVO();
             }else{

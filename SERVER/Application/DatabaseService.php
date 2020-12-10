@@ -1,16 +1,26 @@
 <?php
-    require_once __DIR__."/LoggerService.php";
     require_once __DIR__."/../Infrastructure/Database.php";
     require_once __DIR__."/../Entities/RoomEntity.php";
     require_once __DIR__."/../Entities/ClientEntity.php";
 
     class DatabaseService{
-        public static function getRoomByID($roomID){
+        private $logger;
+        private $database;
+
+        function __construct($logger){
+            $this->logger = $logger;
+            $this->logger->log("Connecting to database...");
+            $this->database = new Database($logger);
+        }
+
+        function __destruct(){
+
+        }
+
+        public function getRoomByID($roomID){
             $roomID = htmlspecialchars($roomID);
 
-            $db = new Database();
-            $result = $db->query("SELECT * FROM `rooms` WHERE `id` = '$roomID';");
-            $db->close();
+            $result = $this->database->query("SELECT * FROM `rooms` WHERE `id` = '$roomID';");
 
             $array = null;
             if($result->num_rows == 1){
@@ -19,18 +29,16 @@
                     $array = $room;
                 }
             }else{
-                LoggerService::warn("Room not found\tid: $roomID");
+                $this->logger->warn("Room not found\tid: $roomID");
             }
             
             return $array;
         }
 
-        public static function getClientByToken($token){
+        public function getClientByToken($token){
             $token = htmlspecialchars($token);
 
-            $db = new Database();
-            $result = $db->query("SELECT * FROM `usertable` WHERE `token` = '$token';");
-            $db->close();
+            $result = $this->database->query("SELECT * FROM `usertable` WHERE `token` = '$token';");
 
             $array = null;
             if($result->num_rows == 1){
@@ -39,7 +47,7 @@
                     $array = $client;
                 }
             }else{
-                LoggerService::warn("Client not found\ttoken: $token");
+                $this->logger->warn("Client not found\ttoken: $token");
             }
 
             return $array;

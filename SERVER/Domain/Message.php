@@ -1,5 +1,5 @@
 <?php
-    require_once __DIR__."/../Application/LoggerService.php";
+    // require_once __DIR__."/../Application/LoggerService.php";
 
     // First octet -> flags with OPCODE
     // RFC 6455 section 5.2 and 11.8
@@ -21,9 +21,9 @@
             if(!empty($type) &&
                $type != OPCODE::TEXT &&
                $type != OPCODE::CLOSE &&
-               $type != OPCODE:: PING &&
+               $type != OPCODE::PING &&
                $type != OPCODE::PONG){
-                LoggerService::error("Wrong message type: ".$type);
+                // LoggerService::error("Wrong message type: ".$type);
                 return false;
             }
 
@@ -62,7 +62,7 @@
                 $datagramBytes[9] = $length & 255;
             }
             else{
-                LoggerService::error("Cannot encode message - wrong length");
+                // LoggerService::error("Cannot encode message - wrong length");
             }
             $parsedDatagramBytes = array_map("chr", $datagramBytes);
             return implode($parsedDatagramBytes).$this->text;
@@ -88,7 +88,7 @@
                 $index = 10;
             }
             else{
-                LoggerService::error("Wrong message length");
+                // LoggerService::error("Wrong message length");
                 return null;
             }
 
@@ -101,7 +101,7 @@
             }
 
             $this->text = $message;
-            return $this->text;
+            return $this->getText();
         }
 
         public function send(){
@@ -131,10 +131,16 @@
             elseif($this->type == OPCODE::CLOSE){
                 return "CLOSE";
             }
+            elseif($this->type == OPCODE::TEXT){
+                return $this->text;
+            }
             else{
                 return $this->type;
             }
-            return $this->text;
+        }
+
+        public function getType(){
+            return $this->type;
         }
     }
 ?>

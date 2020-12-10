@@ -3,12 +3,18 @@
     require_once __DIR__."/../Infrastructure/FileLogger.php";
 
     class LoggerService{
-        private static function getCurrentDateTime(){
+        private $fileLogger;
+
+        function __construct(){
+            $this->fileLogger = new FileLogger();
+        }
+        
+        private function getCurrentDateTime(){
             $datetime = new DateTime('NOW');
             return $datetime->format('d.m.Y H:i:s.v');
         }
-        
-        private static function getCallerFunction(){
+
+        private function getCallerFunction(){
             $backtrace = debug_backtrace(3);
             $class = isset($backtrace[3]['class']) ? $backtrace[3]['class'] : "_";
             $function = isset($backtrace[3]['function']) ? $backtrace[3]['function'] : "_";
@@ -17,27 +23,29 @@
             return $class."::".$function.".".$line;
         }
 
-        private static function createMSG(){
-            $datetime = "[".self::getCurrentDateTime()."]";
-            $caller = "[".self::getCallerFunction()."]";
+        private function createMSG(){
+            $datetime = "[".$this->getCurrentDateTime()."]";
+            $caller = "[".$this->getCallerFunction()."]";
 
             return $datetime." ".$caller;
         }
 
-        static function log($msg){
-            $msgToDisplay = self::createMSG()." [LOG]:\t".$msg;
+        function log($msg){
+            $msgToDisplay = $this->createMSG()." [LOG]:\t".$msg;
             ConsoleLogger::log($msgToDisplay);
-            FileLogger::log($msgToDisplay);
+            $this->fileLogger->log($msgToDisplay);
         }
 
-        static function warn($msg){
-            $msgToDisplay = self::createMSG()." [WARN]:\t".$msg;
+        function warn($msg){
+            $msgToDisplay = $this->createMSG()." [WARN]:\t".$msg;
             ConsoleLogger::warn($msgToDisplay);
+            $this->fileLogger->warn($msgToDisplay);
         }
 
-        static function error($msg){
-            $msgToDisplay = self::createMSG()." [ERROR]:\t".$msg;
+        function error($msg){
+            $msgToDisplay = $this->createMSG()." [ERROR]:\t".$msg;
             ConsoleLogger::error($msgToDisplay);
+            $this->fileLogger->error($msgToDisplay);
         }
     }
 ?>
