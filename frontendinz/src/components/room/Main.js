@@ -18,7 +18,8 @@ function Main(props) {
   const [checkedChat, setChangeChat] = useState(true);
   const [checkedIframeInputAdmin, setCheckedIframeInputAdmin] = useState(false);
   const [messages, setMesseges] = useState([]);
-  const [historyB, setHistoryB] = useState([{title: "strus100/Projekt-inzynierski", link: "https://github.com/strus100/Projekt-inzynierski", date: "2020-12-10 20:00"}, {title: "Projekt Inżynierski – Dysk Google", link: "https://drive.google.com/drive/folders/1OBH7hwjS7rxf_lPeMfBeXzLsXSPu-4sN", date: "2020-12-10 20:00"}]);
+  //const [historyB, setHistoryB] = useState([{title: "strus100/Projekt-inzynierski", link: "https://github.com/strus100/Projekt-inzynierski", date: "2020-12-10 20:00"}, {title: "Projekt Inżynierski – Dysk Google", link: "https://drive.google.com/drive/folders/1OBH7hwjS7rxf_lPeMfBeXzLsXSPu-4sN", date: "2020-12-10 20:00"}]);
+  const [historyB, setHistoryB] = useState([]);
   const [usersList, setUsersList] = useState([]);
   const [ws, setWebsocket] = useState(null); 
   const [iframeURL, setIframeURL] = useState(""); 
@@ -160,6 +161,7 @@ function Main(props) {
 				}
 				break;
 			case "updatelist": return handleUsersList(JSON.parse(message).clients);
+			case "updatehistory": return handleUpdateHistory(JSON.parse(message));
 			}
 		};
 	
@@ -407,6 +409,10 @@ function Main(props) {
 
   function handleUsersList(x){
 	  setUsersList(x);
+  }
+
+  function handleUpdateHistory(x){
+	  if(roomAdmin) setHistoryB(x);
   }
 
   function changePermission(login){
