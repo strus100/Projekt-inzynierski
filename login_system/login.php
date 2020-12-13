@@ -56,7 +56,8 @@
                         "login" => $login,
                         "access" => "student",
                         "name" => "Student",
-                        "surname" => "Student"
+                        "surname" => "Student",
+						"email" => "testMail@test.pl"
                     ];
                 }
                 elseif($login=="pracownik1" || $login=="pracownik2" || $login=="pracownik3" || $login=="pracownik4" || $login=="pracownik5"){
@@ -65,7 +66,8 @@
                         "login" => $login,
                         "access" => "pracownik",
                         "name" => "Pracownik",
-                        "surname" => "Admin"
+                        "surname" => "Admin",
+						"email" => "testMail@test.pl"
                     ];
                 }else{
                     $result = LDAP::login($login, $password);
@@ -78,7 +80,8 @@
                         "login" => $login,
                         "access" => "pracownik",
                         "name" => "Pracownik",
-                        "surname" => "Admin"
+                        "surname" => "Admin",
+						"email" => "testMail@test.pl"
                     ];
                 }
                 elseif ($login=="doktorant") {
@@ -87,7 +90,8 @@
                         "login" => $login,
                         "access" => "doktorant",
                         "name" => "Doktorant",
-                        "surname" => "Admin"
+                        "surname" => "Admin",
+						"email" => "testMail@test.pl"
                     ];
                 }
                 elseif ($login=="user" || $login=="student") {
@@ -96,7 +100,8 @@
                         "login" => $login,
                         "access" => "student",
                         "name" => "Student",
-                        "surname" => "Admin"
+                        "surname" => "Admin",
+						"email" => "testMail@test.pl"
                     ];
                 }
                 else{
@@ -114,7 +119,7 @@
                 if($user){
                     $dbConnection->updateUserToken($user['login'], $refreshToken);
                 }else{
-                    $dbConnection->insertUser($login, $result['name'], $result['surname'], $result['access'], $refreshToken);
+                    $dbConnection->insertUser($login, $result['name'], $result['surname'], $result['access'], $refreshToken, $result['email'] );
                 }
                 setcookie("token", $refreshToken, time()+3600, "/", $domain, false, true);
                 $result['token'] = $refreshToken;

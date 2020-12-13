@@ -35,7 +35,8 @@
                             "login" => 1,
                             "access" => "student",
                             "name" => $data[0]["givenname"][0],
-                            "surname" => $data[0]["sn"][0]
+                            "surname" => $data[0]["sn"][0],
+							"email" => $data[0]["mail"][0]
                         ];
                         break;
                     case 'doktorant':
@@ -44,7 +45,8 @@
                             "login" => 1,
                             "access" => "doktorant",
                             "name" => $data[0]["givenname"][0],
-                            "surname" => $data[0]["sn"][0]
+                            "surname" => $data[0]["sn"][0],
+							"email" => $data[0]["mail"][0]
                         ];
                         break;
                     case 'pracownik':
@@ -53,7 +55,8 @@
                             "login" => 1,
                             "access" => "pracownik",
                             "name" => $data[0]["givenname"][0],
-                            "surname" => $data[0]["sn"][0]
+                            "surname" => $data[0]["sn"][0],
+							"email" => $data[0]["mail"][0]
                         ];
                         break;
                     default:
