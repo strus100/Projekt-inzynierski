@@ -2,7 +2,7 @@
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		require_once __DIR__."/../database/DatabaseConnection.php";
 
-        $roomId = $_GET["roomId"];
+        $roomId = $_POST["roomId"];
 		$DB = new DatabaseConnection();
         $DB->connect();
             if( $row = $DB->getRoom( htmlspecialchars($roomId) ) ){
