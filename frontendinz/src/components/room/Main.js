@@ -45,7 +45,7 @@ function Main(props) {
   //const URL = 'wss://s153070.projektstudencki.pl:3000';
   const URL = 'ws://localhost:1111';
   //const proxy = 'https://s153070.projektstudencki.pl/proxy/index.php?url=';
-  const proxy = '';
+  const proxy = 'http://localhost/proxy/index.php?url=';
 
   const { id } = useParams();
 

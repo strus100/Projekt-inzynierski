@@ -994,8 +994,21 @@ h2, h4, h5{
 }
 
 _:-ms-lang(x), .circle { height: auto; clip-path: unset; } /* fix old edge, and maybe some ie versions, lobby clip path */
+_:-ms-lang(x), .appdiv{
+  min-height: 100vh;
+  height: auto;
+  min-width: 100%;
+}
 
-@supports (-ms-ime-align:auto) { .circle { height: auto; clip-path: unset; } } /* Microsoft Edge 12-18 (all EdgeHTML) Not Chromium */
+@supports (-ms-ime-align:auto) { 
+  .circle { height: auto; clip-path: unset; } 
+  .appdiv{
+    min-height: 100vh;
+    height: auto;
+    min-width: 100%;
+  }
+
+} /* Microsoft Edge 12-18 (all EdgeHTML) Not Chromium */
 
 
 
