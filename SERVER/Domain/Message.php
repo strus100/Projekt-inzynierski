@@ -33,13 +33,16 @@
             $this->text = $text;
 
             $this->dateTime = new DateTime("NOW");
+            $this->text["date"] = $this->dateTime->format('Y-m-d H:i');
             
             return true;
         }
 
         // RFC 6455 section 5.2
         public function encode(){
-            $length = strlen($this->text);
+            $text = json_encode($this->text);
+            
+            $length = strlen($text);
             $datagramBytes[0] = $this->type;
 
             if($length <= 125){
@@ -65,7 +68,7 @@
                 // LoggerService::error("Cannot encode message - wrong length");
             }
             $parsedDatagramBytes = array_map("chr", $datagramBytes);
-            return implode($parsedDatagramBytes).$this->text;
+            return implode($parsedDatagramBytes).$text;
         }
 
         // RFC 6455 section 5.2
@@ -100,7 +103,7 @@
                 $message .= chr($octets[$i] ^ $mask[$j%4]);
             }
 
-            $this->text = $message;
+            $this->text = json_decode($message, true);
             return $this->getText();
         }
 
@@ -121,7 +124,7 @@
             return $this->dateTime;
         }
 
-        public function getText() : string{
+        public function getText(){
             if($this->type == OPCODE::PING){
                 return "PING";
             }

@@ -57,5 +57,37 @@
         public function getAllRooms(){
             return $this->rooms;
         }
+
+        public function getMessageHistoryAsArray($roomID){
+            $room = $this->getRoomByID($roomID);
+            
+            if($room){
+                return $room->getMessageHistory();
+            }
+            
+            /*if($room){
+                $ar = array();
+                $history = $room->getMessageHistory();
+                foreach ($history as $value) {
+                    $ar[] = $value->getText();
+                }
+
+                // {"type":"chat","chat":"asd","name":"Student Admin (student)","messagetype":"chat","date":"2020-12-13 21:39"}
+                // $msg = [
+                //     "type" => "chat",
+                //     ""
+                // ]
+
+                return $ar;
+            }*/
+        }
+
+        public function getUrlHistoryAsArray($roomID){
+            $room = $this->getRoomByID($roomID);
+
+            if($room){
+                return $room->getUrlHistory();
+            }
+        }
     }
 ?>

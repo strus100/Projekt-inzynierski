@@ -140,14 +140,14 @@
 
             switch ($text) {
                 case OPCODE::TEXT:
-                    $decodedJSON = json_decode($msg->getText(), true);
+                    $decodedJSON = $msg->getText();
                     $type = $decodedJSON['type'];
 
                     switch($type){
                         case 'chat':
                             if(!$client->isMuted()){
                                 $decodedJSON['name'] = $client->getName()." ".$client->getSurname()." (".$client->getLogin().")";
-                                $encodedJSON = json_encode($decodedJSON);
+                                $encodedJSON = $decodedJSON;
                                 $msg = $this->messageService->createTextMessage($client, $encodedJSON);
 
                                 $this->sendMessageToClients($roomClients, $msg->encode());
@@ -157,7 +157,7 @@
                                     "chat" => "Zostałeś zablokowany!",
                                     "name" => "SERVER"
                                 ];
-                                $msg = $this->messageService->createTextMessage($client, json_encode($muted));
+                                $msg = $this->messageService->createTextMessage($client, $muted);
                                 //$this->sendMessageToSocket(null, $msg->encode());
                                 $this->sendMessageToClients([$client], $msg->encode());
                             }
@@ -167,7 +167,9 @@
                             if($client->isAdmin()){
                                 $this->sendMessageToClients($roomClients, $msg->encode(), $client->getSocketID());
                                 if($decodedJSON['event']=="redirection"){
+                                    $room->addUrlToHistory($decodedJSON['url']);
                                     $room->setUrl($decodedJSON['url']);
+                                    $this->sendUrlHistoryToSocket($this->clientSockets[$client->getSocketID()], $room);
                                     $this->loggerService->log("Room: ".$room->getRoomName()." \tURL changed: ".$room->getUrl());
                                 }
                                 if($decodedJSON['event']=="scroll"){
@@ -239,14 +241,41 @@
                 "type" => "updatelist",
                 "clients" => $list
             ];
-
-            $msg = $this->messageService->createTextMessage(null, json_encode($clientsList));
+            //createMessage($author, $type, $text){
+            $msg = $this->messageService->createMessage(null, OPCODE::TEXT, $clientsList);
 
             $this->sendMessageToClients($roomClients, $msg->encode());
         }
 
+        private function sendChatHistoryToSocket($socket, $hist){
+            foreach ($hist as $value) {
+                $this->sendMessageToSocket($socket, $value->encode());
+            }
+        }
+
+        private function sendUrlHistoryToSocket($socket, $room){
+            $hist = $this->roomService->getUrlHistoryAsArray($room->getRoomID());
+            $list = array();
+            foreach ($hist as $value) {
+                $list[] = [
+                    //"title" => parse_url($value)['host'],
+                    "title" => $value,
+                    "link" => $value,
+                    "date" => "placeholder"
+                ];
+            }
+            $historyList = [
+                "type" => "updatehistory",
+                "history" => $list
+            ];
+
+            $msg = $this->messageService->createMessage(null, OPCODE::TEXT, $historyList);
+            $this->sendMessageToSocket($socket, $msg->encode());
+        }
+
         private function sendStartInfoToSocket($socket){
-            $room = $this->clientService->getClientBySocketID((string)$socket)->getRoom();
+            $client = $this->clientService->getClientBySocketID((string)$socket);
+            $room = $client->getRoom();
             $roomVO = $room->getRoomVO();
             
             $auth = [
@@ -270,15 +299,25 @@
                 "name" => $roomVO->roomName,
                 "admin" => $roomVO->adminID
             ];
-            $authMSG = $this->messageService->createMessage(null, OPCODE::TEXT, json_encode($auth));
-            $urlMSG = $this->messageService->createMessage(null, OPCODE::TEXT, json_encode($url));
-            $scrollMSG = $this->messageService->createMessage(null, OPCODE::TEXT, json_encode($scroll));
-            $infoMSG = $this->messageService->createMessage(null, OPCODE::TEXT, json_encode($info));
+            $authMSG = $this->messageService->createMessage(null, OPCODE::TEXT, $auth);
+            $urlMSG = $this->messageService->createMessage(null, OPCODE::TEXT, $url);
+            $scrollMSG = $this->messageService->createMessage(null, OPCODE::TEXT, $scroll);
+            $infoMSG = $this->messageService->createMessage(null, OPCODE::TEXT, $info);
             $this->sendMessageToSocket($socket, $authMSG->encode());
             $this->sendMessageToSocket($socket, $urlMSG->encode());
             $this->sendMessageToSocket($socket, $scrollMSG->encode());
             $this->sendMessageToSocket($socket, $infoMSG->encode());
             $this->sendClientsToAllInRoom($room);
+            //$this->sendMessageToSocket($socket, $this->roomService->getMessageHistoryAsTextArray());
+            $msgHistArray = $this->roomService->getMessageHistoryAsArray($room->getRoomID());
+            $this->sendChatHistoryToSocket($socket, $msgHistArray);
+
+            if($client->isAdmin()){
+                $this->sendUrlHistoryToSocket($socket, $room);
+            }
+            
+            //$msgHist = $this->messageService->createMessage(null, OPCODE::TEXT, $msgHistArray);
+            //$this->sendMessageToSocket($socket, $msgHist->encode());
         }
 
         private function handleNewClient($clientSocket){
@@ -315,7 +354,7 @@
                         $messageAuthor = $this->clientService->getClientBySocketID((string)$clientSocket);
                         if(!empty($messageAuthor)){
                             $message = $this->messageService->createMessageFromIncomingData($messageAuthor, $data);
-                            $this->loggerService->log("New message from: ".$messageAuthor->getLogin()." | Message: ".$message->getText());
+                            $this->loggerService->log("New message from: ".$messageAuthor->getLogin()." | Message: ".json_encode($message->getText()));
 
                             $this->parseMessageFrom($messageAuthor, $message);
                         }

@@ -22,7 +22,7 @@
             $this->title = $title;
             $this->adminID = $adminID;
             $this->clients = array();
-            $this->url = "https://google.com";
+            $this->url = "wmi.amu.edu.pl";
         }
 
         public function joinClient($client){
@@ -103,6 +103,18 @@
 
         public function addMessageToHistory($msg){
             $this->messageHistory[] = $msg;
+        }
+
+        public function getMessageHistory(){
+            return $this->messageHistory;
+        }
+
+        public function addUrlToHistory($url){
+            $this->urlHistory[] = $url;
+        }
+
+        public function getUrlHistory(){
+            return $this->urlHistory;
         }
     }
 ?>
