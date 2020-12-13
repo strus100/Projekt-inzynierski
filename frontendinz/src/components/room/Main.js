@@ -158,6 +158,7 @@ function Main(props) {
 		webSocket = new WebSocket(URL);
 	
 		webSocket.onopen = () => {
+			timeout = 1000;
 			//console.log('connected');
 			//webSocket.send(token);
 			//webSocket.send("1"); //debug
@@ -191,7 +192,7 @@ function Main(props) {
 				}
 				break;
 			case "updatelist": return handleUsersList(JSON.parse(message).clients);
-			case "updatehistory": return handleUpdateHistory(JSON.parse(message));
+			case "updatehistory": return handleUpdateHistory(JSON.parse(message).history);
 			}
 		};
 	
