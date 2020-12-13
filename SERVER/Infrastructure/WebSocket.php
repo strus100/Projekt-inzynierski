@@ -25,14 +25,14 @@
 
         private $sleepCounter = 1;
         private $sleepInterval = 0.25*1000000;   //Seconds * 1.000.000 (microseconds 1/mil)
-        private $pingInterval = 5;  //Seconds
+        private $pingInterval = 15;  //Seconds
 
         private $loggerService;
         private $clientService;
         private $messageService;
         private $roomService;
 
-        function __construct($ip, $port, $logger, $client, $message, $room){
+        function __construct($ip, $port, LoggerService $logger, ClientService $client, MessageService $message, RoomService $room){
             $this->loggerService = $logger;
             $this->clientService = $client;
             $this->messageService = $message;
@@ -107,8 +107,148 @@
             return fwrite($socket, $msg);
         }
 
+        private function pingSocket($socket){
+            //$this->loggerService->log("Ping: $socket");
+            $msg = $this->messageService->createPingSignalMessage();
+            return $this->sendMessageToSocket($socket, $msg->encode());
+        }
+
+        private function sendMessageToClients(array $client, $msg, $except = null){
+            $back = $this->clientSockets;
+            $back[$except] = null;
+            unset($back[$except]);
+            foreach ($client as $value) {
+                $socketID = $value->getSocketID();
+                if(isset($back[$socketID])){
+                    $socket = $back[$socketID];
+                    $this->sendMessageToSocket($socket, $msg);
+                }else{
+                    $this->loggerService->warn("Socket not found when sending message");
+                }
+            }
+        }
+
+        private function parseMessageFrom(Client $client, Message $msg){
+            if(!isset($client) || !$client->getRoom()){
+                $this->loggerService->warn("Client not defined");
+                return;
+            }
+
+            $room = $client->getRoom();
+            $roomClients = $room->getClients();
+            $text = $msg->getType();
+
+            switch ($text) {
+                case OPCODE::TEXT:
+                    $decodedJSON = json_decode($msg->getText(), true);
+                    $type = $decodedJSON['type'];
+
+                    switch($type){
+                        case 'chat':
+                            if(!$client->isMuted()){
+                                $decodedJSON['name'] = $client->getName()." ".$client->getSurname()." (".$client->getLogin().")";
+                                $encodedJSON = json_encode($decodedJSON);
+                                $msg = $this->messageService->createTextMessage($client, $encodedJSON);
+
+                                $this->sendMessageToClients($roomClients, $msg->encode());
+                            }else{
+                                $muted = [
+                                    "type" => "chat",
+                                    "chat" => "Zostałeś zablokowany!",
+                                    "name" => "SERVER"
+                                ];
+                                $msg = $this->messageService->createTextMessage($client, json_encode($muted));
+                                //$this->sendMessageToSocket(null, $msg->encode());
+                                $this->sendMessageToClients([$client], $msg->encode());
+                            }
+                            break;
+                        
+                        case 'event':
+                            if($client->isAdmin()){
+                                $this->sendMessageToClients($roomClients, $msg->encode(), $client->getSocketID());
+                                if($decodedJSON['event']=="redirection"){
+                                    $room->setUrl($decodedJSON['url']);
+                                    $this->loggerService->log("Room: ".$room->getRoomName()." \tURL changed: ".$room->getUrl());
+                                }
+                                if($decodedJSON['event']=="scroll"){
+                                    $room->setScrollPositionX($decodedJSON['x']);
+                                    $room->setScrollPositionY($decodedJSON['y']);
+                                    $this->loggerService->log("Room: ".$room->getRoomName()." \tScroll changed: ".$room->getScrollPositionX()." | ".$room->getScrollPositionY());
+                                }
+                            }
+                            $this->loggerService->log("Room: ".$room->getRoomName()." event: ".$decodedJSON[$type]);
+                            break;
+                        case 'mute':
+                            if($client->isAdmin()){
+                                $clientToMute = $room->getClientByLogin($decodedJSON['login']);
+                                if($clientToMute != null){
+                                    if($clientToMute->isMuted()){
+                                        $clientToMute->unMute();
+                                    }else{
+                                        $clientToMute->mute();
+                                    }
+                                    $this->sendClientsToAllInRoom($room);
+                                }
+                            }
+                            break;
+
+                        default:
+                            $this->loggerService->warn("Undefined JSON type received: $type");
+                            break;
+                    }
+                    break;
+                
+                case OPCODE::CLOSE:
+                    $this->clientSockets[(string)$client->getSocketID()] = null;
+                    unset($this->clientSockets[(string)$client->getSocketID()]);
+                    $this->loggerService->log("Client: ".$client->getLogin()." left room: ".$room->getRoomName()."(".$room->getRoomID.")");
+                    $this->clientService->destroyClientBySocketID($client->getSocketID());
+                    $this->sendClientsToAllInRoom($room);
+                    break;
+
+                case OPCODE::PING:
+                    break;
+                
+                case OPCODE::PONG:
+                    break;
+
+                default:
+                    $this->loggerService->warn("Undefined message type received");
+                    break;
+            }
+        }
+
+        private function sendClientsToAllInRoom(Room $room){
+            if(!isset($room)){
+                $this->loggerService->warn("Undefined variable \$room");
+                return;
+            }
+
+            $list = array();
+            $roomClients = $room->getClients();
+
+            foreach($roomClients as $item){
+                $list[] = [
+                    "login" => $item->getLogin(),
+                    "name" => $item->getName()." ".$item->getSurname()." (".$item->getLogin().")",
+                    "permission" => ($item->isMuted()) ? false : true
+                ];
+            }
+
+            $clientsList = [
+                "type" => "updatelist",
+                "clients" => $list
+            ];
+
+            $msg = $this->messageService->createTextMessage(null, json_encode($clientsList));
+
+            $this->sendMessageToClients($roomClients, $msg->encode());
+        }
+
         private function sendStartInfoToSocket($socket){
-            $roomVO = $this->clientService->getClientsRoomInfo((string)$socket);
+            $room = $this->clientService->getClientBySocketID((string)$socket)->getRoom();
+            $roomVO = $room->getRoomVO();
+            
             $auth = [
                 "type" => "auth",
                 "auth" => "true"
@@ -138,6 +278,7 @@
             $this->sendMessageToSocket($socket, $urlMSG->encode());
             $this->sendMessageToSocket($socket, $scrollMSG->encode());
             $this->sendMessageToSocket($socket, $infoMSG->encode());
+            $this->sendClientsToAllInRoom($room);
         }
 
         private function handleNewClient($clientSocket){
@@ -153,20 +294,6 @@
             }else{
                 $msg = $this->messageService->createCloseSignalMessage();
                 $this->sendMessageToSocket($clientSocket, $msg->encode());
-            }
-        }
-
-        private function parseMessageFrom($client, $msg){
-            $text = $msg->getType();
-
-            switch ($text) {
-                case OPCODE::TEXT:
-                    $this->loggerService->log($msg->getText());
-                    break;
-                
-                default:
-                    # code...
-                    break;
             }
         }
 
@@ -194,11 +321,30 @@
                         }
                     }
                 }
+
+                if($this->sleepCounter > $this->pingInterval/$this->sleepInterval*1000000){
+                    foreach ($this->clientSockets as $socket) {
+                        $client = $this->clientService->getClientBySocketID((string)$socket);
+                        $room = $client->getRoom();
+                        if(!$room){
+                            $msg = $this->messageService->createCloseSignalMessage();
+                            $this->sendMessageToSocket($socket, $msg->encode());
+                        }
+                        if(!$this->pingSocket($socket) || !$room){
+                            $this->clientSockets[(string)$client->getSocketID()] = null;
+                            unset($this->clientSockets[(string)$client->getSocketID()]);
+                            $this->loggerService->log("Connection timeout: \tClient: ".$client->getLogin());
+                            $this->clientService->destroyClientBySocketID($client->getSocketID());
+                        }
+                    }
+                    foreach ($this->roomService->getAllRooms() as $room) {
+                        $this->sendClientsToAllInRoom($room);
+                    }
+                    $this->sleepCounter = 1;
+                }
                 usleep($this->sleepInterval);
                 $this->sleepCounter++;
             }
-
-
         }
     }
 ?>

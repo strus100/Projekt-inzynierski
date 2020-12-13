@@ -21,13 +21,12 @@
             $this->loggerService->log("Starting server...");
 
             $this->databaseService = new DatabaseService($this->loggerService);
-            $this->roomService = new RoomService($this->loggerService, $this->databaseService);
-            $this->clientService = new ClientService($this->loggerService, $this->databaseService, $this->roomService);
-            $this->messageService = new MessageService($this->loggerService);
+            $this->roomService = new RoomService($this->loggerService, $this->databaseService, $this);
+            $this->clientService = new ClientService($this->loggerService, $this->databaseService, $this->roomService, $this);
+            $this->messageService = new MessageService($this->loggerService, $this);
 
             $this->webSocket = new WebSocket($ip, $port,
                                             $this->loggerService, $this->clientService, $this->messageService, $this->roomService);
-            //
         }
     }
 ?>

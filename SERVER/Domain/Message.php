@@ -121,7 +121,7 @@
             return $this->dateTime;
         }
 
-        public function getText(){
+        public function getText() : string{
             if($this->type == OPCODE::PING){
                 return "PING";
             }

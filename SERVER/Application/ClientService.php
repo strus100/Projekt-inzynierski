@@ -31,7 +31,7 @@
 
                 if(!empty($this->clients[$socketID])){
                     $this->loggerService->warn("Client already exists!\tLogin: ".$clientEntity->login." \tSocketID: ".$socketID);
-                    return null;
+                    return false;
                 }
 
                 //login permission name surname room
@@ -40,13 +40,15 @@
                                             PERMISSION::ADMIN,
                                             $clientEntity->name,
                                             $clientEntity->surname,
-                                            $room);
+                                            $room,
+                                            $socketID);
                 }else{
                     $client = new Client($clientEntity->login,
                                             PERMISSION::USER,
                                             $clientEntity->name,
                                             $clientEntity->surname,
-                                            $room);
+                                            $room,
+                                            $socketID);
                 }
                 $this->clients[$socketID] = $client;
                 $room->joinClient($client);
@@ -57,6 +59,15 @@
             }else{
                 $this->loggerService->warn("Cannot create new user. \tInvalid token!");
                 return false;
+            }
+        }
+
+        public function destroyClientBySocketID($socketID){
+            $client = $this->getClientBySocketID($socketID);
+            if($client != null){
+                $this->clients[$socketID] = null;
+                unset($this->clients[$socketID]);
+                $client->leaveRoom();
             }
         }
 

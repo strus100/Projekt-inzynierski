@@ -295,6 +295,7 @@
                                 $this->sendClientsListToAllInRoom($clientRoom);
                             }
                         }
+                        break;
                     default:
                         echo "Undefined JSON type received: $type\r\n";
                         break;

@@ -53,5 +53,9 @@
                 $this->logger->warn("Room not found: $roomID");
             }
         }
+
+        public function getAllRooms(){
+            return $this->rooms;
+        }
     }
 ?>
