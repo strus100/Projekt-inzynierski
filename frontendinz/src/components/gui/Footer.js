@@ -22,7 +22,15 @@ function Footer(props){
         }
 
         
-        <Link to="/"><label style={{width:"auto"}}><span className="material-icons footer--span-home">home</span></label></Link>
+            <Link to="/">
+                <label 
+                    htmlFor="homebutton"
+                    className="tooltip footer--span-home"
+                >
+                    <span className="tooltiptext">Powrót do strony głównej</span>
+                    <span className="material-icons">home</span>
+                </label>
+            </Link>
         
 
         <label 
@@ -75,7 +83,21 @@ function Footer(props){
                 <span aria-labelledby="jsx-a11y/accessible-emoji" role="img">Konsultacja</span></label>
                 </a>
             }
-            <Link to="/"><label style={{width:"auto"}}><span className="material-icons footer--span-home">home</span></label></Link>
+            <input 
+                type="checkbox" 
+                id="homebutton"
+                />
+
+            <Link to="/">
+                <label 
+                    htmlFor="homebutton"
+                    className="tooltip footer--span-home"
+                >
+                    <span className="tooltiptext">Powrót do strony głównej</span>
+                    <span className="material-icons">home</span>
+                </label>
+            </Link>
+
             <input 
                 type="checkbox" 
                 id="tooglechat"

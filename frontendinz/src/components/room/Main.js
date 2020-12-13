@@ -64,10 +64,12 @@ function Main(props) {
 		setRoomName(response.data.name);
 		addMessage({ type: "chat", chat: "Witaj na kanale " + response.data.name + " wpisz /help, aby uzyskać pomoc dotyczącą chatu.", name: "SERVER", messagetype: "chat" });
 		if(response) setLoadingMain(true);
+		//document.title = id + " WykładyWebowe";
 	  })
 	  .catch(function (error) {
 		//addMessage({ type: "chat", chat: "Witaj na kanale " + roomName + " wpisz /help, aby uzyskać pomoc dotyczącą chatu.", name: "SERVER", messagetype: "chat" });
 		console.log(error);
+		//document.title = id + " WykładyWebowe";
 	  });
 
 	// możliwe że się przyda

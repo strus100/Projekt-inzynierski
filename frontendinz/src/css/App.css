@@ -459,17 +459,32 @@ input:checked + label{
   border-top: 4px solid #ffaf00;
 }
 
-.footer div label span i {
+.footer div label span i, .footer div label span {
   height: 60px;
   line-height: 60px;
   vertical-align: bottom;
 }
 
+.footer--span-consultation span{
+  height: unset!important;
+  line-height: unset!important;
+  vertical-align: unset!important;
+}
+
 .footer--span-home{
   height: 60px; 
   line-height: 60px;
-  padding-left: 30px; 
-  padding-right: 30px;
+  padding-left: 25px; 
+  padding-right: 25px;
+}
+
+.footer--span-home a span{
+  color: white;
+}
+
+.footer--span-home .tooltiptext{
+  width: 300px!important;
+  margin-left: -150px!important;
 }
 
 .footer--span-files{
