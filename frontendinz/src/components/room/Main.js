@@ -48,29 +48,57 @@ function Main(props) {
   const proxy = 'http://localhost/proxy/index.php?url=';
 
   const { id } = useParams();
+  const [adminName, setAdminName] = useState("");
 
   const [roomName, setRoomName] = useState("");
   const [roomAdmin, setRoomAdmin] = useState(false); //zmienić na false
   const [loadingMain, setLoadingMain] = useState(false); //zmienić na false
 
-  useEffect(() => {
-	axios.post('/rooms/', {
-		roomID: id
-	  })
-	  .then(function (response) {
-		if(response.data.admin){ // do poprawy back
-			setRoomAdmin(true);
-		}
-		setRoomName(response.data.name);
-		addMessage({ type: "chat", chat: "Witaj na kanale " + response.data.name + " wpisz /help, aby uzyskać pomoc dotyczącą chatu.", name: "SERVER", messagetype: "chat" });
-		if(response) setLoadingMain(true);
-		//document.title = id + " WykładyWebowe";
-	  })
-	  .catch(function (error) {
-		//addMessage({ type: "chat", chat: "Witaj na kanale " + roomName + " wpisz /help, aby uzyskać pomoc dotyczącą chatu.", name: "SERVER", messagetype: "chat" });
-		console.log(error);
-		//document.title = id + " WykładyWebowe";
-	  });
+//   useEffect(() => {
+	// axios.post('/rooms/', {
+	// 	roomID: id
+	//   })
+	//   .then(function (response) {
+	// 	if(response.data.admin){ // do poprawy back
+	// 		setRoomAdmin(true);
+	// 	}
+	// 	setRoomName(response.data.name);
+	// 	addMessage({ type: "chat", chat: "Witaj na kanale " + response.data.name + " wpisz /help, aby uzyskać pomoc dotyczącą chatu.", name: "SERVER", messagetype: "chat" });
+	// 	if(response) setLoadingMain(true);
+	// 	//document.title = id + " WykładyWebowe";
+	//   })
+	//   .catch(function (error) {
+	// 	//addMessage({ type: "chat", chat: "Witaj na kanale " + roomName + " wpisz /help, aby uzyskać pomoc dotyczącą chatu.", name: "SERVER", messagetype: "chat" });
+	// 	console.log(error);
+	// 	//document.title = id + " WykładyWebowe";
+	//   });
+
+	useEffect(() => {
+		var bodyFormData = new FormData();
+		bodyFormData.append('roomId', id);
+		axios.all([
+			axios.post('/API/UsersByRoom.php', bodyFormData, {
+				headers: {'Content-Type': 'multipart/form-data'}	
+			}),
+			axios.post("/rooms/", {
+				roomID: id 
+			})
+		])
+		.then(axios.spread((usersByRoomAPI, roomsAPI) => {
+			if(usersByRoomAPI && roomsAPI){
+				if(roomsAPI.data.admin){ // do poprawy back
+					setRoomAdmin(true);
+				}
+				setRoomName(roomsAPI.data.name);
+				addMessage({ type: "chat", chat: "Witaj na kanale " + roomsAPI.data.name + " wpisz /help, aby uzyskać pomoc dotyczącą chatu.", name: "SERVER", messagetype: "chat" });
+				if(roomsAPI) setLoadingMain(true);
+				if(usersByRoomAPI) setAdminName(usersByRoomAPI.data.name + " " + usersByRoomAPI.data.surname);
+				//document.title = id + " WykładyWebowe";
+			}
+		}))
+		.catch(function (error){
+			console.log(error);
+		});
 
 	// możliwe że się przyda
 
@@ -497,6 +525,7 @@ function Main(props) {
 				// userAPIToken={userAPIToken}
 				id={id}
 				login={login}
+				adminName={adminName}
 				/>
 			</div>
 			:

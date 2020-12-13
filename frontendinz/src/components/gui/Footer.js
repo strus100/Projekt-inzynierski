@@ -79,7 +79,7 @@ function Footer(props){
                 <a href={linkPawel+"?roomID="+props.id+"&login="+props.login} target="_blank"><label
                     className="tooltip footer--span-consultation"
                 >
-                <span className="tooltiptext tooltiptext--long">Umów się na konsultację z IMIĘ NAZWISKO</span>
+                <span className="tooltiptext tooltiptext--long">Umów się na konsultację z {props.adminName}</span>
                 <span aria-labelledby="jsx-a11y/accessible-emoji" role="img">Konsultacja</span></label>
                 </a>
             }
