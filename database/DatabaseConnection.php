@@ -89,10 +89,16 @@
 			return $row;
 		}
 
-		function insertUser($login, $name, $surname, $role, $token=NULL){
-			$stmt = $this->conn->prepare("INSERT INTO `usertable` VALUES (?, ?, ?, ?, ?, NULL)");
-			$stmt->bind_param('sssss', $login, $name, $surname, $role, $token);
-			$stmt->execute();
+		function insertUser($login, $name, $surname, $role, $token=NULL, $email){
+	//		$stmt = $this->conn->prepare("INSERT INTO `usertable` VALUES (?, ?, ?, ?, NULL, ?, ?)");
+	//		$roomId = 0;
+	//		$stmt->bind_param('sssssis', $login, $name, $surname, $role, $token, $roomId ,$email);
+			
+	//		$stmt->execute();
+		
+			$sql  = "INSERT INTO `usertable` (`login`, `name`, `surname`, `role`, `token`, `room`, `email`) VALUES ('".$login."', '".$name."', '".$surname."', '".$role."', '".$token."', 0, '".$email."')";
+			$this->conn->query($sql);
+			
 		}
 
 		function getUserByToken($token){
@@ -244,6 +250,5 @@
 			}
 		}
 	}
-	
-	
+		
 ?>
