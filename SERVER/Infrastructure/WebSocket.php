@@ -7,7 +7,7 @@
     require_once __DIR__."/../Application/LoggerService.php";
     require_once __DIR__."/../Application/ClientService.php";
     require_once __DIR__."/../Application/MessageService.php";
-    require_once __DIR__."/../Config.php";
+    require_once __DIR__."/../../Config.php";
 
     // First octet -> flags with OPCODE
     // abstract class OPCODE{
@@ -39,6 +39,8 @@
             $this->roomService = $room;
 
             $context = stream_context_create();
+            stream_context_set_option($context, 'ssl', 'local_cert', CONFIG::CERT_FULL_CHAIN_PATH);
+            stream_context_set_option($context, 'ssl', 'local_pk', CONFIG::CERT_PRIVATE_KEY_PATH);
             // stream_context_set_option($context, 'ssl', 'local_cert', "/etc/letsencrypt/live/s153070.projektstudencki.pl/fullchain.pem");
             // stream_context_set_option($context, 'ssl', 'local_pk', "/etc/letsencrypt/live/s153070.projektstudencki.pl/privkey.pem");
             // stream_context_set_option($context, 'ssl', 'allow_self_signed', false);

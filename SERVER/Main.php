@@ -10,7 +10,7 @@
     date_default_timezone_set("Europe/Warsaw");
 
     //require_once __DIR__."/Infrastructure/WebSocket.php";
-    require_once __DIR__."/Config.php";
+    require_once __DIR__."/../Config.php";
     require_once __DIR__."/Application/ServerService.php";
 
     // Arguments parsing
