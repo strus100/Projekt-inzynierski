@@ -20,6 +20,12 @@
             $this->createRoomsTable();
             echo "Creating table files\r\n";
             $this->createFilesTable();
+            echo "Creating table chathistory\r\n";
+            $this->createChatHistoryTable();
+            echo "Creating table urlhistory\r\n";
+            $this->createUrlHistoryTable();
+            
+            $this->DBconnection->close();
         }
 
         private function connectToDB(){
@@ -64,7 +70,7 @@
 
         private function createRoomsTable(){
             $result = $this->DBconnection->query("CREATE TABLE IF NOT EXISTS `rooms` (
-                    `id` INT NOT NULL,
+                    `id` INT NOT NULL AUTO_INCREMENT,
                     `roomName` VARCHAR(255) NOT NULL,
                     `admin` VARCHAR(255) NOT NULL,
                     PRIMARY KEY (`id`),
@@ -92,12 +98,48 @@
                 die($this->DBconnection->error);
             }
         }
-    }
 
+        private function createChatHistoryTable(){
+            $result = $this->DBconnection->query("CREATE TABLE IF NOT EXISTS `chathistory` (
+                    `id` INT NOT NULL AUTO_INCREMENT,
+                    `date` DATETIME NOT NULL,
+                    `message` TEXT NOT NULL,
+                    `messagetype` TEXT NOT NULL,
+                    `user` VARCHAR(255) NOT NULL,
+                    `room` INT NOT NULL,
+                    PRIMARY KEY(`id`),
+                    FOREIGN KEY(`user`) REFERENCES `usertable`(`login`),
+                    FOREIGN KEY(`room`) REFERENCES `rooms`(`id`)
+                ) ENGINE = InnoDB CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;");
+
+            if($result == false){
+                echo "ERROR cannot create chat history table\r\n";
+                die($this->DBconnection->error);
+            }
+        }
+
+        private function createUrlHistoryTable(){
+            $result = $this->DBconnection->query("CREATE TABLE IF NOT EXISTS `urlhistory` (
+                    `id` INT NOT NULL AUTO_INCREMENT,
+                    `date` DATETIME NOT NULL,
+                    `url` TEXT NOT NULL,
+                    `user` VARCHAR(255) NOT NULL,
+                    PRIMARY KEY(`id`),
+                    FOREIGN KEY(`user`) REFERENCES `usertable`(`login`)
+                ) ENGINE = InnoDB CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;");
+
+            if($result == false){
+                echo "ERROR cannot create url history table\r\n";
+                die($this->DBconnection->error);
+            }
+        }
+    }
+    /*ID(FK auto_incr), message, autor(FK), pokój (FK) messagetype ??*/
     $consent = readline("WARNING! This procedure will DELETE ALL DATA from your database. Are you sure? ([Y]es | [N]o): ");
     
     if(strtolower($consent) == "y" || strtolower($consent) == "yes"){
         new Installation();
+        echo "Installation complete";
     }else{
         echo "Exiting installation";
     }

@@ -13,5 +13,8 @@
         const MAX_BUFFER = 10000000;
         const CERT_FULL_CHAIN_PATH = "/etc/letsencrypt/live/s153070.projektstudencki.pl/fullchain.pem";
         const CERT_PRIVATE_KEY_PATH = "/etc/letsencrypt/live/s153070.projektstudencki.pl/privkey.pem";
+
+        //Preferences
+        const SELECT_LIMIT = 20;
     }
 ?>

@@ -1,5 +1,6 @@
 <?php
     // require_once __DIR__."/../Application/LoggerService.php";
+    require_once __DIR__."/../ValueObjects/MessageVO.php";
 
     // First octet -> flags with OPCODE
     // RFC 6455 section 5.2 and 11.8
@@ -12,10 +13,10 @@
 
     class Message{
         private $type;
+        private $dateTime;
         private $text;
         private $author;
         private $room;
-        private $dateTime;
 
         function __construct($type, $author, $room, $text){
             if(!empty($type) &&
@@ -144,6 +145,10 @@
 
         public function getType(){
             return $this->type;
+        }
+
+        public function getVO(){
+            return new MessageVO($this->type, $this->dateTime, $this->text, $this->author, $this->room);
         }
     }
 ?>

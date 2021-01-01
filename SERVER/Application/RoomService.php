@@ -14,7 +14,7 @@
 
         public function createRoom($roomID){
             $roomEntity = $this->database->getRoomByID($roomID);
-
+            
             if(!empty($roomEntity)){
                 if(!empty($this->rooms[$roomID])){
                     $this->logger->warn("Room already exists!\tID: $roomID");

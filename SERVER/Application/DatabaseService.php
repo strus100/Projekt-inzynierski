@@ -2,6 +2,9 @@
     require_once __DIR__."/../Infrastructure/Database.php";
     require_once __DIR__."/../Entities/RoomEntity.php";
     require_once __DIR__."/../Entities/ClientEntity.php";
+    require_once __DIR__."/../Entities/ChatHistoryEntity.php";
+    require_once __DIR__."/../Entities/UrlHistoryEntity.php";
+    require_once __DIR__."/../../Config.php";
 
     class DatabaseService{
         private $logger;
@@ -51,6 +54,37 @@
             }
 
             return $array;
+        }
+
+        public function getChatHistoryByRoomID($roomID, $offset=0){
+            $sql = "SELECT * FROM `chathistory` WHERE `room`==$roomID ORDER BY `date` DESC LIMIT $offset, ".Config::SELECT_LIMIT;
+            $result = $this->database->query($sql);
+
+            $array = array();
+            while($row = $result->fetch_assoc()){
+                $chatHistory = new ChatHistoryEntity($row['id'], $row['date'], $row['message'], $row['messageType'], $row['user'], $row['room']);
+                $array[] = $chatHistory;
+            }
+
+            return $array;
+        }
+
+        public function getUrlHistoryByUserID($userID, $offset=0){
+            $sql = "SELECT * FROM `urlhistory` WHERE `user`==$userID ORDER BY `date` DESC LIMIT $offset, ".Config::SELECT_LIMIT;
+            $result = $this->database->query($sql);
+
+            $array = array();
+            while($row = $result->fetch_assoc()){
+                $urlHistory = new UrlHistoryEntity($row['id'], $row['date'], $row['url'], $row['user']);
+                $array[] = $urlHistory;
+            }
+
+            return $array;
+        }
+
+        public function addMessageToChatHistory($message, $userID, $roomID){
+            //$stringDate = $message['date']
+            //$sql = "INSERT INTO `chathistory` VALUES (NULL, )"
         }
     }
 ?>
