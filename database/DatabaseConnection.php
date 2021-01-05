@@ -10,45 +10,67 @@
 			$password = "";
 			$dbname = "bazaInz";
 			// Create connection
-			$conn = new mysqli($servername, $username, $password, $dbname);
+			$this->conn = new mysqli($servername, $username, $password, $dbname);
+			$this->conn->set_charset("UTF8");
+			$this->conn->query("SET NAMES UTF8");
 
 			// Check connection
-			if ($conn->connect_error) {
-				die("Connection failed: " . $conn->connect_error);
+			if ($this->conn->connect_error) {
+				die("Connection failed: " . $this->conn->connect_error);
 			}
-			echo "Connected successfully<br>";
-			return $conn;
 		}
 		
-		 function get_name() {
+		function get_name() {
 			return $this->name;
 		}
 	
-		function insertData($conn,$table,$data,$colNames){
-				$colNamesS = join(', ', $colNames);
-				
-				for($i = 0; $i < 2 ; $i++){
-				
-				$dataS = join('"," ', $data[$i]);
-				$sql = "INSERT INTO $table ($colNamesS) VALUES (\"$dataS\")";
-				
-				if ($conn->query($sql) === TRUE) {
-					echo "Row $i added to $table successfully!<br>";
-				} else {
-					echo "Error inserting data: " . $conn->error ."<br>";
-				}
-				}
-				
+		function insertData($table,$data,$colNames){
+			$colNamesS = implode(', ', $colNames);
+			
+			$dataS = implode(', ', $data);
+			$dataS = str_replace(",","\",\"",$dataS);
+			$dataS =  str_replace(" ","",$dataS);
+			
+			$sql = "INSERT INTO $table ($colNamesS) VALUES (\"$dataS\")";
+			
+			if ($this->conn->query($sql) === TRUE) {
+				echo "Row added to $table successfully!<br>";
+			} else {
+				echo "Error inserting data: " . $this->conn->error ."<br>";
+			}	
 		}
 		
-		function getRow($table,$conn){
-			
-		if ($conn->connect_error) {
-			die("Connection failed: " . $conn->connect_error);
-		}
+		function getRow($table,$id){
+			if ($this->conn->connect_error) {
+				die("Connection failed: " . $this->conn->connect_error);
+			}
 
-		$sql = "SELECT * FROM $table";
-		$result = $conn->query($sql);
+			$sql = "SELECT * FROM $table WHERE id = '$id'";
+			$result = $this->conn->query($sql);
+			print_r($result);
+			
+			$row = $result -> fetch_assoc();
+			
+			return $row;
+		}
+		
+		function getRowByToken($table,$token){
+			if ($this->conn->connect_error) {
+				die("Connection failed: " . $this->conn->connect_error);
+			}
+
+			$sql = "SELECT * FROM $table WHERE `token` = '$token'";
+			$result = $this->conn->query($sql);
+			if($result->num_rows != 1){
+				echo "Error num rows: ".$result->num_rows."\r\n";
+				echo $token;
+				return false;
+			}
+			
+			$row = $result->fetch_assoc();
+			
+			return $row;
+		}
 		
 		function closeConnection(){
 			$this->conn->close();
@@ -111,12 +133,17 @@
 			}
 			return $rooms;
 		}
-		
-		
-		function getRowByToken($table,$conn,$token){
-						
-		if ($conn->connect_error) {
-			die("Connection failed: " . $conn->connect_error);
+
+		function createRoom($roomName){
+			$token = htmlspecialchars($_COOKIE['token']);
+			$user = $this->getUserByToken($token);
+			$login = $user['login'];
+
+			$stmt = $this->conn->prepare("INSERT INTO `rooms` VALUES (NULL, ?, ?)");
+			$stmt->bind_param("ss", $roomName, $login);
+			$stmt->execute();
+
+			return $this->conn->insert_id;
 		}
 
 		function selectRoom($roomID){
@@ -133,9 +160,15 @@
 				return true;
 			}
 		}
-		
-		function closeConnection($conn){
-			$conn->close();
+
+		function getRoom($roomID){
+			$sql = "SELECT * FROM `rooms` WHERE `id`=$roomID";
+			$result = $this->conn->query($sql);
+			if($result->num_rows != 1){
+				return false;
+			}else{
+				return $result->fetch_assoc();
+			}
 		}
 		
 		function deleteRoom($roomID){

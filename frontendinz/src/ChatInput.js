@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from 'react'
 
-class ChatInput extends Component {
-  static propTypes = {
-    onSubmitMessage: PropTypes.func.isRequired,
-  }
-  state = {
-    message: '',
-  }
+function ChatInput(props){
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     function submitOnEnter(event){

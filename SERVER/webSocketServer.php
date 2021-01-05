@@ -8,7 +8,8 @@
     error_reporting(E_ALL);
     if(PHP_SAPI !== 'cli') die("Run only using CLI");
 
-    require_once "Client.php";
+    require_once __DIR__."/Client.php";
+    require_once __DIR__."/Room.php";
 
     define("DEFAULT_IP", "0.0.0.0");
     define("DEFAULT_PORT", 3000);
@@ -42,6 +43,7 @@
 
         private $socket;
         private $clients = array();
+        private $rooms = array();
         private $sleepCounter = 1;
         private $sleepInterval = 0.25*1000000;   //Seconds * 1.000.000 (microseconds 1/mil)
         private $pingInterval = 5;  //Seconds
@@ -120,13 +122,24 @@
             if($length <= 125){
                 $datagramBytes[1] = $length;
             }
-            else if($length >= 126 && length <= 65535){
+            else if($length >= 126 && $length <= 65535){
                 $datagramBytes[1] = 126;
                 $datagramBytes[2] = ($length >> 8) & 255;
                 $datagramBytes[3] = $length & 255;
             }
+            else if($length > 65535){
+                $datagramBytes[1] = 127;
+                $datagramBytes[2] = ($length >> 56) & 255;
+                $datagramBytes[3] = ($length >> 48) & 255;
+                $datagramBytes[4] = ($length >> 40) & 255;
+                $datagramBytes[5] = ($length >> 32) & 255;
+                $datagramBytes[6] = ($length >> 24) & 255;
+                $datagramBytes[7] = ($length >> 16) & 255;
+                $datagramBytes[8] = ($length >> 8) & 255;
+                $datagramBytes = $length & 255;
+            }
             else{
-                echo "ERROR encoding message";
+                echo "ERROR encoding message - length";
             }
             $parsedArray = array_map("chr", $datagramBytes);
             // print_r($datagramBytes);
@@ -164,13 +177,12 @@
                 $index = 2;
             }
             else if($length == 126){
-                $length = ($octets[2] << 8) | $octets[3];
+                // $length = ($octets[2] << 8) | $octets[3];
                 $index = 4;
             }
             else if($length == 127){
-                echo("payload length=127 - To implement LATER\r\n\r\n");
                 $index = 10;
-                return false;
+                // return false;
             }
             else{
                 return false;
@@ -209,7 +221,7 @@
         private function send_to_all($message, $clientsArray, $except = [false]){
             $encoded_message = $this->encode($message);
 
-            foreach ($this->clients as $client) {
+            foreach ($clientsArray as $client) {
                 if(!in_array($client->get_socket(), $except)){
                     $this->send_encoded($client->get_socket(), $encoded_message);
                 }
@@ -239,14 +251,8 @@
             }
             else{
                 $decoded_JSON_array = json_decode($message, true);
-                // $token = $decoded_JSON_array['token'];
-                // unset($decoded_JSON_array['token']);
-                // if(!$token){
-                //     echo "$clientSocket:\tTOKEN not present\r\n";
-                //     return false;
-                // }
-
                 $type = $decoded_JSON_array['type'];
+                
                 switch ($type) {
                     case 'chat':
                         if(!$client->isMuted()){
