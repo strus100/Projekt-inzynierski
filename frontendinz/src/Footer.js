@@ -67,7 +67,6 @@ function Footer(props){
             </label>
             
         </div>
-    }
     </div>
     )
 } 
