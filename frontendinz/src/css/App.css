@@ -487,6 +487,11 @@ input:checked + label{
   margin-left: -150px!important;
 }
 
+.footer--span-files .tooltiptext{
+  width: 200px!important;
+  margin-left: -20px!important;
+}
+
 .footer--span-files{
   position: absolute!important; 
   left: 0px; 

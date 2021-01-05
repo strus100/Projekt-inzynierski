@@ -140,7 +140,7 @@ function Lobby(props){
 	  function handlePopupLobby(e){
 		e.preventDefault();
 		handleDestruction();
-		document.getElementById("myModal").style.display = "block";
+		document.getElementById("myModalFiles").style.display = "flex";
 	  }
 
 	  function handleDestruction(){
