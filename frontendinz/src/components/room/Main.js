@@ -52,8 +52,8 @@ function Main(props) {
   const [adminName, setAdminName] = useState("");
 
   const [roomName, setRoomName] = useState("");
-  const [roomAdmin, setRoomAdmin] = useState(true); //zmienić na false
-  const [loadingMain, setLoadingMain] = useState(true); //zmienić na false
+  const [roomAdmin, setRoomAdmin] = useState(false); //zmienić na false
+  const [loadingMain, setLoadingMain] = useState(false); //zmienić na false
 
 //   useEffect(() => {
 	// axios.post('/rooms/', {
@@ -143,7 +143,7 @@ function Main(props) {
 			}else{
 				contentDocument = document.getElementById("scoreboard").contentDocument;
 			}
-			if(contentDocument.readyState !== "complete" && window.location.href.indexOf("main") > -1 && contentDocument !== null){
+			if(contentDocument.readyState !== "complete" && window.location.href.indexOf("room") > -1 && contentDocument !== null){
 				callbackInterval = setTimeout(function(){
 					checkLoadedIframe(callback);
 				}, 500);
@@ -198,7 +198,7 @@ function Main(props) {
 		};
 	
 		webSocket.onclose = e => {
-			if(window.location.href.indexOf("main") > -1){
+			if(window.location.href.indexOf("room") > -1){
 				//setWebsocket(null); //do przetestowania - możliwy błąd uncomment jeśli wina backu
 				console.log(
 					`Socket is closed. Reconnect will be attempted in ${Math.min(
@@ -233,7 +233,7 @@ function Main(props) {
 		}
 
 		function check(){
-			if ((!ws || ws.readyState === WebSocket.CLOSED) && (window.location.href.indexOf("main") > -1)) {
+			if ((!ws || ws.readyState === WebSocket.CLOSED) && (window.location.href.indexOf("room") > -1)) {
 				connect();
 			}
 		};

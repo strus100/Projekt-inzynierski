@@ -16,9 +16,9 @@ import {
 } from "react-router-dom";
 
 function App() {
-  const [authenticated, setAuthenticated] = useState(true); //zmienić na false
-  const [admin, setAdmin] = useState(true);
-  const [loaded, setLoaded] = useState(true); //zmienić na false
+  const [authenticated, setAuthenticated] = useState(false); //zmienić na false
+  const [admin, setAdmin] = useState(false);
+  const [loaded, setLoaded] = useState(false); //zmienić na false
 
   const [access, setAccess] = useState(false);
   const [name, setName] = useState("");
@@ -137,7 +137,7 @@ function App() {
 			<AContext.Provider value={providerValue}>
 				<Switch>
 					<Route exact path="/" render={() => <HomePage authenticated={authenticated} handleLogout={handleLogout}/>}/>
-					<Route path="/main/:id" render={() => (authenticated ? <Main lightMode={lightMode} lightModeHandler={lightModeHandler}/> : <Redirect to='/login' />)}/>
+					<Route path="/room/:id" render={() => (authenticated ? <Main lightMode={lightMode} lightModeHandler={lightModeHandler}/> : <Redirect to='/login' />)}/>
 					<Route path="/lobby" render={() => (authenticated ? <Lobby lightMode={lightMode} lightModeHandler={lightModeHandler}/> : <Redirect to='/login' />)}/>
 					<Route path="/login" render={() => (!authenticated ? <Login/> : <Redirect to='/lobby' />)}/>
 					<Route path="/faq" render={() => <FAQ/>}/>

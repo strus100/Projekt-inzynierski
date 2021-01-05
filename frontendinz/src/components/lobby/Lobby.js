@@ -90,7 +90,7 @@ function Lobby(props){
 		  })
 		  .then(function (response) {
 			//setRoomsList(response.data);
-			history.push("/main/"+response.data);
+			history.push("/room/"+response.data);
 		  })
 		  .catch(function (error) {
 			console.log(error);
