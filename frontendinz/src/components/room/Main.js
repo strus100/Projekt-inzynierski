@@ -5,6 +5,7 @@ import Footer from "../gui/Footer";
 import Iframe from "./Iframe";
 import IframeInputAdmin from "./IframeInputAdmin";
 import Popup from "../gui/Popup";
+import PopupSettings from "../gui/PopupSettings";
 import Loader from "../other/Loader";
 import {AContext} from "../../context/AContext";
 import axios from 'axios';
@@ -489,6 +490,12 @@ function Main(props) {
 				iframeURL={iframeURL}
 			/>
 			{roomAdmin && <Popup
+							fromMain={true}
+							roomName={roomName}
+							handleChangeURL={handleChangeURL}
+							id={id}
+							/>}
+			{roomAdmin && <PopupSettings
 							fromMain={true}
 							roomName={roomName}
 							handleChangeURL={handleChangeURL}

@@ -17,11 +17,11 @@ function Popup(props){
       updateFiles();
         
       window.addEventListener('click', function(event) {
-        if (event.target === document.getElementById("myModal")) {
-            document.getElementById("myModal").style.display = "none";
+        if (event.target === document.getElementById("myModalFiles")) {
+            document.getElementById("myModalFiles").style.display = "none";
         }
         if (event.target === document.getElementsByClassName("close")[0]) {
-            document.getElementById("myModal").style.display = "none";
+            document.getElementById("myModalFiles").style.display = "none";
         }
       })
       var rname = props.roomName; 
@@ -135,30 +135,11 @@ function Popup(props){
     }
 
     return(
-        <div id="myModal" className="modal">
+        <div id="myModalFiles" className="modal">
             <div className="modal-content">
             <span className="close">&times;</span>
                 <div className="modal-inside">
-                <Tabs>
-                    <TabList>
-                        {props.fromMain && <Tab>Ogólne</Tab>}
-                        <Tab>Pliki</Tab>
-                    </TabList>
-
-                    {props.fromMain &&
-                    <TabPanel>
-                        <div className="general-area">
-                            <h1 style={{marginTop: 40 + "px"}}>Nazwa pokoju</h1>
-                            <h2>{props.roomName}</h2>
-                            <input type="text" value={roomNameTmp} onChange={(e) => handleSetRoomNameTmp(e.target.value)}></input><br></br>
-                            <button className="generalbtn" onClick={() => handleChangeName()} disabled={disabledButton}>Zmień</button>
-                            <br></br><hr style={{marginTop: 50+"px", backgroundImage: "linear-gradient(to right, #ccc, #333, #ccc)", height: 1+"px", border: "0", background: "#333", width: 70+"%"}}></hr>
-                            <h1 style={{marginTop: 40 + "px"}}>Usuwanie pokoju</h1>
-                            <button className="generalbtn" onClick={() => handleDeleteRoom()} disabled={disabledButton2}>Usuń pokój</button>
-                        </div>
-                    </TabPanel>
-                    }
-                    <TabPanel>
+                
                        <div id="drop-area">
                         <h1>Wrzuć plik</h1>
                             <form className="drop-form">
@@ -177,11 +158,7 @@ function Popup(props){
                                     >
                                 </input>
                             </div>
-                                {/*<label className="filelabel" htmlFor="fileElem">
-                                    <input type="file" id="fileElem" multiple onChange={() => console.log("file")}>
-                                        
-                                        </input>
-                                </label>*/}
+
                                 <button className="filesbtn" onClick={(e) => handleUploadFile(e)} disabled={disabledButton3}>Potwierdź</button>
                             </form>
                             <h1>Lista plików użytkownika</h1>
@@ -206,8 +183,6 @@ function Popup(props){
                                 </table>
                             </div>
                         </div>
-                    </TabPanel>
-                </Tabs>
                 </div>
             </div>
         </div>         

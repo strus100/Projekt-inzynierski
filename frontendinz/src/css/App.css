@@ -1027,6 +1027,8 @@ _:-ms-lang(x), .appdiv{
   overflow: none;
   background-color: rgb(0,0,0);
   background-color: rgba(0,0,0,0.4);
+  justify-content: center;
+  align-items: center; 
 }
 
 .modal-content {
@@ -1035,7 +1037,7 @@ _:-ms-lang(x), .appdiv{
   margin: 5% auto;
   width: 80%;
   height: auto;
-  min-height: 80%;
+  /* min-height: 80%; */
   max-height: 80%;
   overflow: auto;
 }
@@ -1145,9 +1147,11 @@ _:-ms-lang(x), .appdiv{
   color: #fff;
 }
 
-.modal-inside .react-tabs .react-tabs__tab-panel.react-tabs__tab--selected, .lobby .react-tabs .react-tabs__tab-panel.react-tabs__tab--selected{
+.modal-inside .general-area, .modal-inside #drop-area{
   height: auto;
   min-height: 100%;
+  width: 100%;
+  padding: 50px 0;
 }
 
 .general-area{

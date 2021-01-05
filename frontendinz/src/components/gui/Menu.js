@@ -13,17 +13,24 @@ function Menu(props){
             className += ' menu-hover';
         }
 
-        function handleClick(e){
+        function handleClickFiles(e){
             //console.log("this is working fine");
             e.preventDefault();
-            document.getElementById("myModal").style.display = "block";
+            document.getElementById("myModalFiles").style.display = "flex";
+        }
+
+        function handleClickSettings(e){
+            //console.log("this is working fine");
+            e.preventDefault();
+            document.getElementById("myModalSettings").style.display = "flex";
         }
 
         return(
         <div className="menu">
             <nav className={className}>
                 <ul>
-                    {props.roomAdmin && <li onClick={(e) => handleClick(e) }><a href="#">Ustawienia</a></li>}
+                    {props.roomAdmin && <li onClick={(e) => handleClickSettings(e) }><a href="#">Ustawienia</a></li>}
+                    {props.roomAdmin && <li onClick={(e) => handleClickFiles(e) }><a href="#">Pliki</a></li>}
                     <li><Link to="/">Strona główna</Link></li>
                     <li><Link to="/faq" target="_blank">FAQ</Link></li>
                     <li><Link to="/lobby">POKOJE</Link></li>
