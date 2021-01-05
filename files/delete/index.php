@@ -12,12 +12,22 @@ require_once __DIR__."/../../database/DatabaseConnection.php";
 	$token = htmlspecialchars($_COOKIE['token']);
 			
 	if($dbConnection->isOwner($fileName, $token)){
-		if(unlink("../uploads/".$fileName)){
-			$databasePath = "/files/uploads/".$fileName;
+	
+		$nameArray = explode( ".", $fileName );
+		if( $nameArray[1] == "pdf" ){
 			$dbConnection->removeFile($fileName, $databasePath);
-			echo $fileName. " deleted";
+				
+			$translator = new PdfToHtml( $fileName );
+			$translator->remove();
 		} else {
-			echo "Zła nazwa pliku, upewnij się, że podałeś rozszerzenie pliku";
+	
+			if(unlink("../uploads/".$fileName)){
+				$databasePath = "/files/uploads/".$fileName;
+				$dbConnection->removeFile($fileName, $databasePath);
+				echo $fileName. " deleted";
+			} else {
+				echo "Zła nazwa pliku, upewnij się, że podałeś rozszerzenie pliku";
+			}
 		}
 	} else {
 		echo "Nie jesteś właścicielem tego pliku";
