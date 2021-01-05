@@ -1,19 +1,25 @@
-import React, { useState } from 'react';
-import Menu from "./Menu"
-import Chat from "./Chat"
-import Footer from "./Footer"
+import React, { useState, useMemo, useEffect } from 'react';
+import Main from "./Main"
+import Login from "./Login"
+import Lobby from "./Lobby"
+import {AContext} from "./AContext";
+import axios from 'axios';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect
+} from "react-router-dom";
 
 function App() {
-  const [checkedMenu, setChangeMenu] = useState(false);
-  const [checkedChat, setChangeChat] = useState(false);
+  const [authenticated, setAuthenticated] = useState(false); //zmienić na false
+  const [admin, setAdmin] = useState(false);
+  const [loaded, setLoaded] = useState(false); //zmienić na false
 
-  function handleChangeMenu(checkedMenu){
-    setChangeMenu(checkedMenu => !checkedMenu);
-  }
-
-  function handleChangeChat(checkedChat){
-    setChangeChat(checkedChat => !checkedChat);
-  }
+  const [access, setAccess] = useState(false);
+  const [name, setName] = useState(false);
+  const [surname, setSurname] = useState(false);
+  const [token, setToken] = useState(false);
 
   const [error, setError] = useState(false);
 

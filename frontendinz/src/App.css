@@ -14,6 +14,7 @@ h1{
   padding: 0;
   scroll-behavior: smooth;
   outline: none;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
@@ -133,7 +134,8 @@ nav ul a:hover {
 
 #chat-area{ 
   display: flex;
-  flex-direction: column-reverse;
+  /*flex-direction: column-reverse; nie działa IE, Firefox, Edge, na później*/
+  flex-direction: column;
   height: calc(100vh - 100px - 60px - 100px); 
   overflow: auto; 
   border-top: 2px solid #fff; 
@@ -144,12 +146,19 @@ nav ul a:hover {
 #chat-area .chat-line{
   color: #000; 
   margin: 0 5px 0 0; 
-  word-break: break-all;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -ms-word-break: break-all;
+  word-break: break-word;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
 }
 
 #chat-area p{ 
   padding: 8px 0; 
-  border-bottom: 1px solid #ccc; 
+  border-bottom: 1px solid #ddd; 
 }
 
 #chat-area .nickname{
@@ -259,7 +268,7 @@ nav ul a:hover {
   background: #fff;
 }
 
-#wrap-users-area{ 
+.wrap-users-area{ 
   height: calc(100vh - 100px - 60px - 100px); 
   overflow: auto; 
   border-top: 2px solid #fff; 
@@ -268,7 +277,8 @@ nav ul a:hover {
   user-select: none;
 }
 
-#wrap-additional-area{ 
+.wrap-additional-area{ 
+
   height: calc(100vh - 100px - 60px - 100px); 
   overflow: auto; 
   border-top: 2px solid #fff; 
@@ -341,7 +351,7 @@ span[role="img"]{
   box-shadow: 0 5px 15px 0 rgba(0, 0, 0, .5);
 }
 
-label {
+.footer label {
   z-index: 100;
   display: block;
   display: inline-block;
@@ -359,7 +369,7 @@ label {
   user-select: none;
 }
 
-label:hover {
+.footer label:hover {
   color: #353441;
   background: orangered;
 }
@@ -1048,7 +1058,7 @@ input[type=text], input[type=password], textarea{
 /* MOBILE */
 
 @media (hover: none) and (pointer: coarse) {
-  .menu-active, .chat-active{
+  .menu-active, .chat-active, .admin--iframe--active, .form-iframe{
     width: 100%;
   }
 
