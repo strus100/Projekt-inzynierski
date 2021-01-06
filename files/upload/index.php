@@ -15,7 +15,13 @@ for( $i=0 ; $i < $total ; $i++ ) {
 	
 	$nameArray = explode( ".", $name );
 	
-	if( $nameArray[1] == "pdf" ){
+	if( 
+	$nameArray[1] == "pdf" ||
+	$nameArray[1] == "ppt" ||
+	$nameArray[1] == "pptx" ||
+	$nameArray[1] == "odp" ||
+	$nameArray[1] == "uop" 
+	){
 		$nameToSave = $nameArray[0].".html";
 	} else {
 		$nameToSave = $name;
@@ -26,6 +32,7 @@ for( $i=0 ; $i < $total ; $i++ ) {
 		if(move_uploaded_file($tmpFilePath, $newFilePath)) {
 			$dbConnection->createFile($_FILES['files']['name'][$i], $databasePath);
 			$translator = new PdfToHtml( $name );
+			$translator->translateFromPresentation();
 			$translator->translate();
 
 			echo "Plik $name został przesłany na serwer<br>";
