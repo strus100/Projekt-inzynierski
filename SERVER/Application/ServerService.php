@@ -9,6 +9,8 @@
     require_once __DIR__."/../Infrastructure/WebSocket.php";
 
     class ServerService{
+        private static $instance;
+
         private $webSocket;
         private $loggerService;
         private $databaseService;
@@ -17,6 +19,8 @@
         private $messageService;
 
         function __construct($ip, $port){
+            self::$instance = $this;
+
             $this->loggerService = new LoggerService();
             $this->loggerService->log("Starting server...");
 
@@ -27,6 +31,16 @@
 
             $this->webSocket = new WebSocket($ip, $port,
                                             $this->loggerService, $this->clientService, $this->messageService, $this->roomService);
+            
+            $this->webSocket->main();
+        }
+
+        public static function getInstance(){
+            return self::$instance;
+        }
+
+        public function destroySocketByID($socketID){
+            $this->webSocket->destroySocketByID($socketID);
         }
     }
 ?>

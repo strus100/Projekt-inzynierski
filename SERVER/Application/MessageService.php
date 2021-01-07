@@ -2,10 +2,18 @@
     require_once __DIR__."/../Domain/Message.php";
 
     class MessageService{
+        private static $instance;
+
         private $loggerService;
 
         function __construct($logger){
+            self::$instance = $this;
+
             $this->loggerService = $logger;
+        }
+
+        public static function getInstance(){
+            return self::$instance;
         }
 
         public function createMessage($author, $type, $text){

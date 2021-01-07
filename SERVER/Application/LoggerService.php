@@ -3,12 +3,20 @@
     require_once __DIR__."/../Infrastructure/FileLogger.php";
 
     class LoggerService{
+        private static $instance;
+
         private $fileLogger;
 
         function __construct(){
+            self::$instance = $this;
+
             $this->fileLogger = new FileLogger();
         }
         
+        public static function getInstance(){
+            return self::$instance;
+        }
+
         private function getCurrentDateTime(){
             $datetime = new DateTime('NOW');
             return $datetime->format('d.m.Y H:i:s.v');
@@ -46,6 +54,11 @@
             $msgToDisplay = $this->createMSG()." [ERROR]:\t".$msg;
             ConsoleLogger::error($msgToDisplay);
             $this->fileLogger->error($msgToDisplay);
+        }
+
+        function logToConsole($msg){
+            $msgToDisplay = $this->createMSG()." [LOG]:\t".$msg;
+            ConsoleLogger::log($msgToDisplay);
         }
     }
 ?>

@@ -7,10 +7,14 @@
     require_once __DIR__."/../../Config.php";
 
     class DatabaseService{
+        private static $instance;
+
         private $logger;
         private $database;
 
         function __construct($logger){
+            self::$instance = $this;
+
             $this->logger = $logger;
             $this->logger->log("Connecting to database...");
             $this->database = new Database($logger);
@@ -18,6 +22,10 @@
 
         function __destruct(){
 
+        }
+
+        public static function getInstance(){
+            return self::$instance;
         }
 
         public function getRoomByID($roomID){
@@ -57,12 +65,12 @@
         }
 
         public function getChatHistoryByRoomID($roomID, $offset=0){
-            $sql = "SELECT * FROM `chathistory` WHERE `room`==$roomID ORDER BY `date` DESC LIMIT $offset, ".Config::SELECT_LIMIT;
+            $sql = "SELECT * FROM `chathistory` LEFT JOIN `usertable` ON `usertable`.`login` = `chathistory`.`user` WHERE `chathistory`.`room`=$roomID ORDER BY `date` DESC LIMIT $offset, ".Config::SELECT_LIMIT;
             $result = $this->database->query($sql);
 
             $array = array();
             while($row = $result->fetch_assoc()){
-                $chatHistory = new ChatHistoryEntity($row['id'], $row['date'], $row['message'], $row['messageType'], $row['user'], $row['room']);
+                $chatHistory = new ChatHistoryEntity($row['id'], $row['date'], $row['message'], $row['messagetype'], $row['user'], $row['name'], $row['surname'], $row['room']);
                 $array[] = $chatHistory;
             }
 
@@ -70,7 +78,7 @@
         }
 
         public function getUrlHistoryByUserID($userID, $offset=0){
-            $sql = "SELECT * FROM `urlhistory` WHERE `user`==$userID ORDER BY `date` DESC LIMIT $offset, ".Config::SELECT_LIMIT;
+            $sql = "SELECT * FROM `urlhistory` WHERE `user`='$userID' ORDER BY `date` DESC LIMIT $offset, ".Config::SELECT_LIMIT;
             $result = $this->database->query($sql);
 
             $array = array();
@@ -82,9 +90,26 @@
             return $array;
         }
 
-        public function addMessageToChatHistory($message, $userID, $roomID){
-            //$stringDate = $message['date']
-            //$sql = "INSERT INTO `chathistory` VALUES (NULL, )"
+        public function addMessageToChatHistory(MessageVO $messageVO){
+            $date = $messageVO->date->format("Y-m-d H:i:s");
+            $sql = "INSERT INTO `chathistory` VALUES (NULL, '$date', '$messageVO->text', '$messageVO->type', '$messageVO->author', '$messageVO->room')";
+            $result = $this->database->query($sql);
+
+            if(!$result){
+                $this->logger->warn("Cannot add message to Database");
+            }
+        }
+
+        public function addUrlToHistory(string $url, $login){
+            $url = urldecode($url);
+            $date = new DateTime("NOW");
+            $date = $date->format("Y-m-d H:i:s");
+            $sql = "INSERT INTO `urlhistory` VALUES (NULL, '$date', '$url', '$login')";
+            $result = $this->database->query($sql);
+
+            if(!$result){
+                $this->logger->warn("Cannot add url to Database");
+            }
         }
     }
 ?>

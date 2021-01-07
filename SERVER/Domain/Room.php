@@ -14,7 +14,7 @@
         private $admin;
         private $clients;
 
-        private $messageHistory;
+        private $chatHistory;
         private $urlHistory;
 
         function __construct($id, $title, $adminID){
@@ -22,13 +22,24 @@
             $this->title = $title;
             $this->adminID = $adminID;
             $this->clients = array();
-            $this->url = "wmi.amu.edu.pl";
+            $this->chatHistory = array();
+            $this->urlHistory = array();
+            $this->url = "http://wmi.amu.edu.pl";
+
+            $this->loadChatHistoryFromDB();
+            $this->loadUrlHistoryFromDB();
         }
 
         public function joinClient($client){
             foreach($this->clients as $connectedClient){
                 if($connectedClient->getLogin() == $client->getLogin()){
+                    LoggerService::getInstance()->log("Client already connected: ".$connectedClient->getLogin());
                     //$this->leaveClient($connectedClient);
+                    //$connectedClient->leave();
+                    //$this->leaveClient($connectedClient);
+
+                    ClientService::getInstance()->destroyClientBySocketID($connectedClient->getSocketID());
+                    ServerService::getInstance()->destroySocketByID($connectedClient->getSocketID());
                 }
             }
             $this->clients[spl_object_hash($client)] = $client;
@@ -38,8 +49,44 @@
         }
 
         public function leaveClient($client){
+            /*echo "\r\n\r\n";
+            $backtrace = debug_backtrace(3);
+            foreach ($backtrace as $item) {
+                echo $item['class']."::".$item['function']."\r\n";
+            }
+            echo "\r\n\r\n";*/
             $this->clients[spl_object_hash($client)] = null;
             unset($this->clients[spl_object_hash($client)]);
+        }
+
+        private function loadChatHistoryFromDB(){
+            $history = DatabaseService::getInstance()->getChatHistoryByRoomID($this->roomID);
+
+            $array = array();
+            for ($i=sizeof($history)-1; $i>=0; $i--) {
+                $msg = [
+                    "type" => "chat",
+                    "chat" => $history[$i]->message,
+                    "name" => $history[$i]->name." ".$history[$i]->surname."(".$history[$i]->userID.")",
+                    "messagetype" => $history[$i]->messageType,
+                    "date" => new DateTime($history[$i]->date)
+                ];
+                
+                $array[] = MessageService::getInstance()->createTextMessage(null, $msg);
+            }
+
+            $this->chatHistory = $array;
+        }
+
+        private function loadUrlHistoryFromDB(){
+            $history = DatabaseService::getInstance()->getUrlHistoryByUserID($this->adminID);
+
+            $array = array();
+            foreach ($history as $item) {
+                $array[] = $item->url;
+            }
+
+            $this->urlHistory = $array;
         }
 
         // Getters
@@ -102,15 +149,15 @@
         }
 
         public function addMessageToHistory($msg){
-            $this->messageHistory[] = $msg;
+            $this->chatHistory[] = $msg;
         }
 
         public function getMessageHistory(){
-            return $this->messageHistory;
+            return $this->chatHistory;
         }
 
         public function addUrlToHistory($url){
-            $this->urlHistory[] = $url;
+            array_unshift($this->urlHistory, $url);
         }
 
         public function getUrlHistory(){

@@ -27,7 +27,7 @@
 
         private $sleepCounter = 1;
         private $sleepInterval = 0.25*1000000;   //Seconds * 1.000.000 (microseconds 1/mil)
-        private $pingInterval = 15;  //Seconds
+        private $pingInterval = 5;  //Seconds
 
         private $loggerService;
         private $clientService;
@@ -41,12 +41,12 @@
             $this->roomService = $room;
 
             $context = stream_context_create();
-            stream_context_set_option($context, 'ssl', 'local_cert', CONFIG::CERT_FULL_CHAIN_PATH);
-            stream_context_set_option($context, 'ssl', 'local_pk', CONFIG::CERT_PRIVATE_KEY_PATH);
+            // stream_context_set_option($context, 'ssl', 'local_cert', CONFIG::CERT_FULL_CHAIN_PATH);
+            // stream_context_set_option($context, 'ssl', 'local_pk', CONFIG::CERT_PRIVATE_KEY_PATH);
             // stream_context_set_option($context, 'ssl', 'local_cert', "/etc/letsencrypt/live/s153070.projektstudencki.pl/fullchain.pem");
             // stream_context_set_option($context, 'ssl', 'local_pk', "/etc/letsencrypt/live/s153070.projektstudencki.pl/privkey.pem");
-            stream_context_set_option($context, 'ssl', 'allow_self_signed', false);
-            stream_context_set_option($context, 'ssl', 'verify_peer', false);
+            // stream_context_set_option($context, 'ssl', 'allow_self_signed', false);
+            // stream_context_set_option($context, 'ssl', 'verify_peer', false);
 
             //$this->masterSocket = stream_socket_server("tls://$ip:$port", $errno, $errstr, STREAM_SERVER_BIND|STREAM_SERVER_LISTEN, $context);
             $this->masterSocket = stream_socket_server("tcp://$ip:$port", $errno, $errstr, STREAM_SERVER_BIND|STREAM_SERVER_LISTEN, $context);
@@ -54,7 +54,7 @@
                 $address = stream_socket_get_name($this->masterSocket, FALSE);
                 $this->loggerService->log("Server socket: $this->masterSocket");
                 $this->loggerService->log("Socket listening on $address");
-                $this->main();
+                //$this->main();
             }else{
                 $this->loggerService->error("Socket could not be opened");
             }
@@ -107,12 +107,20 @@
             return $cookies['token'];
         }
 
+        public function destroySocketByID($socketID){
+            //print_r($this->clientSockets);
+            $this->clientSockets[(string)$socketID] = null;
+            unset($this->clientSockets[(string)$socketID]);
+            //print_r($this->clientSockets);
+        }
+
         private function sendMessageToSocket($socket, $msg){
             return fwrite($socket, $msg);
         }
 
         private function pingSocket($socket){
             //$this->loggerService->log("Ping: $socket");
+            $this->loggerService->logToConsole("Ping: $socket");
             $msg = $this->messageService->createPingSignalMessage();
             return $this->sendMessageToSocket($socket, $msg->encode());
         }
@@ -154,9 +162,8 @@
                                 $encodedJSON = $decodedJSON;
                                 $msg = $this->messageService->createTextMessage($client, $encodedJSON);
 
-                                $msgVO = new MessageVO($type, $msg->getTime(), $msg->getText(), $client->getLogin(), $room->getRoomID());
-                                
-
+                                $msgVO = new MessageVO($decodedJSON['messagetype'], $msg->getTime(), $msg->getText()['chat'], $client->getLogin(), $room->getRoomID());
+                                DatabaseService::getInstance()->addMessageToChatHistory($msgVO);
 
                                 $this->sendMessageToClients($roomClients, $msg->encode());
                             }else{
@@ -176,6 +183,7 @@
                                 $this->sendMessageToClients($roomClients, $msg->encode(), $client->getSocketID());
                                 if($decodedJSON['event']=="redirection"){
                                     $room->addUrlToHistory($decodedJSON['url']);
+                                    DatabaseService::getInstance()->addUrlToHistory($decodedJSON['url'], $client->getLogin());
                                     $room->setUrl($decodedJSON['url']);
                                     $this->sendUrlHistoryToSocket($this->clientSockets[$client->getSocketID()], $room);
                                     $this->loggerService->log("Room: ".$room->getRoomName()." \tURL changed: ".$room->getUrl());
@@ -191,7 +199,7 @@
                         case 'mute':
                             if($client->isAdmin()){
                                 $clientToMute = $room->getClientByLogin($decodedJSON['login']);
-                                if($clientToMute != null){
+                                if($clientToMute != null && $room->getAdminID() != $clientToMute->getLogin()){
                                     if($clientToMute->isMuted()){
                                         $clientToMute->unMute();
                                     }else{
@@ -209,9 +217,8 @@
                     break;
                 
                 case OPCODE::CLOSE:
-                    $this->clientSockets[(string)$client->getSocketID()] = null;
-                    unset($this->clientSockets[(string)$client->getSocketID()]);
-                    $this->loggerService->log("Client: ".$client->getLogin()." left room: ".$room->getRoomName()."(".$room->getRoomID.")");
+                    $this->destroySocketByID($client->getSocketID());
+                    $this->loggerService->log("Client: ".$client->getLogin()." left room: ".$room->getRoomName()." (".$room->getRoomID().")");
                     $this->clientService->destroyClientBySocketID($client->getSocketID());
                     $this->sendClientsToAllInRoom($room);
                     break;
@@ -220,6 +227,7 @@
                     break;
                 
                 case OPCODE::PONG:
+                    $this->loggerService->logToConsole("Pong from: ".$client->getSocketID());
                     break;
 
                 default:
@@ -265,10 +273,11 @@
             $hist = $this->roomService->getUrlHistoryAsArray($room->getRoomID());
             $list = array();
             foreach ($hist as $value) {
+                //print_r(parse_url(urldecode($value)));
                 $list[] = [
-                    //"title" => parse_url($value)['host'],
-                    "title" => $value,
-                    "link" => $value,
+                    "title" => parse_url(urldecode($value))['host'],
+                    //"title" => $value,
+                    "link" => urldecode($value),
                     "date" => "placeholder"
                 ];
             }
@@ -344,7 +353,7 @@
             }
         }
 
-        private function main(){
+        public function main(){
             while($this->running == true){
                 $read = array_merge([$this->masterSocket], $this->clientSockets);
                 stream_select($read, $write, $except, 0, 1);
@@ -363,7 +372,7 @@
                         if(!empty($messageAuthor)){
                             $message = $this->messageService->createMessageFromIncomingData($messageAuthor, $data);
                             if($message->getType() != OPCODE::PING && $message->getType() != OPCODE::PONG){
-                                $this->loggerService->log("New message from: ".$messageAuthor->getLogin()." | Message: ".json_encode($message->getText()));
+                                $this->loggerService->log("New message from: ".$messageAuthor->getLogin()."(".$messageAuthor->getSocketID().") | Message: ".json_encode($message->getText()));
                             }                            
 
                             $this->parseMessageFrom($messageAuthor, $message);
@@ -380,8 +389,7 @@
                             $this->sendMessageToSocket($socket, $msg->encode());
                         }
                         if(!$this->pingSocket($socket) || !$room){
-                            $this->clientSockets[(string)$client->getSocketID()] = null;
-                            unset($this->clientSockets[(string)$client->getSocketID()]);
+                            $this->destroySocketByID($client->getSocketID());
                             $this->loggerService->log("Connection timeout: \tClient: ".$client->getLogin());
                             $this->clientService->destroyClientBySocketID($client->getSocketID());
                         }
