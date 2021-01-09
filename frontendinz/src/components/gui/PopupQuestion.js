@@ -29,7 +29,7 @@ function PopupQuestion(props){
             <span className="closeQ">&times;</span>
                 <div className="modal-inside">
                     <p>Czy jesteś pewien, że chcesz dołączyć do pokoju<br></br><span id="popupRoomname">{props.popupRoomname} ({props.roomId})</span><br></br>użytkownika <span id="popupName">{props.popupName}</span> <span id="popupSurname">{props.popupSurname}</span> (<span id="popupLogin">{props.popupLogin}</span>)? </p>
-                    <Link id="popupLink" to={"/main/"+props.roomId}><button className="enter_course">Przejdź do kursu</button></Link> <button id="nobuttonenter" className="enter_course">Nie</button>
+                    <Link id="popupLink" to={"/room/"+props.roomId}><button className="enter_course">Przejdź do kursu</button></Link> <button id="nobuttonenter" className="enter_course">Nie</button>
                 </div>
             </div>
           }

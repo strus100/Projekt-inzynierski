@@ -498,6 +498,11 @@ input:checked + label{
   padding: 0px 40px 0px 40px;
 }
 
+.footer--span-lapka{
+  position: absolute;
+  right: 90px;
+}
+
 .footer--span-logout{
   position: absolute!important; 
   right: 0px; 

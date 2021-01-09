@@ -305,7 +305,7 @@ function Main(props) {
 
 	return () => {
 	//   console.log("clear");
-	  clearInterval(connectInterval);
+	  clearTimeout(connectInterval);
 	  clearInterval(callbackInterval);
 	  if(roomAdmin && (document.getElementById("scoreboardx") !== null && document.getElementById("scoreboardx").contentDocument !== null && document.getElementById("scoreboardx") !== undefined && document.getElementById("scoreboardx").contentDocument !== undefined)){
 		//removeListenerScroll();

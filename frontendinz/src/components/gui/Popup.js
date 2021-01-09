@@ -6,7 +6,7 @@ import axios from 'axios';
 import '../../css/App.css'
 
 function Popup(props){   
-    const [files, setFiles] = useState([])
+    const [files, setFiles] = useState([]);
     const [roomNameTmp, setRoomNameTmp] = useState("");
     const [disabledButton, setDisabledButton] = useState(false);
     const [disabledButton2, setDisabledButton2] = useState(false);

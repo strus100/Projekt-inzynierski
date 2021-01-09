@@ -98,6 +98,15 @@ function Footer(props){
                 </label>
             </Link>
 
+            {!props.roomAdmin &&
+                <a className="footer--span-lapka"><label
+                    className="tooltip"
+                >
+                <span className="tooltiptext">.</span>
+                <span className="material-icons" style={{padding: "0 25px"}}>pan_tool</span></label>
+                </a>
+            }
+
             <input 
                 type="checkbox" 
                 id="tooglechat"
