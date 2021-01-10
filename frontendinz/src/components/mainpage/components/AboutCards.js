@@ -9,5 +9,3 @@ export default ({name, surname, role}) =>
                 <h3>{role}</h3>
             </div>
         </div>
-    
-    

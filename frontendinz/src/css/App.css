@@ -2047,7 +2047,31 @@ input[type=text], input[type=password], textarea{
   background-position: center;
   background-position-x: 0px;
   background-position-y: 0px;
-  background-size: 105% 105%;
+  background-size: 100% 100%;
+  transition: 2.5s;
+} 
+
+.main--card:nth-child(1):hover .main--card-image{ 
+  background-position: center;
+  background-position-x: -230px;
+  background-size: 302% 322%;
+  transition: 2.5s;
+} 
+.main--card:nth-child(2):hover .main--card-image{ 
+  background-position: center;
+  background-size: 102% 142%;
+  transition: 2.5s;
+} 
+.main--card:nth-child(3):hover .main--card-image{ 
+  background-position: center;
+  background-size: 102% 122%;
+  transition: 2.5s;
+} 
+.main--card:nth-child(4):hover .main--card-image{ 
+  background-position: center;
+  background-position-x: 0px;
+  background-position-y: 0px;
+  background-size: 100% 100%;
   transition: 2.5s;
 } 
 
@@ -2057,12 +2081,43 @@ input[type=text], input[type=password], textarea{
 .main--card-text {
   grid-area: text;
 }
+
 .main--card-image {
   grid-area: image;
-  background: url("../img/pobrane.jfif");
+  /* background: url("../img/pobrane.jfif"); */
   border-top-left-radius: 7px;
   border-top-right-radius: 7px;
   background-size: 110% 110%;
+  background-position: center;
+  transition: 2.5s;
+}
+
+.main--card:nth-child(1) .main--card-image{
+  grid-area: image;
+  background: url("../img/136971536_731289760920239_1318077005117700340_n.jpg");
+  border-top-left-radius: 7px;
+  border-top-right-radius: 7px;
+  background-size: 100% 110%;
+  background-position: center;
+  transition: 2.5s;
+}
+
+.main--card:nth-child(2) .main--card-image{
+  grid-area: image;
+  background: url("../img/IMG_20210110_144416_1.jpg");
+  border-top-left-radius: 7px;
+  border-top-right-radius: 7px;
+  background-size: 100% 140%;
+  background-position: center;
+  transition: 2.5s;
+}
+
+.main--card:nth-child(3) .main--card-image{
+  grid-area: image;
+  background: url("../img/137547336_335278464600703_2369026722630994800_n.png");
+  border-top-left-radius: 7px;
+  border-top-right-radius: 7px;
+  background-size: 100% 120%;
   background-position: center;
   transition: 2.5s;
 }
