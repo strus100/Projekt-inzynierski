@@ -5,12 +5,13 @@
 		public $conn = null;
 		
 		function connect(){
-			$servername = "localhost";
-			$username = "root";
-			$password = "";
-			$dbname = "bazaInz";
 			// Create connection
-			$this->conn = new mysqli($servername, $username, $password, $dbname);
+			$this->conn = new mysqli( 
+			Config::DB_SERVER_NAME,
+			Config::DB_USERNAME,
+			Config::DB_PASSWORD,
+			Config::DB_NAME
+			);
 			$this->conn->set_charset("UTF8");
 			$this->conn->query("SET NAMES UTF8");
 
