@@ -1,5 +1,7 @@
 <?php
 	require_once("DatabaseCreate.php");
+	require_once __DIR__."/../Config.php";
+
 	
 	class DatabaseConnection {
 		public $conn = null;
@@ -147,6 +149,14 @@
 			return $this->conn->insert_id;
 		}
 
+		function createRoomTest( $roomName, $login ){
+            $stmt = $this->conn->prepare("INSERT INTO `rooms` VALUES (NULL, ?, ?)");
+            $stmt->bind_param("ss", $roomName, $login);
+            $stmt->execute();
+
+            return $this->conn->insert_id;
+        }
+
 		function selectRoom($roomID){
 			$token = htmlspecialchars($_COOKIE['token']);
 			$stmt = $this->conn->prepare("UPDATE `usertable` SET `room` = ? WHERE `token`=?");
@@ -261,9 +271,14 @@
 		}
 		
 		function getAttendance( $room ){
-			$sql = "select * from timesheet where room = '$room';"
+			$sql = "select * from timesheet where room = '$room'";
 			$result = $this->conn->query($sql);
 
+            $resultSet = array();
+            while ($cRecord = $result->fetch_assoc() ) {
+                $resultSet[] = $cRecord;
+            }
+            return json_encode( $resultSet );
 			}
 	}
 		

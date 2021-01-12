@@ -1,6 +1,7 @@
 <?php
 
-require_once __DIR__."/../database/DatabaseConnection.php";
+require_once __DIR__."/database/DatabaseConnection.php";
+
 
 use PHPUnit\Framework\TestCase;
 
@@ -53,5 +54,19 @@ class DatabaseConnectionTest extends TestCase
         $dbConnection->connect();
         $id = $dbConnection->getLastId();
         \PHPUnit\Framework\assertEquals( 0, $id["last_insert_id()"] );
+    }
+
+    public function testInsertAttendance(){
+        $dbConnection = new DatabaseConnection();
+        $dbConnection->connect();
+        $dbConnection->conn->query( "DELETE from timesheet");
+        $dbConnection->insertUser("studentTEST2", "Imię",  "Nazwisko", "admin","test", "email@test.pl" );
+        $dbConnection->createRoomTest( "test", 1 );
+
+        $dbConnection->insertAttendance( 'studentTEST2', 1 );
+        $result = $dbConnection->getAttendance( 1 );
+
+        \PHPUnit\Framework\assertTrue( $result != null );
+
     }
 }
