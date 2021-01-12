@@ -1,7 +1,8 @@
 <?php
 require_once __DIR__."/../../database/DatabaseConnection.php";
+require_once __DIR__."/../uploads/PdfToHtml.php";
 
-    $dbConnection = new DatabaseConnection();
+	$dbConnection = new DatabaseConnection();
     $dbConnection->connect();
 	
 	$json = file_get_contents('php://input');

@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__."/../../database/DatabaseConnection.php";
+require_once __DIR__."/../uploads/PdfToHtml.php";
 
     $dbConnection = new DatabaseConnection();
     $dbConnection->connect();
