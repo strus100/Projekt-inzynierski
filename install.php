@@ -24,7 +24,9 @@
             $this->createChatHistoryTable();
             echo "Creating table urlhistory\r\n";
             $this->createUrlHistoryTable();
-            
+            echo "Creating table timesheet\r\n";
+			$this->createTimesheetTable();
+			
             $this->DBconnection->close();
         }
 
@@ -119,7 +121,7 @@
         }
 
         private function createUrlHistoryTable(){
-            $result = $this->DBconnection->query("CREATE TABLE IF NOT EXISTS `urlhistory` (
+			$result = $this->DBconnection->query("CREATE TABLE IF NOT EXISTS `urlhistory` (
                     `id` INT NOT NULL AUTO_INCREMENT,
                     `date` DATETIME NOT NULL,
                     `url` TEXT NOT NULL,
@@ -133,6 +135,24 @@
                 die($this->DBconnection->error);
             }
         }
+		
+		private function createTimesheetTable(){
+		  $result = $this->DBconnection->query("CREATE TABLE IF NOT EXISTS `timesheet` (
+                    `id` INT NOT NULL AUTO_INCREMENT,
+					`date` DATETIME NOT NULL,
+                    PRIMARY KEY(`id`),
+  			        `user` VARCHAR(255) NOT NULL,
+                    `room` INT NOT NULL,
+                    FOREIGN KEY(`user`) REFERENCES `usertable`(`login`),
+                    FOREIGN KEY(`room`) REFERENCES `rooms`(`id`)
+                ) ENGINE = InnoDB CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;");
+
+
+            if($result == false){
+                echo "ERROR cannot create timesheet table\r\n";
+                die($this->DBconnection->error);
+            }
+		}
     }
     /*ID(FK auto_incr), message, autor(FK), pokój (FK) messagetype ??*/
     $consent = readline("WARNING! This procedure will DELETE ALL DATA from your database. Are you sure? ([Y]es | [N]o): ");

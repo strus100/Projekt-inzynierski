@@ -250,6 +250,21 @@
 				return false;
 			}
 		}
+		
+		function insertAttendance( $user, $room ){
+			$date = new DateTime("NOW");
+            $date = $date->format("Y-m-d H:i:s");
+            
+			$sql = "INSERT INTO `timesheet` VALUES (NULL, '$date', '$user', '$room')";
+            $result = $this->conn->query($sql);
+			
+		}
+		
+		function getAttendance( $room ){
+			$sql = "select * from timesheet where room = '$room';"
+			$result = $this->conn->query($sql);
+
+			}
 	}
 		
 ?>
