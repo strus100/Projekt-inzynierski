@@ -1,45 +1,101 @@
 <?php
 
+
+
 class PdfToHtml {
+
     private $fileName;
     private $name;
+	private $extension;
+	private $folderPath = "/var/www/html/files/uploads/";
+	
 
     function __construct( $fileName ){
+
         $this->fileName = $fileName;
 		$this->name = explode( ".", $fileName )[0];
 		$this->extension = explode( ".", $fileName )[1];
+	
 	}
 
+
+
     function translateFromPresentation(){
-		echo $this->extension;
+
 	if( 
 	$this->extension == "ppt" ||
 	$this->extension == "pptx" ||
 	$this->extension == "odp" ||
 	$this->extension == "uop" 
 	){
-		//OR unoconv -f pdf filenameWithExtenstion 	
-		shell_exec( "libreoffice --headless --invisible --convert-to pdf ".$this->fileName ); 
+		$cmd = "libreoffice --headless --invisible --convert-to pdf ".$this->folderPath.$this->fileName;
+		echo $cmd."<br>";
+		shell_exec( $cmd ); 
+		$this->fileName = $this->name.".pdf";
+		$this->extension = "pdf";
 	}
+
     }
+
 
     function translate(){
-	shell_exec( "mkdir -m 777 uploads/".$this->name );
-	rename( "uploads/".$this->fileName, "uploads/".$this->name."/".$this->fileName );
-	$cmd = "pdftohtml -p -c -q uploads/".$this->name."/".$this->fileName;
-        shell_exec($cmd);
+	if( $this->extension == "pdf" ){
+		$this->createFolder();
+		$this->moveToFolder();
+		$this->convertPdf();
+
+		return $this->name."/".$this->name."-html.html"; 
+    } 
+	else {
+		return $this->fileName;
+		}
+	}
 	
-	return $this->name."/".$this->name.".html"; 
+    function remove(){
+	if( 
+	$this->extension == "ppt" ||
+	$this->extension == "pptx" ||
+	$this->extension == "odp" ||
+	$this->extension == "uop" ||
+	$this->extension == "pdf" 
+	){
+    	shell_exec( "rm -rf ".$this->folderPath.$this->name );
+		return true;
+	}
+	return false;
     }
 
-    function remove(){
-    	shell_exec( "rm -rf ".$this->name );
-    }
+	
+
+	function createFolder(){
+		$cmdMakeDir = "mkdir -m 777 ".$this->folderPath.$this->name;
+		echo $cmdMakeDir."<br>";
+		echo shell_exec( $cmdMakeDir );
+	}
+
+	
+
+	function moveToFolder(){
+		$cmdMoveFileFrom = $this->folderPath.$this->fileName;
+		$cmdMoveFileTo = $this->folderPath.$this->name."/".$this->fileName;
+		echo $cmdMoveFileFrom."<br>";
+		echo $cmdMoveFileTo."<br>";
+		echo rename( $cmdMoveFileFrom, $cmdMoveFileTo );
+	}
+
+	
+
+	function convertPdf(){
+		$cmdPdf = "pdftohtml -p -c -q -s ".$this->folderPath.$this->name."/".$this->fileName;
+		echo $cmdPdf."<br>";
+		echo shell_exec( $cmdPdf );
+	}
 }
 
 //FOR MANUAL TESTS
 //$name = $_GET["name"];
 //$x = new PdfToHtml($name);
-//$x->translateFromPresentation();
+//echo $x->translateFromPresentation();
 //echo $x->translate();
+//$x->remove();
 ?>
