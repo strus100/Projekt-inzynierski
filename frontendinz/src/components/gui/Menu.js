@@ -25,12 +25,19 @@ function Menu(props){
             document.getElementById("myModalSettings").style.display = "flex";
         }
 
+        function handleClickAttendanceList(e){
+            //console.log("this is working fine");
+            e.preventDefault();
+            document.getElementById("myModalAL").style.display = "flex";
+        }
+
         return(
         <div className="menu">
             <nav className={className}>
                 <ul>
                     {props.roomAdmin && <li onClick={(e) => handleClickSettings(e) }><a href="#">Ustawienia</a></li>}
                     {props.roomAdmin && <li onClick={(e) => handleClickFiles(e) }><a href="#">Pliki</a></li>}
+                    {props.roomAdmin && <li onClick={(e) => handleClickAttendanceList(e) }><a href="#">Lista obecności</a></li>}
                     <li><Link to="/">Strona główna</Link></li>
                     <li><Link to="/faq" target="_blank">FAQ</Link></li>
                     <li><Link to="/lobby">POKOJE</Link></li>

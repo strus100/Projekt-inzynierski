@@ -1252,9 +1252,18 @@ _:-ms-lang(x), .appdiv{
   margin-top: 20px;
 }
 
+#myModalAL .modal-inside{
+  padding: 100px 20px;
+  flex-direction: column;
+}
+
+#myModalAL input[type=button]{
+  margin-bottom: 50px;
+}
+
 /* POPUP table */
 
-.filestable {
+.filestable, .attendancelisttable {
   border-collapse: collapse;
   width: 60%;
   max-width: 60%;
@@ -1264,21 +1273,21 @@ _:-ms-lang(x), .appdiv{
   text-overflow: ellipsis;
 }
 
-th{
+.filestable th{
   text-align: center;
   padding: 8px;
   border-bottom: 1px solid lightgrey;
   background-color: #2e2f3e;
 }
 
-tr td {
+.filestable tr td {
   text-align: center;
   padding: 30px;
   border-bottom: 1px solid lightgrey;
   color: #000;
 }
 
-td:first-child, td:nth-child(3){
+.filestable td:first-child, .filestable td:nth-child(3){
   width: 10%;
   max-width: 300px;
   overflow: hidden;
@@ -1286,7 +1295,7 @@ td:first-child, td:nth-child(3){
   white-space: nowrap;
 } 
 
-td:nth-child(2){
+.filestable td:nth-child(2){
   width: 25%;
   max-width: 300px;
   overflow: hidden;
@@ -1294,23 +1303,23 @@ td:nth-child(2){
   white-space: nowrap;
 }
 
-td:nth-child(3) span, td:nth-child(4) span{
+.filestable td:nth-child(3) span, .filestable td:nth-child(4) span{
   cursor: pointer;
 }
 
-td:nth-child(4){
+.filestable td:nth-child(4){
   width: 10%;
 }
 
-tr:nth-child(even){
+.filestable tr:nth-child(even){
   background-color: #fff;
 }
 
-tr:nth-child(odd){
+.filestable tr:nth-child(odd){
   background-color: #eee;
 }
 
-tr:hover{
+.filestable tr:hover{
   background-color: #ccc;
 }
 
@@ -1350,7 +1359,7 @@ tr:hover{
   background-color: #ccc;
 }
 
-.iframeurl--button, .drop-form .filesbtn{
+.iframeurl--button, .drop-form .filesbtn, .attendancebtn{
   margin: 0 auto;
   width: 25%;
   height: 50px;
@@ -1368,7 +1377,7 @@ tr:hover{
   padding: 0 20px;
 }
 
-.iframeurl--button:hover, .filesbtn:hover{
+.iframeurl--button:hover, .filesbtn:hover, .attendancebtn:hover{
   background-color: #ffaf00;
 }
 
@@ -1620,6 +1629,7 @@ input[type=text], input[type=password], textarea{
 .light-mode .menu-activea, 
 .light-mode .iframeurl--button, 
 .light-mode .drop-form .filesbtn, 
+.light-mode .attendancebtn, 
 .light-mode nav ul a,
 .light-mode .modal-inside .react-tabs__tab.react-tabs__tab--selected,
 .light-mode .modal-inside ul li, 
@@ -2031,7 +2041,7 @@ input[type=text], input[type=password], textarea{
   grid-template-areas: "image" "text";
   border-radius: 5px;
   background: white;
-  box-shadow: 5px 5px 15px rgba(0,0,0,0.9);
+  box-shadow: 0px 0px 2px rgba(0,0,0,0.9);
   font-family: roboto;
   text-align: center;
   max-width: 300px;
@@ -2051,7 +2061,7 @@ input[type=text], input[type=password], textarea{
   transition: 2.5s;
 } 
 
-.main--card:nth-child(1):hover .main--card-image{ 
+/* .main--card:nth-child(1):hover .main--card-image{ 
   background-position: center;
   background-position-x: -230px;
   background-size: 302% 322%;
@@ -2073,7 +2083,7 @@ input[type=text], input[type=password], textarea{
   background-position-y: 0px;
   background-size: 100% 100%;
   transition: 2.5s;
-} 
+}  */
 
 .main--card-image {
   grid-area: image;
@@ -2085,8 +2095,8 @@ input[type=text], input[type=password], textarea{
 .main--card-image {
   grid-area: image;
   /* background: url("../img/pobrane.jfif"); */
-  border-top-left-radius: 7px;
-  border-top-right-radius: 7px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
   background-size: 110% 110%;
   background-position: center;
   transition: 2.5s;
@@ -2095,30 +2105,33 @@ input[type=text], input[type=password], textarea{
 .main--card:nth-child(1) .main--card-image{
   grid-area: image;
   background: url("../img/136971536_731289760920239_1318077005117700340_n.jpg");
-  border-top-left-radius: 7px;
-  border-top-right-radius: 7px;
-  background-size: 100% 110%;
-  background-position: center;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  background-size: cover;
+  background-position: center -40px;
+  background-repeat: no-repeat;
   transition: 2.5s;
 }
 
 .main--card:nth-child(2) .main--card-image{
   grid-area: image;
   background: url("../img/IMG_20210110_144416_1.jpg");
-  border-top-left-radius: 7px;
-  border-top-right-radius: 7px;
-  background-size: 100% 140%;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
   transition: 2.5s;
 }
 
 .main--card:nth-child(3) .main--card-image{
   grid-area: image;
   background: url("../img/137547336_335278464600703_2369026722630994800_n.png");
-  border-top-left-radius: 7px;
-  border-top-right-radius: 7px;
-  background-size: 100% 120%;
-  background-position: center;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  background-size: cover;
+  background-position: center -20px;
+  background-repeat: no-repeat;
   transition: 2.5s;
 }
 
@@ -2471,7 +2484,7 @@ input[type=text], input[type=password], textarea{
     width: 100%;
   }
 
-  .createroom button, .iframeurl--button, .drop-form .filesbtn, .generalbtn{
+  .createroom button, .iframeurl--button, .drop-form .filesbtn, .generalbtn, .attendancebtn{
     width: 50%;
   }
 
