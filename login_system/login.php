@@ -1,8 +1,22 @@
 <?php
-    require_once __DIR__."/../database/DatabaseConnection.php";
+
+use JetBrains\PhpStorm\Pure;
+
+require_once __DIR__."/../database/DatabaseConnection.php";
     require_once __DIR__."/ldap.php";
 
     $TEST = TRUE;
+
+
+function isStudent( $login )
+{
+    return strpos( strtolower( $login ), 'student' );
+}
+
+function isAdmin( $login )
+{
+    return strpos( strtolower( $login ), 'pracownik' );
+}
 
     $dbConnection = new DatabaseConnection();
     $dbConnection->connect();
@@ -49,8 +63,8 @@
             $password = htmlspecialchars($data['pwd']);
             $result = null;
             
-            if(!$TEST){
-                if($login=="student1" || $login=="student2" || $login=="student3" || $login=="student4" || $login=="student5"){
+                if( !(isStudent( $login ) === false) )
+                {
                     $result = [
                         "type" => "login",
                         "login" => $login,
@@ -60,7 +74,8 @@
 						"email" => "testMail@test.pl"
                     ];
                 }
-                elseif($login=="pracownik1" || $login=="pracownik2" || $login=="pracownik3" || $login=="pracownik4" || $login=="pracownik5"){
+                elseif( !(isAdmin( $login ) === false) )
+                {
                     $result = [
                         "type" => "login",
                         "login" => $login,
@@ -72,47 +87,7 @@
                 }else{
                     $result = LDAP::login($login, $password);
                 }
-            }
-            else{
-                if($login=="admin" || $login=="pracownik"){
-                    $result = [
-                        "type" => "login",
-                        "login" => $login,
-                        "access" => "pracownik",
-                        "name" => "Pracownik",
-                        "surname" => "Admin",
-						"email" => "testMail@test.pl"
-                    ];
-                }
-                elseif ($login=="doktorant") {
-                    $result = [
-                        "type" => "login",
-                        "login" => $login,
-                        "access" => "doktorant",
-                        "name" => "Doktorant",
-                        "surname" => "Admin",
-						"email" => "testMail@test.pl"
-                    ];
-                }
-                elseif ($login=="user" || $login=="student") {
-                    $result = [
-                        "type" => "login",
-                        "login" => $login,
-                        "access" => "student",
-                        "name" => "Student",
-                        "surname" => "Admin",
-						"email" => "testMail@test.pl"
-                    ];
-                }
-                else{
-                    $result = [
-                        "type" => "login",
-                        "login" => 0,
-                        "access" => "login"
-                    ];
-                }
-    
-            }
+
             if($result['login'] != '0'){
                 $user = $dbConnection->getUserByLogin($login);
                 // If user exists in DB update token | if not -> insert user
@@ -138,5 +113,4 @@
             echo json_encode($result);
         }
     }
-
 ?>
