@@ -107,7 +107,7 @@ function Footer(props){
             </Link>
 
             {!props.roomAdmin &&
-                <a className="footer--span-lapka"><label
+                <a className="footer--span-lapka" onClick={() => props.handleRaiseHand()}><label
                     className="tooltip"
                 >
                 <span className="tooltiptext">.</span>

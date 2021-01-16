@@ -76,6 +76,7 @@ function Chat(props){
                             permission={usersList.permission}
                             login={usersList.login}
                             roomAdmin={props.roomAdmin}
+                            hand={usersList.hand}
                         />,
                         )}
                         </div>

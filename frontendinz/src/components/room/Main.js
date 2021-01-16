@@ -93,7 +93,7 @@ function Main(props) {
 				}
 				setRoomName(roomsAPI.data.name);
 				addMessage({ type: "chat", chat: "Witaj na kanale " + roomsAPI.data.name + " wpisz /help, aby uzyskać pomoc dotyczącą chatu.", name: "SERVER", messagetype: "chat" });
-				if(roomsAPI) setTimeout(() => setLoadingMain(true), 10000);
+				if(roomsAPI) setLoadingMain(true);
 				if(usersByRoomAPI) setAdminName(usersByRoomAPI.data.name + " " + usersByRoomAPI.data.surname);
 				//document.title = id + " WykładyWebowe";
 			}
@@ -449,8 +449,16 @@ function Main(props) {
   }
 
   function changePermission(login){
-	const message = { type: "mute", login: login };
-	ws.send(JSON.stringify(message))
+		const message = { type: "mute", login: login };
+		ws.send(JSON.stringify(message))
+	}
+
+	function handleRaiseHand(){
+		console.log("click");
+		if(ws != null){
+			const message = { type: "hand" };
+			ws.send(JSON.stringify(message));
+		}
 	}
 
   return (
@@ -531,6 +539,7 @@ function Main(props) {
 				handleHoverChat={handleHoverChat}
 				handleHoverMenu={handleHoverMenu}
 				handleChangeIframeInputAdmin={handleChangeIframeInputAdmin}
+				handleRaiseHand={handleRaiseHand}
 				// roomAPILogin={roomAPILogin}
 				// roomAPIToken={roomAPIToken}
 				// userAPILogin={userAPILogin}
