@@ -160,7 +160,7 @@ function Main(props) {
 		webSocket = new WebSocket(URL);
 	
 		webSocket.onopen = () => {
-			timeout = 1000;
+			//timeout = 1000;
 			//console.log('connected');
 			//webSocket.send(token);
 			//webSocket.send("1"); //debug

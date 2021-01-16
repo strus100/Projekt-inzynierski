@@ -513,9 +513,14 @@ input:checked + label{
   padding: 0 25px;
 }
 
-.footer--span-http, .footer--span-consultation{
+.footer--span-consultation{
   position: absolute!important;
-  left: 60px;
+  left: 70px;
+}
+
+.footer--span-http{
+  position: absolute!important;
+  right: 90px;
 }
 
 .footer--span-consultation{
