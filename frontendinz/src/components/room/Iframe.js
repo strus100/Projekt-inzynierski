@@ -13,11 +13,17 @@ function Iframe(props){
             </div>
             { ! props.roomAdmin ? 
                 <div className="iframediv">
-                    <iframe id="scoreboard" sandbox="allow-same-origin allow-scripts allow-forms allow-pointer-lock" scrolling="no" src={props.proxy + props.iframeURL} title="iframe-title"></iframe>
+                    <iframe id="scoreboard"
+                            sandbox="allow-same-origin allow-scripts allow-forms allow-pointer-lock"
+                            scrolling="no" src={props.proxy + props.iframeURL}
+                            title="iframe-title"></iframe>
                 </div>
                 :
                 <div className="iframediv">
-                    <iframe id="scoreboardx" sandbox="allow-same-origin allow-scripts allow-forms allow-pointer-lock" scrolling="yes" src={props.proxy + props.iframeURL} title="iframe-title"></iframe>
+                    <iframe id="scoreboardx"
+                            sandbox="allow-same-origin allow-scripts allow-forms allow-pointer-lock"
+                            scrolling="yes" src={props.proxy + props.iframeURL}
+                            title="iframe-title"></iframe>
                 </div>
             }
         </div>
