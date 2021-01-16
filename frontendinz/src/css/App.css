@@ -651,6 +651,7 @@ input:checked + label{
   position: relative;
   margin: 0 auto;
   margin-bottom: 100px;
+  -webkit-transform:scale(0.5);-moz-transform-scale(0.5);
 }
 
 #scoreboard, #scoreboardx{
