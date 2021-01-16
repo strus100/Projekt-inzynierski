@@ -93,7 +93,7 @@ function Main(props) {
 				}
 				setRoomName(roomsAPI.data.name);
 				addMessage({ type: "chat", chat: "Witaj na kanale " + roomsAPI.data.name + " wpisz /help, aby uzyskać pomoc dotyczącą chatu.", name: "SERVER", messagetype: "chat" });
-				if(roomsAPI) setLoadingMain(true);
+				if(roomsAPI) setTimeout(() => setLoadingMain(true), 10000);
 				if(usersByRoomAPI) setAdminName(usersByRoomAPI.data.name + " " + usersByRoomAPI.data.surname);
 				//document.title = id + " WykładyWebowe";
 			}

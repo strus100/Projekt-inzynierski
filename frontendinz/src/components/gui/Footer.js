@@ -7,7 +7,7 @@ import {
 
 function Footer(props){
     const {admin} = useContext(AContext);
-    const [linkPawel, setLinkPawel] = useState("jakislink/");
+    const [linkPawel, setLinkPawel] = useState("https://pomocnikprofesora.herokuapp.com/");
 
     return(
     <div className="footer">
@@ -76,10 +76,18 @@ function Footer(props){
                 <span aria-labelledby="jsx-a11y/accessible-emoji" role="img"><i className="material-icons">http</i></span></label>
             }
             {!props.roomAdmin &&
-                <a href={linkPawel+"?roomID="+props.id+"&login="+props.login} target="_blank"><label
+                <a href={linkPawel+"zapisy?roomID="+props.id+"&login="+props.login} target="_blank"><label
                     className="tooltip footer--span-consultation"
                 >
                 <span className="tooltiptext tooltiptext--long">Umów się na konsultację z {props.adminName}</span>
+                <span aria-labelledby="jsx-a11y/accessible-emoji" role="img">Konsultacja</span></label>
+                </a>
+            }
+            {props.roomAdmin &&
+                <a href={linkPawel+"dashboardTeacher?roomID="+props.id} target="_blank"><label
+                    className="tooltip footer--span-consultation"
+                >
+                <span className="tooltiptext tooltiptext--long">Moje konsultacje</span>
                 <span aria-labelledby="jsx-a11y/accessible-emoji" role="img">Konsultacja</span></label>
                 </a>
             }

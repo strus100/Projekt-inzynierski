@@ -2,10 +2,11 @@ import React, { useEffect } from 'react'
 import { Link } from "react-router-dom";
 import { useState } from 'react';
 import AttendanceList from "./AttendanceList"
+import { findAllByTestId } from '@testing-library/react';
 
 function PopupAttendanceList(props){
 
-    const [attendancelist, setAttendancelist] = useState([{a: "a"}, {b: "b"}, {b: "b"}, {b: "b"}, {b: "b"}, {b: "b"}, {b: "b"}, {b: "b"}, {b: "b"}, {b: "b"}, {b: "b"}, {b: "b"}, {b: "b"}, {b: "b"}, {b: "b"}, {b: "b"}, {b: "b"}, {b: "b"}, {b: "b"}, {b: "b"}, {b: "b"}, {b: "b"}, {b: "b"}, {b: "b"}, {b: "b"}, {b: "b"}, {b: "b"}, {b: "b"}, {b: "b"}, {b: "b"}, {b: "b"}, {b: "b"}]);
+    const [attendancelist, setAttendancelist] = useState([{id: "a", date: "b", name : "name"}]);
   
     useEffect(() => {
         window.addEventListener('click', function(event) {
@@ -25,6 +26,14 @@ function PopupAttendanceList(props){
         
       }, [])
 
+      function getList(e){
+        console.log(e.currentTarget.textContent);
+      }
+
+      function deleteList(x){
+        console.log(x);
+      }
+
   return (
     
     <div id="myModalAL" className="modal">
@@ -41,7 +50,12 @@ function PopupAttendanceList(props){
                                     <tbody>
                                         {attendancelist.map((attendancelist, index) =>
                                         <AttendanceList
-                                            
+                                            key={index}
+                                            getList={getList}
+                                            deleteList={deleteList}
+                                            name={attendancelist.name}
+                                            id={attendancelist.id}
+                                            date={attendancelist.date}
                                         />,
                                         )}
                                     </tbody>

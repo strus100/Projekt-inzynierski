@@ -1041,6 +1041,10 @@ _:-ms-lang(x), .appdiv{
   align-items: center; 
 }
 
+#modalALD{
+  z-index: 1111;
+}
+
 .modal-content {
   background-color: #fefefe;
   border: 1px solid #888;
