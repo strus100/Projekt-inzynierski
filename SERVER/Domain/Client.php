@@ -15,6 +15,7 @@
         private $socketID;
 
         private $isMuted;
+        private $hasHand;
 
         function __construct($login, $permission, $name, $surname, $room, $socketID){
             $this->login = $login;
@@ -27,23 +28,36 @@
             $this->socketID = $socketID;
 
             $this->isMuted = false;
+            $this->hasHand = false;
         }
 
         function __destruct(){
             $this->leaveRoom();
         }
 
-        public function authorize(){
-            echo "DONT USE THIS FUNCTION!!! (Client.php->authorize())";
-            return false;
-        }
+        // public function authorize(){
+        //     echo "DONT USE THIS FUNCTION!!! (Client.php->authorize())";
+        //     return false;
+        // }
 
         public function mute(){
-            $this->isMuted = true;
+            if($this->isMuted){
+                $this->isMuted = false;
+            }else{
+                $this->isMuted = true;
+            }
         }
 
-        public function unMute(){
-            $this->isMuted = false;
+        // public function unMute(){
+        //     $this->isMuted = false;
+        // }
+
+        public function hand(){
+            if($this->hasHand){
+                $this->hasHand = false;
+            }else{
+                $this->hasHand = true;
+            }
         }
 
         public function leaveRoom(){
@@ -53,9 +67,9 @@
             }
         }
 
-        public function sendMessage(){
+        // public function sendMessage(){
             
-        }
+        // }
 
         public function isAdmin() : bool{
             return $this->permission == PERMISSION::ADMIN;
@@ -63,6 +77,10 @@
 
         public function isMuted() : bool{
             return $this->isMuted;
+        }
+
+        public function hasHand() : bool{
+            return $this->hasHand;
         }
 
         // Getters

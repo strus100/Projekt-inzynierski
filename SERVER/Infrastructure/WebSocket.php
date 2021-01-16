@@ -201,13 +201,23 @@
                             if($client->isAdmin()){
                                 $clientToMute = $room->getClientByLogin($decodedJSON['login']);
                                 if($clientToMute != null && $room->getAdminID() != $clientToMute->getLogin()){
-                                    if($clientToMute->isMuted()){
-                                        $clientToMute->unMute();
-                                    }else{
-                                        $clientToMute->mute();
-                                    }
+                                    $clientToMute->mute();
+                                    // if($clientToMute->isMuted()){
+                                    //     $clientToMute->unMute();
+                                    // }else{
+                                    //     $clientToMute->mute();
+                                    // }
                                     $this->sendClientsToAllInRoom($room);
                                 }
+                            }
+                            break;
+
+                        case 'hand':
+                            // $clientToHand = $room->getClientByLogin($decodedJSON['login']);
+                            $clientToHand = $client;
+                            if($clientToHand != null){
+                                $clientToHand->hand();
+                                $this->sendClientsToAllInRoom($room);
                             }
                             break;
 
@@ -250,7 +260,8 @@
                 $list[] = [
                     "login" => $item->getLogin(),
                     "name" => $item->getName()." ".$item->getSurname()." (".$item->getLogin().")",
-                    "permission" => ($item->isMuted()) ? false : true
+                    "permission" => ($item->isMuted()) ? false : true,
+                    "hand" => ($item->hasHand()) ? true : false
                 ];
             }
 
