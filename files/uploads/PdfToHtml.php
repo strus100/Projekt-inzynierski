@@ -28,7 +28,7 @@ class PdfToHtml {
 	$this->extension == "odp" ||
 	$this->extension == "uop" 
 	){
-		$cmd = "libreoffice --headless --invisible --convert-to pdf ".$this->folderPath.$this->fileName;
+		$cmd = "unoconv ".$this->folderPath->$this->fileName;
 		echo $cmd."<br>";
 		shell_exec( $cmd ); 
 		$this->fileName = $this->name.".pdf";
