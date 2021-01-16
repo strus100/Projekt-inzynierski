@@ -43,6 +43,7 @@
                 }
 
                 if(!empty($room->getClientByLogin($clientEntity->login))){
+                    $this->loggerService->warn("Client already exists!\tLogin: ".$clientEntity->login." \tSocketID: ".$socketID);
                     return false;
                 }
 
