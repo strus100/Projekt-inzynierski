@@ -261,25 +261,74 @@
 			}
 		}
 		
-		function insertAttendance( $user, $room ){
+		function createAttendance( $roomID, $list ){
 			$date = new DateTime("NOW");
-            $date = $date->format("Y-m-d H:i:s");
-            
-			$sql = "INSERT INTO `timesheet` VALUES (NULL, '$date', '$user', '$room')";
-            $result = $this->conn->query($sql);
+			$date = $date->format("Y-m-d H:i:s");
 			
+			$room = $this->getRoom($roomID);
+			$roomName = $room['roomName'];
+			$rand = substr(md5(rand().microtime().rand()), 0, 3);
+			$attendanceListName = $roomName."_".$date."_".$rand;
+            
+			$sql = "INSERT INTO `timesheet` VALUES (NULL, '$date', '$attendanceListName', '$roomID')";
+			$result = $this->conn->query($sql);
+			
+			$last_id = $this->conn->insert_id;
+
+			foreach ($list as $key => $value) {
+				$name = $value['name'];
+				$subStart = strpos($name, "(")+1;
+				$size = strlen($name)-1 - $subStart;
+				$login = substr($name, $subStart, $size);
+				$sql = "INSERT INTO `timesheetuser` VALUES (NULL, '$last_id', '$login')";
+				$result = $this->conn->query($sql);
+
+				/*if($result == false){
+					echo $this->conn->error."\r\n";
+				}*/
+			}
 		}
 		
-		function getAttendance( $room ){
-			$sql = "select * from timesheet where room = '$room'";
+		function getAttendance( $roomID, $name ){
+			$sql = "SELECT * FROM `timesheetuser` JOIN `timesheet` ON `timesheet`.`id`=`timesheetuser`.`timesheet` JOIN `usertable` ON `usertable`.`login`=`timesheetuser`.`user` WHERE `timesheet`.`name`='$name' AND `timesheet`.`room`='$roomID' ORDER BY `usertable`.`surname` ASC, `usertable`.`name` ASC, `usertable`.`login` ASC";
 			$result = $this->conn->query($sql);
+			// if($result == false){
+			// 	echo $this->conn->error."\r\n";
+			// }
 
             $resultSet = array();
             while ($cRecord = $result->fetch_assoc() ) {
-                $resultSet[] = $cRecord;
+				$tmp = [
+					"name" => $cRecord['name'],
+					"surname" => $cRecord['surname']
+				];
+                $resultSet[] = $tmp;
             }
-            return json_encode( $resultSet );
+            return $resultSet;
 			}
+
+		function getAllAttendanceListsByRoom( $roomID ){
+			$sql = "SELECT * FROM `timesheet` WHERE `room` = '$roomID';";
+			$result = $this->conn->query($sql);
+			
+			// if($result == false){
+			// 	echo "[]";
+			// 	echo $this->conn->error."\r\n";
+			// }
+
+			$array = array();
+			
+			while($row = $result->fetch_assoc()){
+				$item = [
+					"id" => $row['id'],
+					"date" => $row['date'],
+					"name" => $row['name']
+				];
+				$array[] = $item;
+			}
+
+			return $array;
+		}
 	}
 		
 ?>

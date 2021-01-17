@@ -25,7 +25,9 @@
             echo "Creating table urlhistory\r\n";
             $this->createUrlHistoryTable();
             echo "Creating table timesheet\r\n";
-			$this->createTimesheetTable();
+            $this->createTimesheetTable();
+            echo "Creating table timesheetuser\r\n";
+            $this->createTimesheetuserTable();
 			
             $this->DBconnection->close();
         }
@@ -140,10 +142,9 @@
 		  $result = $this->DBconnection->query("CREATE TABLE IF NOT EXISTS `timesheet` (
                     `id` INT NOT NULL AUTO_INCREMENT,
 					`date` DATETIME NOT NULL,
-                    PRIMARY KEY(`id`),
-  			        `user` VARCHAR(255) NOT NULL,
+                    `name` VARCHAR(255) NOT NULL,
                     `room` INT NOT NULL,
-                    FOREIGN KEY(`user`) REFERENCES `usertable`(`login`),
+                    PRIMARY KEY(`id`),
                     FOREIGN KEY(`room`) REFERENCES `rooms`(`id`)
                 ) ENGINE = InnoDB CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;");
 
@@ -152,7 +153,23 @@
                 echo "ERROR cannot create timesheet table\r\n";
                 die($this->DBconnection->error);
             }
-		}
+        }
+        
+        private function createTimesheetuserTable(){
+            $result = $this->DBconnection->query("CREATE TABLE IF NOT EXISTS `timesheetuser` (
+                `id` INT NOT NULL AUTO_INCREMENT,
+                `timesheet` INT NOT NULL,
+                `user` VARCHAR(255) NOT NULL,
+                PRIMARY KEY(`id`),
+                FOREIGN KEY(`timesheet`) REFERENCES `timesheet`(`id`),
+                FOREIGN KEY(`user`) REFERENCES `usertable`(`login`)
+            ) ENGINE = InnoDB CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;");
+
+            if($result == false){
+                echo "ERROR cannot create timesheetuser table\r\n";
+                die($this->DBconnection->error);
+            }
+        }
     }
     /*ID(FK auto_incr), message, autor(FK), pokój (FK) messagetype ??*/
     $consent = readline("WARNING! This procedure will DELETE ALL DATA from your database. Are you sure? ([Y]es | [N]o): ");
