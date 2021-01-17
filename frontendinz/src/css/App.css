@@ -2193,6 +2193,17 @@ input[type=text], input[type=password], textarea{
   transition: 2.5s;
 }
 
+.main--card:nth-child(4) .main--card-image{
+  grid-area: image;
+  background: url("../img/139821543_1237178496677888_5011637356941514777_n.jpg");
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  background-size: cover;
+  background-position: center -20px;
+  background-repeat: no-repeat;
+  transition: 2.5s;
+}
+
 .main--card-text {
   grid-area: text;
   margin: 45px;
