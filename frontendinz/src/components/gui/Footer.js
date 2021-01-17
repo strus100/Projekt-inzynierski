@@ -76,7 +76,7 @@ function Footer(props){
                 <span aria-labelledby="jsx-a11y/accessible-emoji" role="img"><i className="material-icons">http</i></span></label>
             }
             {!props.roomAdmin &&
-                <a href={linkPawel+"zapisy?roomID="+props.id+"&login="+props.login} target="_blank"><label
+                <a href={linkPawel+"zapisy?roomId="+props.id+"&login="+props.login} target="_blank"><label
                     className="tooltip footer--span-consultation"
                 >
                 <span className="tooltiptext tooltiptext--long">Umów się na konsultację z {props.adminName}</span>
@@ -84,7 +84,7 @@ function Footer(props){
                 </a>
             }
             {props.roomAdmin &&
-                <a href={linkPawel+"dashboardTeacher?roomID="+props.id} target="_blank"><label
+                <a href={linkPawel+"dashboardTeacher?roomId="+props.id} target="_blank"><label
                     className="tooltip footer--span-consultation"
                 >
                 <span className="tooltiptext tooltiptext--long">Moje konsultacje</span>

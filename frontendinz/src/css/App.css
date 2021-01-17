@@ -1071,7 +1071,7 @@ _:-ms-lang(x), .appdiv{
   color: white;
 }
 
-.close, .closeQ {
+.close, .closeQ, .closeQD {
   color: #aaa;
   float: right;
   font-size: 5em;
@@ -1082,13 +1082,13 @@ _:-ms-lang(x), .appdiv{
   right: 10px;
 }
 
-.closeQ{
+.closeQ, .closeQD{
   top: -10px;
   right: 10px;
 }
 
 .close:hover,
-.close:focus, .closeQ:hover, .closeQ:focus {
+.close:focus, .closeQ:hover, .closeQ:focus, .closeQD:hover, .closeQD:focus {
   text-decoration: none;
   cursor: pointer;
 }
@@ -1280,6 +1280,49 @@ _:-ms-lang(x), .appdiv{
   text-align: center;
   border: 1px solid lightgrey;
   text-overflow: ellipsis;
+}
+
+.attendancelisttable{
+  width: 50%;
+}
+
+.attendancelisttable, .attendancelisttable th, .attendancelisttable td{
+  /* border: 1px solid lightgrey; */
+}
+
+.attendancelisttable th{
+  background-color: #1c1c24;
+  color: white;
+}
+
+.attendancelisttable tr:nth-child(even){
+  background-color: #f2f2f2;
+  color: #000;
+}
+
+.attendancelisttable tr:nth-child(odd){
+  background-color: #fff;
+  color: #000;
+}
+
+.attendancelisttable tr th:nth-child(1){
+  width: 10%;
+}
+
+.attendancelisttable tr th:nth-child(2){
+  width: 20%;
+}
+
+.attendancelisttable tr th:nth-child(3){
+  width: 60%;
+}
+
+.attendancelisttable tr td:nth-child(3){
+  cursor: pointer;
+}
+
+.attendancelisttable tr th:nth-child(4){
+  width: 10%;
 }
 
 .filestable th{
@@ -2123,7 +2166,7 @@ input[type=text], input[type=password], textarea{
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
   background-size: cover;
-  background-position: center -40px;
+  background-position: center -60px;
   background-repeat: no-repeat;
   transition: 2.5s;
 }

@@ -55,7 +55,7 @@ function Main(props) {
 
   const [roomName, setRoomName] = useState("");
   const [roomAdmin, setRoomAdmin] = useState(false); //zmienić na false
-  const [loadingMain, setLoadingMain] = useState(true); //zmienić na false
+  const [loadingMain, setLoadingMain] = useState(false); //zmienić na false
 
 //   useEffect(() => {
 	// axios.post('/rooms/', {
@@ -520,6 +520,8 @@ function Main(props) {
 							/>}
 			{roomAdmin && <PopupAttendanceList
 							roomAdmin={roomAdmin}
+							usersList={usersList}
+							roomID={id}
 							/>}
 			<Chat
 				roomAdmin={roomAdmin}

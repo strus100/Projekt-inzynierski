@@ -3,11 +3,16 @@ import { Link } from "react-router-dom";
 import { useState } from 'react';
 import AttendanceList from "./AttendanceList"
 import { findAllByTestId } from '@testing-library/react';
+import AttendanceListDetails from './AttendanceListDetails';
+import axios from 'axios';
 
 function PopupAttendanceList(props){
 
-    const [attendancelist, setAttendancelist] = useState([{id: "a", date: "b", name : "name"}]);
-  
+    const [attendancelist, setAttendancelist] = useState([{id: "1", date: "10-10-2010", name : "lista_roomname_cos1"},{id: "1", date: "11-10-2010", name : "lista_roomname_cos"},{id: "1", date: "13-10-2010", name : "lista_roomname_cos"}]);
+    const [attendanceListDetails, setAttendanceListDetails] = useState([{name: "Ala", surname: "Kowalska"},{name: "Ala", surname: "Kowalska"},{name: "Ala", surname: "Kowalska"}])
+    const [dateList, setDateList] = useState("");
+    const [nameList, setNameList] = useState("");
+    
     useEffect(() => {
         window.addEventListener('click', function(event) {
           if (event.target === document.getElementById("myModalAL")) {
@@ -26,8 +31,58 @@ function PopupAttendanceList(props){
         
       }, [])
 
-      function getList(e){
+    useEffect(() => {
+        window.addEventListener('click', function(event) {
+          if (event.target === document.getElementById("myModalALD")) {
+              document.getElementById("myModalALD").style.display = "none";
+          }
+          if (event.target === document.getElementsByClassName("closeQD")[0]) {
+              document.getElementById("myModalALD").style.display = "none";
+          }
+
+        }
+        )
+        
+      }, [])
+
+      useEffect(() => {
+        getWholeList();
+      }, [])
+
+      function getList(e, date, name){
         console.log(e.currentTarget.textContent);
+        axios.get('/attendanceList/', { listName: e.currentTarget.textContent, roomID: props.roomID })
+          .then(function (response) {
+            setNameList(name);
+            setDateList(date);
+            setAttendanceListDetails(response.data.list);
+            e.preventDefault();
+            document.getElementById("myModalALD").style.display = "flex";
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
+
+      function createList(e){
+        e.preventDefault();
+        axios.post('/attendanceList/', { roomID: props.roomID, list: props.usersList })
+          .then(function (response) {
+            setAttendancelist(response.data.list);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
+
+      function getWholeList(){
+        axios.get('/attendanceList/', { roomID: props.roomID })
+          .then(function (response) {
+            setAttendancelist(response.data.list);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
       }
 
       function deleteList(x){
@@ -41,7 +96,7 @@ function PopupAttendanceList(props){
             <div className="modal-content">
             <span className="closeQ">&times;</span>
                 <div className="modal-inside">
-                    <input type="button" value="GENERUJ LISTĘ TERAZ" className="attendancebtn"/>
+                    <input type="button" value="GENERUJ LISTĘ TERAZ" className="attendancebtn" onClick={(e) => createList(e)}/>
 
                     <table className="attendancelisttable">
                                     <thead>
@@ -63,6 +118,31 @@ function PopupAttendanceList(props){
                 </div>
             </div>
           }
+      <div id="myModalALD" className="modal" style={{zIndex: 2000}}>
+        {props.roomAdmin &&
+              <div className="modal-content">
+              <span className="closeQD">&times;</span>
+                  <div className="modal-inside">
+                    <p>{nameList}</p>
+                    <p>{dateList}</p>
+                    <table className="attendancelisttable">
+                      <thead>
+                      <tr><th>Name</th><th>Surname</th></tr>
+                      </thead>
+                      <tbody>
+                        {attendanceListDetails.map((attendanceListDetails, index) =>
+                          <AttendanceListDetails
+                            key={index}
+                            name={attendanceListDetails.name}
+                            surname={attendanceListDetails.surname}
+                          />
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+              </div>
+            }
+      </div>
     </div>
     
     
