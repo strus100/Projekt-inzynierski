@@ -2,7 +2,7 @@
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		require_once __DIR__."/../database/DatabaseConnection.php";
 
-        $login = $_POST["login"];
+        $login = $_GET["login"];
 		$DB = new DatabaseConnection();
         $DB->connect();
         if( $row2 = $DB->getUserByLogin( htmlspecialchars($login) ) ){
