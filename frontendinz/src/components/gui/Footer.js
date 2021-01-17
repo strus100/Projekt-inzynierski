@@ -7,7 +7,9 @@ import {
 
 function Footer(props){
     const {admin} = useContext(AContext);
+    const {login} = useContext(AContext);
     const [linkPawel, setLinkPawel] = useState("https://pomocnikprofesora.herokuapp.com/");
+    //https://pomocnikprofesora.herokuapp.com/resultsStudent?login=student1
 
     return(
     <div className="footer">
@@ -19,6 +21,12 @@ function Footer(props){
         className="tooltip footer--span-files"
         ><span className="tooltiptext tooltipfiles" style={{width: 150+"px", marginLeft: -5 + "%"}}>Przeglądaj pliki</span>
         <span aria-labelledby="jsx-a11y/accessible-emoji" role="img"><i className="material-icons">insert_drive_file</i></span></label>
+        }
+        {!admin && <a href={linkPawel+"resultsStudent?login="+login} target="_blank"><label 
+        htmlFor="tooglepawel"
+        className="tooltip footer--span-files"
+        ><span className="tooltiptext tooltipfiles" style={{width: 150+"px", marginLeft: -5 + "%"}}>Moje dyżury</span>
+        <span aria-labelledby="jsx-a11y/accessible-emoji" role="img"><i className="material-icons">question_answer</i></span></label></a>
         }
 
         

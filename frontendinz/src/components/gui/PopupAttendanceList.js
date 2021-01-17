@@ -51,7 +51,7 @@ function PopupAttendanceList(props){
 
       function getList(e, date, name){
         console.log(e.currentTarget.textContent);
-        axios.get('/attendanceList/', { listName: e.currentTarget.textContent, roomID: props.roomID })
+        axios.get('/attendanceList/', { params: { listName: e.currentTarget.textContent, roomID: props.roomID } })
           .then(function (response) {
             setNameList(name);
             setDateList(date);
@@ -76,7 +76,7 @@ function PopupAttendanceList(props){
       }
 
       function getWholeList(){
-        axios.get('/attendanceList/', { roomID: props.roomID })
+        axios.get('/attendanceList/', { params: { roomID: props.roomID } })
           .then(function (response) {
             setAttendancelist(response.data.list);
           })
