@@ -80,7 +80,9 @@ function Footer(props){
                     className="tooltip footer--span-consultation"
                 >
                 <span className="tooltiptext tooltiptext--long">Umów się na konsultację z {props.adminName}</span>
-                <span aria-labelledby="jsx-a11y/accessible-emoji" role="img">Konsultacja</span></label>
+                <span class="material-icons">
+                question_answer
+                </span></label>
                 </a>
             }
             {props.roomAdmin &&
@@ -88,7 +90,9 @@ function Footer(props){
                     className="tooltip footer--span-consultation"
                 >
                 <span className="tooltiptext tooltiptext--long">Moje konsultacje</span>
-                <span aria-labelledby="jsx-a11y/accessible-emoji" role="img">Konsultacja</span></label>
+                <span class="material-icons">
+                question_answer
+                </span></label>
                 </a>
             }
             <input 
