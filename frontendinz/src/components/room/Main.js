@@ -444,8 +444,8 @@ function Main(props) {
   function handleUsersList(x){
 	  setUsersList(x);
 	  var counter = 0;
-	  for(var i = 0; i < usersList.length; i++){
-		  if(usersList[i].permission === true){
+	  for(var i = 0; i < x.length; i++){
+		  if(x[i].hand === true){
 				counter = counter + 1;
 		  }
 		}
