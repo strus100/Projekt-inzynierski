@@ -26,6 +26,7 @@ function Main(props) {
   const [ws, setWebsocket] = useState(null); 
   const [iframeURL, setIframeURL] = useState(""); 
   const [blockChat, setBlockChat] = useState(false);
+  const [handCounter, setHandCouter] = useState(0);
   //console.log('in render:', blockChat)
 
 //   const [roomAPILogin, setRoomAPILogin] = useState("");
@@ -442,6 +443,13 @@ function Main(props) {
 
   function handleUsersList(x){
 	  setUsersList(x);
+	  var counter = 0;
+	  for(var i = 0; i < usersList.length; i++){
+		  if(usersList[i].permission === true){
+				counter = counter + 1;
+		  }
+		}
+		setHandCouter(counter);
   }
 
   function handleUpdateHistory(x){
@@ -523,6 +531,7 @@ function Main(props) {
 				messages={messages} 
 				historyB={historyB}
 				usersList={usersList}
+				handCounter={handCounter}
 				changePermission={changePermission}
 				submitMessage={submitMessage}
 				handleChangeURL={handleChangeURL}
