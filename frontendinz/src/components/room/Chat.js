@@ -42,7 +42,7 @@ function Chat(props){
                         <Tab><i className="material-icons">person</i>
                             {props.handCounter > 0 &&
                                 <span style={{position: "relative"}}>
-                                    <span style={{position:"absolute", right: "-15px", top: "1px", zIndex: "200", fontSize: "12px", color: "black", fontSize: "11px"}}>{props.handCounter}</span>
+                                    <span style={{position:"absolute", right: "-15px", top: "1px", zIndex: "200", fontSize: "12px", color: "black", fontSize: "11px", fontFamily: "monospace"}}>{props.handCounter}</span>
                                     <span className="material-icons" style={{position:"absolute", right: "-18px", top: "18px", fontSize: "18px", color: "gold"}}>pan_tool</span>
                                 </span>
                             }
