@@ -183,11 +183,13 @@
                             if($client->isAdmin()){
                                 $this->sendMessageToClients($roomClients, $msg->encode(), $client->getSocketID());
                                 if($decodedJSON['event']=="redirection"){
-                                    $room->addUrlToHistory($decodedJSON['url']);
-                                    DatabaseService::getInstance()->addUrlToHistory($decodedJSON['url'], $client->getLogin());
-                                    $room->setUrl($decodedJSON['url']);
-                                    $this->sendUrlHistoryToSocket($this->clientSockets[$client->getSocketID()], $room);
-                                    $this->loggerService->log("Room: ".$room->getRoomName()." \tURL changed: ".$room->getUrl());
+                                    if($decodedJSON['url'] != "" && $decodedJSON['url'] != "http://" && $decodedJSON['url'] != "https://"){
+                                        $room->addUrlToHistory($decodedJSON['url']);
+                                        DatabaseService::getInstance()->addUrlToHistory($decodedJSON['url'], $client->getLogin());
+                                        $room->setUrl($decodedJSON['url']);
+                                        $this->sendUrlHistoryToSocket($this->clientSockets[$client->getSocketID()], $room);
+                                        $this->loggerService->log("Room: ".$room->getRoomName()." \tURL changed: ".$room->getUrl());
+                                    }
                                 }
                                 if($decodedJSON['event']=="scroll"){
                                     $room->setScrollPositionX($decodedJSON['x']);

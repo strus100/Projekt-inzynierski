@@ -14,6 +14,8 @@
             }else{
                 echo json_encode(["list" => $db->getAllAttendanceListsByRoom($roomID)]);
             }
+        }else{
+            echo json_encode(["list" => []]);
         }
 
     }elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {

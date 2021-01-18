@@ -6,7 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		$DB = new DatabaseConnection();
         $DB->connect();
             if( $row = $DB->getRoom( htmlspecialchars($roomId) ) ){
-				$login = $row['login'];
+				$login = $row['admin'];
 				
 				if( $row2 = $DB->getUserByLogin( htmlspecialchars($login) ) ){
 					 if (!isset($user)) { 
