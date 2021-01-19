@@ -244,10 +244,11 @@ function Lobby(props){
 						<input type="text" placeholder="Znajdź pokój" id="textrooms" onChange={() => filterRooms()}></input>
 						<br></br>
 						
-						<label htmlFor="myrooms" className="myroomsclass">
+						{admin && <label htmlFor="myrooms" className="myroomsclass">
 						<input type="checkbox" id="myrooms" name="myrooms" onChange={() => filterRooms()}></input>
 							<span id="myrooms--span">{checked ? <span className='material-icons' id="donesign" style={{fontSize: "inherit"}}>done</span> : "."}</span> <span id="checkbox-text" style={{display:"inline-block"}}>Pokaż moje pokoje</span>
 							</label>
+						}
 						<br></br>
 					</div>
 

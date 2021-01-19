@@ -122,7 +122,7 @@ function Footer(props){
                 <a className="footer--span-lapka" onClick={() => props.handleRaiseHand()}><label
                     className="tooltip"
                 >
-                <span className="tooltiptext">.</span>
+                <span className="tooltiptext">Zgłoś się</span>
                 <span className="material-icons" style={{padding: "0 25px"}}>pan_tool</span></label>
                 </a>
             }

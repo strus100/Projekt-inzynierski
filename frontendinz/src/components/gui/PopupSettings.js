@@ -17,7 +17,7 @@ function PopupSettings(props){
         if (event.target === document.getElementById("myModalSettings")) {
             document.getElementById("myModalSettings").style.display = "none";
         }
-        if (event.target === document.getElementsByClassName("close")[0]) {
+        if (event.target === document.getElementsByClassName("close")[1]) {
             document.getElementById("myModalSettings").style.display = "none";
         }
       })

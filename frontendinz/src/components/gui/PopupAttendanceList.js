@@ -8,8 +8,8 @@ import axios from 'axios';
 
 function PopupAttendanceList(props){
 
-    const [attendancelist, setAttendancelist] = useState([{id: "1", date: "10-10-2010", name : "lista_roomname_cos1"},{id: "1", date: "11-10-2010", name : "lista_roomname_cos"},{id: "1", date: "13-10-2010", name : "lista_roomname_cos"}]);
-    const [attendanceListDetails, setAttendanceListDetails] = useState([{name: "Ala", surname: "Kowalska"},{name: "Ala", surname: "Kowalska"},{name: "Ala", surname: "Kowalska"}])
+    const [attendancelist, setAttendancelist] = useState([]);
+    const [attendanceListDetails, setAttendanceListDetails] = useState([]);
     const [dateList, setDateList] = useState("");
     const [nameList, setNameList] = useState("");
     
