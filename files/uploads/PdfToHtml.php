@@ -1,5 +1,6 @@
 <?php
 
+require_once(__DIR__ . '/vendor/autoload.php');
 
 
 class PdfToHtml {
@@ -28,11 +29,28 @@ class PdfToHtml {
 	$this->extension == "odp" ||
 	$this->extension == "uop" 
 	){
-		$cmd = "unoconv ".$this->folderPath->$this->fileName;
-		echo $cmd."<br>";
-		shell_exec( $cmd ); 
-		$this->fileName = $this->name.".pdf";
-		$this->extension = "pdf";
+		// Configure API key authorization: Apikey
+		$config = Swagger\Client\Configuration::getDefaultConfiguration()->setApiKey('Apikey', 'c019885c-ae0d-4f7d-a765-5e82d2530d1e');
+
+		$apiInstance = new Swagger\Client\Api\ConvertDocumentApi(
+        
+		new GuzzleHttp\Client(),
+		$config
+		);
+	
+		try {
+			$result = $apiInstance->convertDocumentPptxToPdf( "../uploads/".$this->fileName);
+			print_r($result);
+
+			echo $myfile = fopen( "../uploads/".$this->name.".pdf", "c+" ) or die("Unable to open file!");
+			echo fwrite($myfile, $result);
+			fclose($myfile);
+			
+			$this->fileName = $this->name.".pdf";
+			$this->extension = "pdf";
+		} catch (Exception $e) {
+			echo 'Exception when calling ConvertDocumentApi->convertDocumentPptxToPdf: ', $e->getMessage(), PHP_EOL;
+		}
 	}
 
     }
@@ -59,13 +77,14 @@ class PdfToHtml {
 	$this->extension == "uop" ||
 	$this->extension == "pdf" 
 	){
-    	shell_exec( "rm -rf ".$this->folderPath.$this->name );
+		$nameToDelete = str_replace(' ', '\ ', $this->name );
+		$cmd = "rm -rf ".$this->folderPath.$nameToDelete;
+    	shell_exec( $cmd );
 		return true;
 	}
 	return false;
     }
 
-	
 
 	function createFolder(){
 		$cmdMakeDir = "mkdir -m 777 ".$this->folderPath.$this->name;
