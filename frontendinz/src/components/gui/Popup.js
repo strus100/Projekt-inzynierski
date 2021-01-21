@@ -56,8 +56,10 @@ function Popup(props){
         setDisabledButton(true);
         axios.post('/rooms/', { roomID: props.id, name: roomNameTmp })
 		.then(function (response) {
-            setDisabledButton(false);
-			history.push("/lobby");
+            if(Array.isArray(response.data)){
+                setDisabledButton(false);
+                history.push("/lobby");
+            }
 		})
 		.catch(function (error) {
             setDisabledButton(false);
@@ -82,11 +84,13 @@ function Popup(props){
                 } })
                 .then(function (response) {
                     //setFiles(response.data); //lub updateFiles() jeszcze, zależy od backu
-                    formData = null;
-                    document.getElementById("files").value = "";
-                    document.getElementById("uploadbtn").innerHTML = "Wybierz plik";
-                    updateFiles();
-                    setDisabledButton3(false);
+                    if(Array.isArray(response.data)){
+                        formData = null;
+                        document.getElementById("files").value = "";
+                        document.getElementById("uploadbtn").innerHTML = "Wybierz plik";
+                        updateFiles();
+                        setDisabledButton3(false);
+                    }
                 })
                 .catch(function (error) {
                     setDisabledButton3(false);
@@ -101,7 +105,9 @@ function Popup(props){
         axios.post('/files/delete/', { name: argName })
                 .then(function (response) {
                     //setFiles(response.data); //lub updateFiles() jeszcze, zależy od backu
-                    updateFiles();
+                    if(Array.isArray(response.data)){
+                        updateFiles();
+                    }
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -125,8 +131,10 @@ function Popup(props){
         setDisabledButton2(true);
         axios.post('/rooms/', { deleteID: props.id })
 		.then(function (response) {
-            setDisabledButton2(false);
-			history.push("/lobby");
+            if(Array.isArray(response.data)){
+                setDisabledButton2(false);
+                history.push("/lobby");
+            }
 		})
 		.catch(function (error) {
             setDisabledButton2(false);

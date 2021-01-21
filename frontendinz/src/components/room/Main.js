@@ -87,14 +87,16 @@ function Main(props) {
 		])
 		.then(axios.spread((usersByRoomAPI, roomsAPI) => {
 			if(usersByRoomAPI && roomsAPI){
-				if(roomsAPI.data.admin){ // do poprawy back
-					setRoomAdmin(true);
+				if(Array.isArray(usersByRoomAPI.data) && Array.isArray(roomsAPI.data)){
+					if(roomsAPI.data.admin){ // do poprawy back
+						setRoomAdmin(true);
+					}
+					setRoomName(roomsAPI.data.name);
+					addMessage({ type: "chat", chat: "Witaj na kanale " + roomsAPI.data.name + " wpisz /help, aby uzyskać pomoc dotyczącą chatu.", name: "SERVER", messagetype: "chat" });
+					if(roomsAPI) setLoadingMain(true);
+					if(usersByRoomAPI) setAdminName(usersByRoomAPI.data.name + " " + usersByRoomAPI.data.surname);
+					//document.title = id + " WykładyWebowe";
 				}
-				setRoomName(roomsAPI.data.name);
-				addMessage({ type: "chat", chat: "Witaj na kanale " + roomsAPI.data.name + " wpisz /help, aby uzyskać pomoc dotyczącą chatu.", name: "SERVER", messagetype: "chat" });
-				if(roomsAPI) setLoadingMain(true);
-				if(usersByRoomAPI) setAdminName(usersByRoomAPI.data.name + " " + usersByRoomAPI.data.surname);
-				//document.title = id + " WykładyWebowe";
 			}
 		}))
 		.catch(function (error){
@@ -172,6 +174,7 @@ function Main(props) {
 			//console.log(JSON.parse(message).type);
 			switch(JSON.parse(message).type){
 			case "chat": return addMessage(JSON.parse(message));
+			case "oldchat": return oldMessages(JSON.parse(message));
 			case "auth": return connected();
 			case "event":
 				var element = null;
@@ -325,6 +328,10 @@ function Main(props) {
 
  function handleAddMessage(message){
 	setMesseges(x => [...x, message] );
+ }
+
+ function oldMessages(message){
+	setMesseges([message]);
  }
 
  function addMessageCallback(x, callback){

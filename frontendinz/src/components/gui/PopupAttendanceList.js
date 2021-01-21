@@ -53,11 +53,13 @@ function PopupAttendanceList(props){
         console.log(e.currentTarget.textContent);
         axios.get('/attendanceList/', { params: { listName: e.currentTarget.textContent, roomID: props.roomID } })
           .then(function (response) {
-            setNameList(name);
-            setDateList(date);
-            setAttendanceListDetails(response.data.list);
-            e.preventDefault();
-            document.getElementById("myModalALD").style.display = "flex";
+            if(Array.isArray(response.data)){
+              setNameList(name);
+              setDateList(date);
+              setAttendanceListDetails(response.data.list);
+              e.preventDefault();
+              document.getElementById("myModalALD").style.display = "flex";
+            }
           })
           .catch(function (error) {
             console.log(error);
@@ -68,7 +70,9 @@ function PopupAttendanceList(props){
         e.preventDefault();
         axios.post('/attendanceList/', { roomID: props.roomID, list: props.usersList })
           .then(function (response) {
-            setAttendancelist(response.data.list);
+            if(Array.isArray(response.data)){
+              setAttendancelist(response.data.list);
+            }
           })
           .catch(function (error) {
             console.log(error);
@@ -78,7 +82,9 @@ function PopupAttendanceList(props){
       function getWholeList(){
         axios.get('/attendanceList/', { params: { roomID: props.roomID } })
           .then(function (response) {
-            setAttendancelist(response.data.list);
+            if(Array.isArray(response.data)){
+              setAttendancelist(response.data.list);
+            }
           })
           .catch(function (error) {
             console.log(error);
@@ -127,7 +133,7 @@ function PopupAttendanceList(props){
                     <p>{dateList}</p>
                     <table className="attendancelisttable">
                       <thead>
-                      <tr><th>Name</th><th>Surname</th></tr>
+                      <tr><th>Imię</th><th>Nazwisko</th><th>Login</th></tr>
                       </thead>
                       <tbody>
                         {attendanceListDetails.map((attendanceListDetails, index) =>
@@ -135,6 +141,7 @@ function PopupAttendanceList(props){
                             key={index}
                             name={attendanceListDetails.name}
                             surname={attendanceListDetails.surname}
+                            login={attendanceListDetails.login}
                           />
                         )}
                       </tbody>

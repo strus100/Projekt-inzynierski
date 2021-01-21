@@ -62,24 +62,26 @@ function App() {
     useEffect(() => {
 		axios.post('/login_system/login.php', {  })
 		.then(function (response) {
-			if(response.data.login !== 0){
-				setAccess(response.data.access);
-				setName(response.data.name);
-				setSurname(response.data.surname);
-				setToken(response.data.token);
-				setLogin(response.data.login);
-				setAuthenticated(true);
-				if(response.data.access === "pracownik" || response.data.access === "doktorant"){
-					setAdmin(true);
-					//console.log("admin SET");
+			if(Array.isArray(response.data)){
+				if(response.data.login !== 0){
+					setAccess(response.data.access);
+					setName(response.data.name);
+					setSurname(response.data.surname);
+					setToken(response.data.token);
+					setLogin(response.data.login);
+					setAuthenticated(true);
+					if(response.data.access === "pracownik" || response.data.access === "doktorant"){
+						setAdmin(true);
+						//console.log("admin SET");
+					}else{
+						setAdmin(false);
+					}
 				}else{
-					setAdmin(false);
+					setAuthenticated(false);
 				}
-			}else{
-				setAuthenticated(false);
+				if(response)
+				setLoaded(true);
 			}
-			if(response)
-			setLoaded(true);
 		})
 		.catch(function (error) {
 			console.log(error);

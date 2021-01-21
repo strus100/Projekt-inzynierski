@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 function PopupAttendanceListDetails(props){
 
-    const [attendancelistdetails, setAttendancelistdetails] = useState([{a: "a"}]);
+    const [attendancelistdetails, setAttendancelistdetails] = useState([]);
   
     useEffect(() => {
         window.addEventListener('click', function(event) {
@@ -26,7 +26,7 @@ function PopupAttendanceListDetails(props){
             <div className="modal-content">
             <span className="closeQ">&times;</span>
                 <div className="modal-inside">
-                    AAAAAAAAA
+                    
                 </div>
             </div>
           }
