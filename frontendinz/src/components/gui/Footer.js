@@ -93,6 +93,16 @@ function Footer(props){
                 </span></label>
                 </a>
             }
+
+            {!props.roomAdmin &&
+                <form method="post" action={linkPawel+"zapisy"} target="_blank" style={{width: "60px", left: "120px", postition: "relative"}}>
+                <input type="text" style={{display: "none"}} id="roomId" name="roomId" value={props.id}/>
+                <input type="text" style={{display: "none"}} id="login" name="login" value={props.login}/>
+                <button className="tooltip footer--span-consultation" style={{postition: "absolute", left: "200px", height: "100%"}}><span class="material-icons">
+                question_answer
+                </span></button>
+                </form>
+            }
             {props.roomAdmin &&
                 <a href={linkPawel+"dashboardTeacher?roomId="+props.id} target="_blank"><label
                     className="tooltip footer--span-consultation"

@@ -12,6 +12,8 @@ function PopupAttendanceList(props){
     const [attendanceListDetails, setAttendanceListDetails] = useState([]);
     const [dateList, setDateList] = useState("");
     const [nameList, setNameList] = useState("");
+
+    const [isButtonDisabled, setIsButtonDisabled] = useState(false);
     
     useEffect(() => {
         window.addEventListener('click', function(event) {
@@ -68,14 +70,20 @@ function PopupAttendanceList(props){
 
       function createList(e){
         e.preventDefault();
+        setIsButtonDisabled(true);
         axios.post('/attendanceList/', { roomID: props.roomID, list: props.usersList })
           .then(function (response) {
             if(Array.isArray(response.data)){
               setAttendancelist(response.data.list);
+              setTimeout(() => {
+                setIsButtonDisabled(false);
+              }, 4000);
             }
           })
           .catch(function (error) {
-            console.log(error);
+            setTimeout(() => {
+              setIsButtonDisabled(false);
+            }, 4000);
           });
       }
 
@@ -102,7 +110,7 @@ function PopupAttendanceList(props){
             <div className="modal-content">
             <span className="closeQ">&times;</span>
                 <div className="modal-inside">
-                    <input type="button" value="GENERUJ LISTĘ TERAZ" className="attendancebtn" onClick={(e) => createList(e)}/>
+                    <input type="button" value={!isButtonDisabled ? "Generuj Listę" : "Zaczekaj.."} className="attendancebtn" onClick={(e) => createList(e)} disabled={isButtonDisabled}/>
 
                     <table className="attendancelisttable">
                                     <thead>
