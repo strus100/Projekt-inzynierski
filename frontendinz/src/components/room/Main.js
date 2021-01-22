@@ -556,6 +556,7 @@ function Main(props) {
 				handleHoverMenu={handleHoverMenu}
 				handleChangeIframeInputAdmin={handleChangeIframeInputAdmin}
 				handleRaiseHand={handleRaiseHand}
+				handCounter={handCounter}
 				// roomAPILogin={roomAPILogin}
 				// roomAPIToken={roomAPIToken}
 				// userAPILogin={userAPILogin}

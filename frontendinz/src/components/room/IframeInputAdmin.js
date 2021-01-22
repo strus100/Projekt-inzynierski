@@ -19,6 +19,12 @@ function IframeInputAdmin(props){
         setURLtmp(x);
     }
 
+    function handleClickFiles(e){
+        //console.log("this is working fine");
+        e.preventDefault();
+        document.getElementById("myModalFiles").style.display = "flex";
+    }
+
     return(
     <div className="iframeinputadmin">            
         <div className={className}>
@@ -32,6 +38,9 @@ function IframeInputAdmin(props){
                         onClick={(e)=>props.handleChangeURL(e, URLtmp)}
                         >
                         Zmień adres URL
+                    </button>
+                    <button className="iframeurl--button" style={{marginLeft: "10px"}} onClick={(e) => handleClickFiles(e)}>
+                        Moje pliki
                     </button>
             </form>
         </div>

@@ -2309,6 +2309,11 @@ input[type=text], input[type=password], textarea{
   font-weight: 900!important;
 }
 
+.footer-hand--up{
+  box-shadow: inset 0 0 1em gold;
+  color: gold!important;
+}
+
 /* FAQ */
 
 .faq--div-main{

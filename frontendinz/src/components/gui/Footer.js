@@ -11,6 +11,7 @@ function Footer(props){
     const [linkPawel, setLinkPawel] = useState("https://pomocnikprofesora.herokuapp.com/");
     //https://pomocnikprofesora.herokuapp.com/resultsStudent?login=student1
     const [postPawel, setPostPawel] = useState(true);
+    const [handClass, setHandClass] = useState("tooltip");
 
     useEffect(() => {
         window.addEventListener('click', function(event) {
@@ -21,6 +22,15 @@ function Footer(props){
         )
         
       }, [])
+
+    function hand(){
+        props.handleRaiseHand();
+        if(handClass === "tooltip"){
+            setHandClass("tooltip footer-hand--up");
+        }else{
+            setHandClass("tooltip");
+        }
+    }
 
     return(
     <div className="footer">
@@ -55,7 +65,6 @@ function Footer(props){
         </form>
         }
 
-        
             <Link to="/">
                 <label 
                     htmlFor="homebutton"
@@ -65,7 +74,6 @@ function Footer(props){
                     <span className="material-icons">home</span>
                 </label>
             </Link>
-        
 
         <label 
         htmlFor="tooglemenu"
@@ -169,19 +177,9 @@ function Footer(props){
                 id="homebutton"
                 />
 
-            <Link to="/">
-                <label 
-                    htmlFor="homebutton"
-                    className="tooltip footer--span-home"
-                >
-                    <span className="tooltiptext">Powrót do strony głównej</span>
-                    <span className="material-icons">home</span>
-                </label>
-            </Link>
-
             {!props.roomAdmin &&
-                <a className="footer--span-lapka" onClick={() => props.handleRaiseHand()}><label
-                    className="tooltip"
+                <a className="footer--span-lapka" onClick={() => hand()}><label
+                    className={handClass}
                 >
                 <span className="tooltiptext">Zgłoś się</span>
                 <span className="material-icons" style={{padding: "0 25px"}}>pan_tool</span></label>
@@ -202,7 +200,14 @@ function Footer(props){
                 style={{position:"absolute", right: 0}}
             >
                 <span className="tooltiptext">Chat</span>
-                <span aria-labelledby="jsx-a11y/accessible-emoji" role="img"><i className="material-icons">chat</i></span>
+                <span aria-labelledby="jsx-a11y/accessible-emoji" role="img"><i className="material-icons">chat</i>
+                {props.handCounter > 0 &&
+                                <span style={{position: "relative"}}>
+                                    <span style={{position:"absolute", right: "-15px", top: "-2px", zIndex: "200", fontSize: "12px", color: "black", fontSize: "11px", fontFamily: "monospace"}}>{props.handCounter}</span>
+                                    <span className="material-icons" style={{position:"absolute", right: "-18px", top: "-5px", fontSize: "18px", color: "gold"}}>pan_tool</span>
+                                </span>
+                            }
+                </span>
             </label>
             
         </div>
