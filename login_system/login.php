@@ -63,6 +63,7 @@ function isAdmin( $login )
             $password = htmlspecialchars($data['pwd']);
             $result = null;
             
+			
                 if( !(isStudent( $login ) === false) )
                 {
                     $result = [
@@ -71,7 +72,7 @@ function isAdmin( $login )
                         "access" => "student",
                         "name" => "Student",
                         "surname" => "Student",
-						"email" => "testMail@test.pl"
+						"email" => $login."@test.pl"
                     ];
                 }
                 elseif( !(isAdmin( $login ) === false) )
@@ -82,7 +83,7 @@ function isAdmin( $login )
                         "access" => "pracownik",
                         "name" => "Pracownik",
                         "surname" => "Admin",
-						"email" => "testMail@test.pl"
+						"email" => $login."@test.pl"
                     ];
                 }else{
                     $result = LDAP::login($login, $password);
