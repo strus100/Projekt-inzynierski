@@ -1314,7 +1314,7 @@ _:-ms-lang(x), .appdiv{
 }
 
 .attendancelisttable tr th:nth-child(3){
-  width: 60%;
+  width: 70%;
 }
 
 .attendancelisttable tr td:nth-child(3){
@@ -1323,6 +1323,11 @@ _:-ms-lang(x), .appdiv{
 
 .attendancelisttable tr th:nth-child(4){
   width: 10%;
+}
+
+.attendancelisttabledetails tr th, .attendancelisttabledetails tr td{
+  width: 33%;
+  cursor: default;
 }
 
 .filestable th{

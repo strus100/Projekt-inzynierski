@@ -114,7 +114,7 @@ function PopupAttendanceList(props){
 
                     <table className="attendancelisttable">
                                     <thead>
-                                        <tr><th>ID</th><th>Data</th><th>Lista</th><th>Usuń</th></tr>
+                                        <tr><th>ID</th><th>Data</th><th>Lista</th></tr>
                                     </thead>
                                     <tbody>
                                         {attendancelist.map((attendancelist, index) =>
@@ -139,7 +139,7 @@ function PopupAttendanceList(props){
                   <div className="modal-inside">
                     <p>{nameList}</p>
                     <p>{dateList}</p>
-                    <table className="attendancelisttable">
+                    <table className="attendancelisttable attendancelisttabledetails">
                       <thead>
                       <tr><th>Login</th><th>Imię</th><th>Nazwisko</th></tr>
                       </thead>

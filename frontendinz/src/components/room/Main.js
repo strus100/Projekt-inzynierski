@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
+import { useHistory } from "react-router-dom";
 import Menu from "../gui/Menu";
 import Chat from "./Chat";
 import Footer from "../gui/Footer";
@@ -27,6 +28,8 @@ function Main(props) {
   const [iframeURL, setIframeURL] = useState(""); 
   const [blockChat, setBlockChat] = useState(false);
   const [handCounter, setHandCouter] = useState(0);
+
+  let history = useHistory();
   //console.log('in render:', blockChat)
 
 //   const [roomAPILogin, setRoomAPILogin] = useState("");
@@ -197,6 +200,7 @@ function Main(props) {
 				break;
 			case "updatelist": return handleUsersList(JSON.parse(message).clients);
 			case "updatehistory": return handleUpdateHistory(JSON.parse(message).history);
+			case "deleteroom": return handleDeleteRoom();
 			}
 		};
 	
@@ -475,6 +479,10 @@ function Main(props) {
 		}
 	}
 
+	function handleDeleteRoom(){
+		history.push("/lobby");
+	}
+
   return (
 	  <div className="main">
 		  <span style={{zIndex: 150, position: "fixed", height: 70+"px", width: 70+"px", clipPath: "circle(50px at 7px 7px)"}}>		
@@ -523,6 +531,7 @@ function Main(props) {
 							roomName={roomName}
 							handleChangeURL={handleChangeURL}
 							id={id}
+							ws={ws}
 							/>}
 			{roomAdmin && <PopupAttendanceList
 							roomAdmin={roomAdmin}
