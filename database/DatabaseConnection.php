@@ -300,7 +300,8 @@
             while ($cRecord = $result->fetch_assoc() ) {
 				$tmp = [
 					"name" => $cRecord['name'],
-					"surname" => $cRecord['surname']
+					"surname" => $cRecord['surname'],
+					"login" => $cRecord['login']
 				];
                 $resultSet[] = $tmp;
             }
