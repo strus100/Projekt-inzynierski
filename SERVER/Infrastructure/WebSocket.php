@@ -183,13 +183,23 @@
                             if($client->isAdmin()){
                                 $this->sendMessageToClients($roomClients, $msg->encode(), $client->getSocketID());
                                 if($decodedJSON['event']=="redirection"){
-                                    if($decodedJSON['url'] != "" && $decodedJSON['url'] != "http://" && $decodedJSON['url'] != "https://"){
+                                    $urlde = urldecode($decodedJSON['url']);
+                                    if($urlde != "" && $urlde != "http://" && $urlde != "https://"){
                                         $room->addUrlToHistory($decodedJSON['url']);
                                         DatabaseService::getInstance()->addUrlToHistory($decodedJSON['url'], $client->getLogin());
                                         $room->setUrl($decodedJSON['url']);
                                         $this->sendUrlHistoryToSocket($this->clientSockets[$client->getSocketID()], $room);
                                         $this->loggerService->log("Room: ".$room->getRoomName()." \tURL changed: ".$room->getUrl());
                                     }
+                                    // else{
+                                    //     $msg = [
+                                    //         "type" => "event",
+                                    //         "event" => "redirection",
+                                    //         "url" => $room->getUrl()
+                                    //     ];
+                                    //     $msg = $this->messageService->createTextMessage($client, $msg);
+                                    //     $this->sendMessageToSocket($this->clientSockets[$client->getSocketID()], $msg->encode());
+                                    // }
                                 }
                                 if($decodedJSON['event']=="scroll"){
                                     $room->setScrollPositionX($decodedJSON['x']);
@@ -278,6 +288,9 @@
         }
 
         private function sendChatHistoryToSocket($socket, $hist){
+            $clearMSG = $this->messageService->createClearChatMessage();
+            $this->sendMessageToSocket($socket, $clearMSG->encode());
+
             foreach ($hist as $value) {
                 $this->sendMessageToSocket($socket, $value->encode());
             }

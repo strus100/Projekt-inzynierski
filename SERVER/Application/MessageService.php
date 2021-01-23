@@ -48,6 +48,14 @@
             return $message;
         }
 
+        public function createClearChatMessage(){
+            $data = [
+                "type" => "oldchat"
+            ];
+            $msg = new Message(OPCODE::TEXT, null, null, $data);
+            return $msg;
+        }
+
         private function addMessageToHistory(Message $msg){
             $client = $msg->getAuthor();
             if($client){

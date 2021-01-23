@@ -42,8 +42,7 @@ function isAdmin( $login )
 				"login" => $user['login'],
 				"access" => $user['role'],
 				"name" => $user['name'],
-				"surname" => $user['surname'],
-				"token" => $refreshToken
+				"surname" => $user['surname']
 			];
             die(json_encode($return));
         }else{
