@@ -64,6 +64,12 @@ if (isset($_GET['url'])) {
 // decode q parameter to get the real URL
 $url = url_decrypt($_GET['q']);
 
+
+if( $url == "http://" ){
+		$url = "https://wmi.amu.edu.pl/";
+}
+
+
 $proxy = new Proxy();
 
 // load plugins
