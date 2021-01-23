@@ -179,7 +179,7 @@ function Lobby(props){
 			const filtered = roomsList.filter((a) => {
 				//console.log(array + " " + lenA);
 				// console.log(a.roomName.match(regex) + " " + a.name.match("^.*"+name+".*$", 'gi') + " " + a.surname.match("^.*"+surname+".*$", 'gi'))
-				return (a.roomName.match(regex) || a.id.match(regex)) && a.name.match("^.*"+name+".*$", 'gi') && a.surname.match("^.*"+surname+".*$", 'gi') && a.login.match("^.*"+login+".*$", 'gi');
+				return (a.roomName.match(regex) || a.id.match(regex)) && a.login.match("^"+login+"$", 'gi');
 			  });
 			//   console.log(filtered);
 			  setRoomsFilter(filtered);

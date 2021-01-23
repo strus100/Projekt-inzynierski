@@ -36,10 +36,8 @@ function PopupSettings(props){
         setDisabledButton(true);
         axios.post('/rooms/', { roomID: props.id, name: roomNameTmp })
 		.then(function (response) {
-            if(response.data){
-                setDisabledButton(false);
-                history.push("/lobby");
-            }
+            setDisabledButton(false);
+            setRoomNameTmp(roomNameTmp);
 		})
 		.catch(function (error) {
             setDisabledButton(false);
@@ -51,10 +49,8 @@ function PopupSettings(props){
         setDisabledButton2(true);
         axios.post('/rooms/', { deleteID: props.id })
 		.then(function (response) {
-            if(response.data){
-                setDisabledButton2(false);
-                history.push("/lobby");
-            }
+            setDisabledButton2(false);
+            history.push("/lobby");
 		})
 		.catch(function (error) {
             setDisabledButton2(false);
@@ -70,7 +66,8 @@ function PopupSettings(props){
                 
                     <div className="general-area">
                         <h1 style={{marginTop: 0 + "px"}}>Nazwa pokoju</h1>
-                        <h2>{props.roomName}</h2>
+                        {/* <h2>{props.roomName}</h2> */}
+                        <h2>{roomNameTmp}</h2>
                         <input type="text" value={roomNameTmp} onChange={(e) => handleSetRoomNameTmp(e.target.value)}></input><br></br>
                         <button className="generalbtn" onClick={() => handleChangeName()} disabled={disabledButton}>Zmień</button>
                         <br></br><hr style={{marginTop: 50+"px", backgroundImage: "linear-gradient(to right, #ccc, #333, #ccc)", height: 1+"px", border: "0", background: "#333", width: 70+"%"}}></hr>

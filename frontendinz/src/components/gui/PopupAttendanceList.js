@@ -141,7 +141,7 @@ function PopupAttendanceList(props){
                     <p>{dateList}</p>
                     <table className="attendancelisttable">
                       <thead>
-                      <tr><th>Imię</th><th>Nazwisko</th><th>Login</th></tr>
+                      <tr><th>Login</th><th>Imię</th><th>Nazwisko</th></tr>
                       </thead>
                       <tbody>
                         {attendanceListDetails.map((attendanceListDetails, index) =>
