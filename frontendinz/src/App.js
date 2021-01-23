@@ -62,7 +62,7 @@ function App() {
     useEffect(() => {
 		axios.post('/login_system/login.php', {  })
 		.then(function (response) {
-			if(Array.isArray(response.data)){
+			if(response.data){
 				if(response.data.login !== 0){
 					setAccess(response.data.access);
 					setName(response.data.name);

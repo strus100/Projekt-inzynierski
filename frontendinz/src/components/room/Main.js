@@ -87,7 +87,7 @@ function Main(props) {
 		])
 		.then(axios.spread((usersByRoomAPI, roomsAPI) => {
 			if(usersByRoomAPI && roomsAPI){
-				if(Array.isArray(usersByRoomAPI.data) && Array.isArray(roomsAPI.data)){
+				if(usersByRoomAPI.data && roomsAPI.data){
 					if(roomsAPI.data.admin){ // do poprawy back
 						setRoomAdmin(true);
 					}

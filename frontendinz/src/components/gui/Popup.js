@@ -52,21 +52,6 @@ function Popup(props){
 
     /* AXIOSY */
 
-    function handleChangeName(){
-        setDisabledButton(true);
-        axios.post('/rooms/', { roomID: props.id, name: roomNameTmp })
-		.then(function (response) {
-            if(Array.isArray(response.data)){
-                setDisabledButton(false);
-                history.push("/lobby");
-            }
-		})
-		.catch(function (error) {
-            setDisabledButton(false);
-			console.log(error);
-        });	
-    }
-
     function handleUploadFile(e){
         if(e.target){
             setDisabledButton3(true);
@@ -84,7 +69,7 @@ function Popup(props){
                 } })
                 .then(function (response) {
                     //setFiles(response.data); //lub updateFiles() jeszcze, zależy od backu
-                    if(Array.isArray(response.data)){
+                    if(response.data){
                         formData = null;
                         document.getElementById("files").value = "";
                         document.getElementById("uploadbtn").innerHTML = "Wybierz plik";
@@ -105,7 +90,7 @@ function Popup(props){
         axios.post('/files/delete/', { name: argName })
                 .then(function (response) {
                     //setFiles(response.data); //lub updateFiles() jeszcze, zależy od backu
-                    if(Array.isArray(response.data)){
+                    if(response.data){
                         updateFiles();
                     }
                 })
@@ -123,21 +108,6 @@ function Popup(props){
             }
 		})
 		.catch(function (error) {
-			console.log(error);
-        });
-    }
-
-    function handleDeleteRoom(){
-        setDisabledButton2(true);
-        axios.post('/rooms/', { deleteID: props.id })
-		.then(function (response) {
-            if(Array.isArray(response.data)){
-                setDisabledButton2(false);
-                history.push("/lobby");
-            }
-		})
-		.catch(function (error) {
-            setDisabledButton2(false);
 			console.log(error);
         });
     }

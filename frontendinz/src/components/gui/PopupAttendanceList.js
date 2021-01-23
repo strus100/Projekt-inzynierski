@@ -55,7 +55,7 @@ function PopupAttendanceList(props){
         console.log(e.currentTarget.textContent);
         axios.get('/attendanceList/', { params: { listName: e.currentTarget.textContent, roomID: props.roomID } })
           .then(function (response) {
-            if(Array.isArray(response.data)){
+            if(Array.isArray(response.data.list)){
               setNameList(name);
               setDateList(date);
               setAttendanceListDetails(response.data.list);
@@ -73,7 +73,7 @@ function PopupAttendanceList(props){
         setIsButtonDisabled(true);
         axios.post('/attendanceList/', { roomID: props.roomID, list: props.usersList })
           .then(function (response) {
-            if(Array.isArray(response.data)){
+            if(Array.isArray(response.data.list)){
               setAttendancelist(response.data.list);
               setTimeout(() => {
                 setIsButtonDisabled(false);
@@ -90,7 +90,7 @@ function PopupAttendanceList(props){
       function getWholeList(){
         axios.get('/attendanceList/', { params: { roomID: props.roomID } })
           .then(function (response) {
-            if(Array.isArray(response.data)){
+            if(Array.isArray(response.data.list)){
               setAttendancelist(response.data.list);
             }
           })

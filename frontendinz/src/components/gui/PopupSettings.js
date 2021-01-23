@@ -36,7 +36,7 @@ function PopupSettings(props){
         setDisabledButton(true);
         axios.post('/rooms/', { roomID: props.id, name: roomNameTmp })
 		.then(function (response) {
-            if(Array.isArray(response.data)){
+            if(response.data){
                 setDisabledButton(false);
                 history.push("/lobby");
             }
@@ -51,7 +51,7 @@ function PopupSettings(props){
         setDisabledButton2(true);
         axios.post('/rooms/', { deleteID: props.id })
 		.then(function (response) {
-            if(Array.isArray(response.data)){
+            if(response.data){
                 setDisabledButton2(false);
                 history.push("/lobby");
             }
