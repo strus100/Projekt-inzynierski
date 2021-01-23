@@ -89,17 +89,15 @@ function Main(props) {
 			})
 		])
 		.then(axios.spread((usersByRoomAPI, roomsAPI) => {
-			if(usersByRoomAPI && roomsAPI){
-				if(Array.isArray(usersByRoomAPI.data) && Array.isArray(roomsAPI.data)){
-					if(roomsAPI.data.admin){ // do poprawy back
-						setRoomAdmin(true);
-					}
-					setRoomName(roomsAPI.data.name);
-					addMessage({ type: "chat", chat: "Witaj na kanale " + roomsAPI.data.name + " wpisz /help, aby uzyskać pomoc dotyczącą chatu.", name: "SERVER", messagetype: "chat" });
-					if(roomsAPI) setLoadingMain(true);
-					if(usersByRoomAPI) setAdminName(usersByRoomAPI.data.name + " " + usersByRoomAPI.data.surname);
-					//document.title = id + " WykładyWebowe";
+			if(usersByRoomAPI.data && roomsAPI.data){
+				if(roomsAPI.data.admin){ // do poprawy back
+					setRoomAdmin(true);
 				}
+				setRoomName(roomsAPI.data.name);
+				addMessage({ type: "chat", chat: "Witaj na kanale " + roomsAPI.data.name + " wpisz /help, aby uzyskać pomoc dotyczącą chatu.", name: "SERVER", messagetype: "chat" });
+				if(roomsAPI) setLoadingMain(true);
+				if(usersByRoomAPI) setAdminName(usersByRoomAPI.data.name + " " + usersByRoomAPI.data.surname);
+				//document.title = id + " WykładyWebowe";
 			}
 		}))
 		.catch(function (error){
@@ -200,7 +198,7 @@ function Main(props) {
 				break;
 			case "updatelist": return handleUsersList(JSON.parse(message).clients);
 			case "updatehistory": return handleUpdateHistory(JSON.parse(message).history);
-			case "deleteroom": return handleDeleteRoom();
+			// case "deleteroom": return handleDeleteRoom();
 			}
 		};
 	
@@ -531,7 +529,7 @@ function Main(props) {
 							roomName={roomName}
 							handleChangeURL={handleChangeURL}
 							id={id}
-							ws={ws}
+							// ws={ws}
 							/>}
 			{roomAdmin && <PopupAttendanceList
 							roomAdmin={roomAdmin}

@@ -6,6 +6,7 @@ import AccordionBody from './Accordion/AccordionBody';
 import AccordionHeader from './Accordion/AccordionHeader';
 import AccordionIMG from './Accordion/AccordionIMG';
 import AccordionP from './Accordion/AccordionP';
+import instrukcja from "../../pdf/WebWyklady_PomocnikProfesora_InstrukcjaUzytkownika.pdf"
 
 function FAQ(props){   
 
@@ -34,12 +35,9 @@ function FAQ(props){
             <div className="faq--div-main">
                 <div className="faq--div-container">
 
-                    <AccordionHeader title="Jak korzystać z pokoju?"/>
-                    <AccordionBody>
-                        <AccordionP text="Widok pokoju z zamkniętymi kartami:"/>
-                        <AccordionIMG src={lobby_tutorial_1}/>
-                        <AccordionP text="Otwórz Menu - pozwala na otwarcie karty Menu z lewej strony.<br/>Edycja URL - pozwala na otwarcie karty URL z góry, jest to przycisk widoczny tylko dla administratora pokoju, pozwala on na zmianę adresu URL strony, która obecnie jest wyświetlana w pokoju.<br/>Otwórz Chat - pozwala na otwarcie karty Chatu z prawej strony.<br/></p><br/><br/><br/><p>Widok pokoju z otwartymi kartami:"/>
-                        <AccordionIMG src={lobby_tutorial_2}/>
+                    <AccordionHeader title="Jak korzystać z aplikacji?"/>
+                    <AccordionBody style={{width: "100%", height: "600px"}}>
+                        <iframe style={{width: "100%", height: "100%"}} src={instrukcja}/>
                     </AccordionBody>
 
                     <AccordionHeader title="Komendy dostępne na chatcie."/>

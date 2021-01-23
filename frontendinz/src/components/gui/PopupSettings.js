@@ -50,8 +50,8 @@ function PopupSettings(props){
         axios.post('/rooms/', { deleteID: props.id })
 		.then(function (response) {
             setDisabledButton2(false);
-            const message = { type: "deleteroomtrigger" };
-		    ws.send(JSON.stringify(message))
+            // const message = { type: "deleteroomtrigger" };
+		    // ws.send(JSON.stringify(message))
             history.push("/lobby");
 		})
 		.catch(function (error) {
