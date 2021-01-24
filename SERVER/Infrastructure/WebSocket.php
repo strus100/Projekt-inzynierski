@@ -49,7 +49,7 @@
             // stream_context_set_option($context, 'ssl', 'allow_self_signed', false);
             // stream_context_set_option($context, 'ssl', 'verify_peer', false);
 
-            //$this->masterSocket = stream_socket_server("tls://$ip:$port", $errno, $errstr, STREAM_SERVER_BIND|STREAM_SERVER_LISTEN, $context);
+            // $this->masterSocket = stream_socket_server("tls://$ip:$port", $errno, $errstr, STREAM_SERVER_BIND|STREAM_SERVER_LISTEN, $context);
             $this->masterSocket = stream_socket_server("tcp://$ip:$port", $errno, $errstr, STREAM_SERVER_BIND|STREAM_SERVER_LISTEN, $context);
             if($this->masterSocket){
                 $address = stream_socket_get_name($this->masterSocket, FALSE);
