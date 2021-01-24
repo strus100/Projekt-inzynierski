@@ -181,27 +181,19 @@
                         
                         case 'event':
                             if($client->isAdmin()){
-                                $this->sendMessageToClients($roomClients, $msg->encode(), $client->getSocketID());
                                 if($decodedJSON['event']=="redirection"){
                                     $urlde = urldecode($decodedJSON['url']);
                                     if($urlde != "" && $urlde != "http://" && $urlde != "https://"){
+                                        $this->sendMessageToClients($roomClients, $msg->encode(), $client->getSocketID());
                                         $room->addUrlToHistory($decodedJSON['url']);
                                         DatabaseService::getInstance()->addUrlToHistory($decodedJSON['url'], $client->getLogin());
                                         $room->setUrl($decodedJSON['url']);
                                         $this->sendUrlHistoryToSocket($this->clientSockets[$client->getSocketID()], $room);
                                         $this->loggerService->log("Room: ".$room->getRoomName()." \tURL changed: ".$room->getUrl());
                                     }
-                                    // else{
-                                    //     $msg = [
-                                    //         "type" => "event",
-                                    //         "event" => "redirection",
-                                    //         "url" => $room->getUrl()
-                                    //     ];
-                                    //     $msg = $this->messageService->createTextMessage($client, $msg);
-                                    //     $this->sendMessageToSocket($this->clientSockets[$client->getSocketID()], $msg->encode());
-                                    // }
                                 }
                                 if($decodedJSON['event']=="scroll"){
+                                    $this->sendMessageToClients($roomClients, $msg->encode(), $client->getSocketID());
                                     $room->setScrollPositionX($decodedJSON['x']);
                                     $room->setScrollPositionY($decodedJSON['y']);
                                     $this->loggerService->log("Room: ".$room->getRoomName()." \tScroll changed: ".$room->getScrollPositionX()." | ".$room->getScrollPositionY());
@@ -214,22 +206,21 @@
                                 $clientToMute = $room->getClientByLogin($decodedJSON['login']);
                                 if($clientToMute != null && $room->getAdminID() != $clientToMute->getLogin()){
                                     $clientToMute->mute();
-                                    // if($clientToMute->isMuted()){
-                                    //     $clientToMute->unMute();
-                                    // }else{
-                                    //     $clientToMute->mute();
-                                    // }
                                     $this->sendClientsToAllInRoom($room);
                                 }
                             }
                             break;
 
                         case 'hand':
-                            // $clientToHand = $room->getClientByLogin($decodedJSON['login']);
                             $clientToHand = $client;
                             if($clientToHand != null){
                                 $clientToHand->hand();
                                 $this->sendClientsToAllInRoom($room);
+                                $msg = $this->messageService->createHandRaiseMessage(true);
+                                $this->sendMessageToClients([$clientToHand], $msg->encode());
+                            }else{
+                                $msg = $this->messageService->createHandRaiseMessage(false);
+                                $this->sendMessageToClients([$clientToHand], $msg->encode());
                             }
                             break;
 

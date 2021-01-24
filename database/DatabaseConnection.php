@@ -283,18 +283,12 @@
 				$sql = "INSERT INTO `timesheetuser` VALUES (NULL, '$last_id', '$login')";
 				$result = $this->conn->query($sql);
 
-				/*if($result == false){
-					echo $this->conn->error."\r\n";
-				}*/
 			}
 		}
 		
 		function getAttendance( $roomID, $name ){
 			$sql = "SELECT * FROM `timesheetuser` JOIN `timesheet` ON `timesheet`.`id`=`timesheetuser`.`timesheet` JOIN `usertable` ON `usertable`.`login`=`timesheetuser`.`user` WHERE `timesheet`.`name`='$name' AND `timesheet`.`room`='$roomID' ORDER BY `usertable`.`surname` ASC, `usertable`.`name` ASC, `usertable`.`login` ASC";
 			$result = $this->conn->query($sql);
-			// if($result == false){
-			// 	echo $this->conn->error."\r\n";
-			// }
 
             $resultSet = array();
             while ($cRecord = $result->fetch_assoc() ) {
@@ -311,11 +305,6 @@
 		function getAllAttendanceListsByRoom( $roomID ){
 			$sql = "SELECT * FROM `timesheet` WHERE `room` = '$roomID';";
 			$result = $this->conn->query($sql);
-			
-			// if($result == false){
-			// 	echo "[]";
-			// 	echo $this->conn->error."\r\n";
-			// }
 
 			$array = array();
 			
@@ -331,5 +320,4 @@
 			return $array;
 		}
 	}
-		
 ?>
