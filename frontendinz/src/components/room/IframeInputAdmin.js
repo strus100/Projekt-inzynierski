@@ -36,10 +36,11 @@ function IframeInputAdmin(props){
                         type="submit" 
                         className="iframeurl--button"
                         onClick={(e)=>props.handleChangeURL(e, URLtmp)}
+                        style={{margin: "5px 10px"}}
                         >
                         Zmień adres URL
                     </button>
-                    <button className="iframeurl--button" style={{marginLeft: "10px"}} onClick={(e) => handleClickFiles(e)}>
+                    <button className="iframeurl--button" style={{margin: "5px 10px"}} onClick={(e) => handleClickFiles(e)}>
                         Moje pliki
                     </button>
             </form>

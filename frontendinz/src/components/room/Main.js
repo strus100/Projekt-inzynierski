@@ -293,7 +293,7 @@ function Main(props) {
 					}
 					
 					const message = { type: "event", event: "redirection", url: replaced };
-					if(webSocket.readyState === WebSocket.OPEN){
+					if(webSocket.readyState === WebSocket.OPEN && replaced !== "http://" || replaced !== "https://"){
 						webSocket.send(JSON.stringify(message));
 						setIframeURLadmin(replaced);
 					}

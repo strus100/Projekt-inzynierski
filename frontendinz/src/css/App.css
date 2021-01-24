@@ -2696,6 +2696,12 @@ input[type=text], input[type=password], textarea{
   }
 }
 
+@media(max-width: 400px){
+  .iframeurl--button{
+    width: 100%;
+  }
+}
+
 .iframe-container-chat {
   overflow: hidden;
   min-height: 50px;
