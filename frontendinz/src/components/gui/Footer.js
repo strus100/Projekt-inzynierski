@@ -11,7 +11,6 @@ function Footer(props){
     const [linkPawel, setLinkPawel] = useState("https://pomocnikprofesora.herokuapp.com/");
     //https://pomocnikprofesora.herokuapp.com/resultsStudent?login=student1
     const [postPawel, setPostPawel] = useState(true);
-    const [handClass, setHandClass] = useState("tooltip");
 
     useEffect(() => {
         window.addEventListener('click', function(event) {
@@ -25,11 +24,6 @@ function Footer(props){
 
     function hand(){
         props.handleRaiseHand();
-        if(handClass === "tooltip"){
-            setHandClass("tooltip footer-hand--up");
-        }else{
-            setHandClass("tooltip");
-        }
     }
 
     return(
@@ -79,7 +73,7 @@ function Footer(props){
         htmlFor="tooglemenu"
         onClick={() => props.handleLogout()}
         className="tooltip footer--span-logout"
-        >{/*<span class="tooltiptext">Wyloguj się</span>*/}
+        >{/*<span className="tooltiptext">Wyloguj się</span>*/}
         <span aria-labelledby="jsx-a11y/accessible-emoji" role="img">WYLOGUJ</span></label>
         </div>
         :
@@ -122,7 +116,7 @@ function Footer(props){
                     className="tooltip footer--span-consultation"
                 >
                 <span className="tooltiptext tooltiptext--long">Umów się na konsultację z {props.adminName}</span>
-                <span class="material-icons">
+                <span className="material-icons">
                 question_answer
                 </span></label>
                 </a>
@@ -138,7 +132,7 @@ function Footer(props){
                     className="tooltip footer--span-consultation"
                 >
                 <span className="tooltiptext tooltiptext--long">Umów się na konsultację z {props.adminName}</span>
-                <span class="material-icons" id="form-consultation-a--icon">
+                <span className="material-icons" id="form-consultation-a--icon">
                 question_answer
                 </span></label></a>
                 </form>
@@ -149,7 +143,7 @@ function Footer(props){
                     className="tooltip footer--span-consultation"
                 >
                 <span className="tooltiptext tooltiptext--long">Moje konsultacje</span>
-                <span class="material-icons">
+                <span className="material-icons">
                 question_answer
                 </span></label>
                 </a>
@@ -164,7 +158,7 @@ function Footer(props){
                         className="tooltip footer--span-consultation"
                     >
                         <span className="tooltiptext tooltiptext--long">Moje konsultacje</span>
-                        <span class="material-icons" id="form-consultation-a--icon">
+                        <span className="material-icons" id="form-consultation-a--icon">
                             question_answer
                         </span>
                     </label>
@@ -179,7 +173,7 @@ function Footer(props){
 
             {!props.roomAdmin &&
                 <a className="footer--span-lapka" onClick={() => hand()}><label
-                    className={handClass}
+                    className={props.isHandRaised ? "tooltip footer-hand--up" : "tooltip"}
                 >
                 <span className="tooltiptext">Zgłoś się</span>
                 <span className="material-icons" style={{padding: "0 25px"}}>pan_tool</span></label>

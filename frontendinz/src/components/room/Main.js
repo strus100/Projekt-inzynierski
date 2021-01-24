@@ -29,6 +29,8 @@ function Main(props) {
   const [blockChat, setBlockChat] = useState(false);
   const [handCounter, setHandCouter] = useState(0);
 
+  const[isHandRaised, setIsHandRaised] = useState(false);
+
   let history = useHistory();
   //console.log('in render:', blockChat)
 
@@ -199,6 +201,7 @@ function Main(props) {
 			case "updatelist": return handleUsersList(JSON.parse(message).clients);
 			case "updatehistory": return handleUpdateHistory(JSON.parse(message).history);
 			// case "deleteroom": return handleDeleteRoom();
+			case "handraise": return raiseHand(JSON.parse(message).state);
 			}
 		};
 	
@@ -240,6 +243,7 @@ function Main(props) {
 		function check(){
 			if ((!ws || ws.readyState === WebSocket.CLOSED) && (window.location.href.indexOf("room") > -1)) {
 				connect();
+				handleDeletedRoom();
 			}
 		};
 
@@ -477,8 +481,24 @@ function Main(props) {
 		}
 	}
 
-	function handleDeleteRoom(){
-		history.push("/lobby");
+	function handleDeletedRoom(){
+		axios.post("/rooms/", {
+			roomID: id 
+		}).then(function (response) {
+			if(!response.data){
+				history.push("/lobby");
+			}
+		}).catch(function (error) {
+            history.push("/lobby");
+        })
+	}
+
+	function raiseHand(x){
+		if(x === true){
+			setIsHandRaised(true);
+		}else{
+			setIsHandRaised(false);
+		}
 	}
 
   return (
@@ -565,6 +585,7 @@ function Main(props) {
 				handleChangeIframeInputAdmin={handleChangeIframeInputAdmin}
 				handleRaiseHand={handleRaiseHand}
 				handCounter={handCounter}
+				isHandRaised={isHandRaised}
 				// roomAPILogin={roomAPILogin}
 				// roomAPIToken={roomAPIToken}
 				// userAPILogin={userAPILogin}
