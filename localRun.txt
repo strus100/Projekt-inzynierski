@@ -1,0 +1,3 @@
+W SERVER
+
+..\..\..\php\php.exe .\Main.php start -p=1111
