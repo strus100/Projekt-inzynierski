@@ -171,18 +171,36 @@ function Lobby(props){
 		//var lenA = array.length;
 		setRoomsFilter(roomsList);
 		// console.log(x);
-		if(document.getElementById("myrooms").checked){
-			setChecked(true);
-			setRoomsFilter(roomsList);
-			const regex = new RegExp("^.*"+x+".*$", 'gi');
-			// console.log(regex);
-			const filtered = roomsList.filter((a) => {
-				//console.log(array + " " + lenA);
-				// console.log(a.roomName.match(regex) + " " + a.name.match("^.*"+name+".*$", 'gi') + " " + a.surname.match("^.*"+surname+".*$", 'gi'))
-				return (a.roomName.match(regex) || a.id.match(regex)) && a.login.match("^"+login+"$", 'gi');
-			  });
-			//   console.log(filtered);
-			  setRoomsFilter(filtered);
+		if(document.getElementById("myrooms")){
+			if(document.getElementById("myrooms").checked){
+				setChecked(true);
+				setRoomsFilter(roomsList);
+				const regex = new RegExp("^.*"+x+".*$", 'gi');
+				// console.log(regex);
+				const filtered = roomsList.filter((a) => {
+					//console.log(array + " " + lenA);
+					// console.log(a.roomName.match(regex) + " " + a.name.match("^.*"+name+".*$", 'gi') + " " + a.surname.match("^.*"+surname+".*$", 'gi'))
+					return (a.roomName.match(regex) || a.id.match(regex)) && a.login.match("^"+login+"$", 'gi');
+				  });
+				//   console.log(filtered);
+				  setRoomsFilter(filtered);
+			}
+			else{
+				setChecked(false);
+				if(x === null || x === undefined || x === ''){
+					setRoomsFilter(roomsList);
+				}else{
+					setRoomsFilter(roomsList);
+					const regex = new RegExp("^.*"+x+".*$", 'gi');
+					const filtered = roomsList.filter((a) => {
+						//console.log(typeof array + " " + lenA);
+						//console.log(string)
+						return a.roomName.match(regex) || a.name.match(regex) || a.surname.match(regex) || a.login.match(regex) || a.id.match(regex);
+					});
+					setRoomsFilter(filtered);
+					//console.log(regex);
+				}
+			}
 		}
 		else{
 			setChecked(false);
