@@ -216,8 +216,14 @@
                             if($clientToHand != null){
                                 $clientToHand->hand();
                                 $this->sendClientsToAllInRoom($room);
-                                $msg = $this->messageService->createHandRaiseMessage(true);
-                                $this->sendMessageToClients([$clientToHand], $msg->encode());
+
+                                if($clientToHand->hasHand()){
+                                    $msg = $this->messageService->createHandRaiseMessage(true);
+                                    $this->sendMessageToClients([$clientToHand], $msg->encode());
+                                }else{
+                                    $msg = $this->messageService->createHandRaiseMessage(false);
+                                    $this->sendMessageToClients([$clientToHand], $msg->encode());
+                                }
                             }else{
                                 $msg = $this->messageService->createHandRaiseMessage(false);
                                 $this->sendMessageToClients([$clientToHand], $msg->encode());
