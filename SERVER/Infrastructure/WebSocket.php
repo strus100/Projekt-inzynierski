@@ -180,7 +180,7 @@
                             break;
                         
                         case 'event':
-                            if($client->isAdmin()){
+                            if($client->isRoomAdmin()){
                                 if($decodedJSON['event']=="redirection"){
                                     $urlde = urldecode($decodedJSON['url']);
                                     if($urlde != "" && $urlde != "http://" && $urlde != "https://"){
@@ -202,7 +202,7 @@
                             $this->loggerService->log("Room: ".$room->getRoomName()." event: ".$decodedJSON[$type]);
                             break;
                         case 'mute':
-                            if($client->isAdmin()){
+                            if($client->isRoomAdmin()){
                                 $clientToMute = $room->getClientByLogin($decodedJSON['login']);
                                 if($clientToMute != null && $room->getAdminID() != $clientToMute->getLogin()){
                                     $clientToMute->mute();
@@ -353,7 +353,7 @@
             $msgHistArray = $this->roomService->getMessageHistoryAsArray($room->getRoomID());
             $this->sendChatHistoryToSocket($socket, $msgHistArray);
 
-            if($client->isAdmin()){
+            if($client->isRoomAdmin()){
                 $this->sendUrlHistoryToSocket($socket, $room);
             }
             

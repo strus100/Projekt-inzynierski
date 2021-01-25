@@ -75,6 +75,10 @@
             return $this->permission == PERMISSION::ADMIN;
         }
 
+        public function isRoomAdmin() : bool{
+            return $this->room->getAdminID() == $this->login;
+        }
+
         public function isMuted() : bool{
             return $this->isMuted;
         }
