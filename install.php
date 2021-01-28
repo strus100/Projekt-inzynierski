@@ -78,7 +78,7 @@
                     `roomName` VARCHAR(255) NOT NULL,
                     `admin` VARCHAR(255) NOT NULL,
                     PRIMARY KEY (`id`),
-                    FOREIGN KEY (`admin`) REFERENCES `usertable`(`login`)
+                    FOREIGN KEY (`admin`) REFERENCES `usertable`(`login`) ON DELETE CASCADE
                 ) ENGINE = InnoDB CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;");
             
             if($result == false){
@@ -94,7 +94,7 @@
                     `location` VARCHAR(255) NOT NULL,
                     `login` VARCHAR(255) NOT NULL,
                     PRIMARY KEY(`id`),
-                    FOREIGN KEY(`login`) REFERENCES `usertable`(`login`)
+                    FOREIGN KEY(`login`) REFERENCES `usertable`(`login`) ON DELETE CASCADE
                 ) ENGINE = InnoDB CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;");
             
             if($result == false){
@@ -112,8 +112,8 @@
                     `user` VARCHAR(255) NOT NULL,
                     `room` INT NOT NULL,
                     PRIMARY KEY(`id`),
-                    FOREIGN KEY(`user`) REFERENCES `usertable`(`login`),
-                    FOREIGN KEY(`room`) REFERENCES `rooms`(`id`)
+                    FOREIGN KEY(`user`) REFERENCES `usertable`(`login`) ON DELETE CASCADE,
+                    FOREIGN KEY(`room`) REFERENCES `rooms`(`id`) ON DELETE CASCADE
                 ) ENGINE = InnoDB CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;");
 
             if($result == false){
@@ -129,7 +129,7 @@
                     `url` TEXT NOT NULL,
                     `user` VARCHAR(255) NOT NULL,
                     PRIMARY KEY(`id`),
-                    FOREIGN KEY(`user`) REFERENCES `usertable`(`login`)
+                    FOREIGN KEY(`user`) REFERENCES `usertable`(`login`) ON DELETE CASCADE
                 ) ENGINE = InnoDB CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;");
 
             if($result == false){
@@ -145,7 +145,7 @@
                     `name` VARCHAR(255) NOT NULL,
                     `room` INT NOT NULL,
                     PRIMARY KEY(`id`),
-                    FOREIGN KEY(`room`) REFERENCES `rooms`(`id`)
+                    FOREIGN KEY(`room`) REFERENCES `rooms`(`id`) ON DELETE CASCADE
                 ) ENGINE = InnoDB CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;");
 
 
@@ -161,8 +161,8 @@
                 `timesheet` INT NOT NULL,
                 `user` VARCHAR(255) NOT NULL,
                 PRIMARY KEY(`id`),
-                FOREIGN KEY(`timesheet`) REFERENCES `timesheet`(`id`),
-                FOREIGN KEY(`user`) REFERENCES `usertable`(`login`)
+                FOREIGN KEY(`timesheet`) REFERENCES `timesheet`(`id`) ON DELETE CASCADE,
+                FOREIGN KEY(`user`) REFERENCES `usertable`(`login`) ON DELETE CASCADE
             ) ENGINE = InnoDB CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;");
 
             if($result == false){

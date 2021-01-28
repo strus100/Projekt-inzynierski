@@ -23,10 +23,15 @@
         $data = json_decode($request_body, true);
         
         $roomID = htmlspecialchars($data['roomID']);
-        $userList = $data['list'];
 
-        $db->createAttendance($roomID, $userList);
-        echo json_encode(["list" => $db->getAllAttendanceListsByRoom($roomID)]);
+        if(canManipulate($db, $roomID)){
+            $userList = $data['list'];
+    
+            $db->createAttendance($roomID, $userList);
+            echo json_encode(["list" => $db->getAllAttendanceListsByRoom($roomID)]);
+        }else{
+            echo json_encode(["list" => []]);
+        }
     }
 
     $db->closeConnection();
