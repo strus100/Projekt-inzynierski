@@ -4,18 +4,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $login = $_GET["login"];
 		
-		//$token = $_GET["token"];
-//USUN GDY WSZYSCY DODDZĄ TOKEN I ODKOMENTUJ TO Z GÓRY
-		if(isset($_GET['token'])) { 
-			$token = $_GET["token"];
+		$authToken = $_GET["token"];
 		
-		} else {
-			$token = "f513297c48cbd3d7400538e747ea9c5a";
-		}
-// 		
-		if($token == "f513297c48cbd3d7400538e747ea9c5a")
-		{
-
+ 	
+		$DB = new DatabaseConnection();
+        $DB->connect();
+		
+		$databaseToken = $DB->getLoginAuthToken( $login );
+		if($authToken == $databaseToken ){
+		
 		$DB = new DatabaseConnection();
         $DB->connect();
         if( $row2 = $DB->getUserByLogin( htmlspecialchars($login) ) ){
@@ -35,7 +32,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                $DB->closeConnection();
                 return false;
             }
-		} else { return false; } 
+		} else { 
+		//TODO NAME I SURNAME
+		return false; } 
 } else { return false; }
 
 

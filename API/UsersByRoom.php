@@ -3,19 +3,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		require_once __DIR__."/../database/DatabaseConnection.php";
 
         $roomId = $_GET["roomId"];
-				
-		//$token = $_GET["token"];
-//USUN GDY WSZYSCY DODDZĄ TOKEN I ODKOMENTUJ TO Z GÓRY
-		if(isset($_GET['token'])) { 
-			$token = $_GET["token"];
 		
-		} else {
-			$token = "f513297c48cbd3d7400538e747ea9c5a";
-		}
-// 		
-		if($token == "f513297c48cbd3d7400538e747ea9c5a"){
+		$authToken = $_GET["token"];
+		
 		$DB = new DatabaseConnection();
         $DB->connect();
+		
+		$databaseToken = $DB->getRoomAuthToken( $roomId );
+		if($authToken == $databaseToken ){
+		
+		
             if( $row = $DB->getRoom( htmlspecialchars($roomId) ) ){
 				$login = $row['admin'];
 				
@@ -42,7 +39,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                $DB->closeConnection();
                 return false;
             }
-}else { return false; }
+}else { 
+//TODO NAME I SURNAME
+return false; }
 } else { return false; }
 
 ?>

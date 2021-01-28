@@ -142,8 +142,14 @@
 			$user = $this->getUserByToken($token);
 			$login = $user['login'];
 
-			$stmt = $this->conn->prepare("INSERT INTO `rooms` VALUES (NULL, ?, ?)");
-			$stmt->bind_param("ss", $roomName, $login);
+            $sql = "SELECT id FROM rooms ORDER BY id DESC LIMIT 1";
+            $roomId = $this->conn->query($sql);
+
+            $authToken = md5( "roomId=".$roomId );
+
+
+            $stmt = $this->conn->prepare("INSERT INTO `rooms` VALUES (NULL, ?, ?,?)");
+			$stmt->bind_param("sss", $roomName, $login, $authToken);
 			$stmt->execute();
 
 			return $this->conn->insert_id;
@@ -283,12 +289,18 @@
 				$sql = "INSERT INTO `timesheetuser` VALUES (NULL, '$last_id', '$login')";
 				$result = $this->conn->query($sql);
 
+				/*if($result == false){
+					echo $this->conn->error."\r\n";
+				}*/
 			}
 		}
 		
 		function getAttendance( $roomID, $name ){
 			$sql = "SELECT * FROM `timesheetuser` JOIN `timesheet` ON `timesheet`.`id`=`timesheetuser`.`timesheet` JOIN `usertable` ON `usertable`.`login`=`timesheetuser`.`user` WHERE `timesheet`.`name`='$name' AND `timesheet`.`room`='$roomID' ORDER BY `usertable`.`surname` ASC, `usertable`.`name` ASC, `usertable`.`login` ASC";
 			$result = $this->conn->query($sql);
+			// if($result == false){
+			// 	echo $this->conn->error."\r\n";
+			// }
 
             $resultSet = array();
             while ($cRecord = $result->fetch_assoc() ) {
@@ -305,6 +317,11 @@
 		function getAllAttendanceListsByRoom( $roomID ){
 			$sql = "SELECT * FROM `timesheet` WHERE `room` = '$roomID';";
 			$result = $this->conn->query($sql);
+			
+			// if($result == false){
+			// 	echo "[]";
+			// 	echo $this->conn->error."\r\n";
+			// }
 
 			$array = array();
 			
@@ -319,5 +336,41 @@
 
 			return $array;
 		}
+	
+	
+	function getRoomAuthToken( $roomId ){
+		$sql = "SELECT authToken FROM rooms WHERE id=$roomId";
+		$result = $this->conn->query($sql);
+		$data = $result->fetch_assoc()["authToken"];
+		
+		return $data;
+	}
+	
+	function setRoomAuthToken( $roomId ){
+		$authToken = md5( "roomId=".$roomId );
+		
+		$sql = "UPDATE rooms SET authToken = $authToken WHERE id = $roomId";
+	
+		return $this->conn->query($sql);
+	}
+	
+	
+	function getLoginAuthToken( $login ){
+		$sql = "SELECT * FROM usertable WHERE login = '$login'";
+		$result = $this->conn->query($sql);
+		$data = $result->fetch_assoc()["authToken"];
+		
+		return $data;
+	}
+	
+	function setLoginAuthToken( $login ){
+	//TODO
+		$authToken = md5( "login=".$login );
+		
+		$sql = "UPDATE usertable SET authToken = $authToken WHERE login = $login";
+	
+		return $this->conn->query($sql);
+	}
+	
 	}
 ?>

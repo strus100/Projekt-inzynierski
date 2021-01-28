@@ -20,6 +20,7 @@
         elseif(isset($data['name'])){
             if(canManipulate($dbConnection)){
                 $roomName = htmlspecialchars($data['name']);
+
                 echo $dbConnection->createRoom($roomName);
             }
         }

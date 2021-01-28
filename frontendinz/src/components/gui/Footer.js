@@ -115,7 +115,7 @@ function Footer(props){
                 <a href={linkPawel+"zapisy?roomId="+props.id+"&login="+props.login} target="_blank"><label
                     className="tooltip footer--span-consultation"
                 >
-                <span className="tooltiptext tooltiptext--long">Umów się na konsultację z {props.adminName}</span>
+                <span className="tooltiptext tooltiptext--long">Umów się na konsultację z prowadzącym ten wykład</span>
                 <span className="material-icons">
                 question_answer
                 </span></label>
@@ -131,7 +131,7 @@ function Footer(props){
                     id="form-consultation-a"
                     className="tooltip footer--span-consultation"
                 >
-                <span className="tooltiptext tooltiptext--long">Umów się na konsultację z {props.adminName}</span>
+                <span className="tooltiptext tooltiptext--long">Umów się na konsultację z prowadzącym ten wykład</span>
                 <span className="material-icons" id="form-consultation-a--icon">
                 question_answer
                 </span></label></a>

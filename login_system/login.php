@@ -95,6 +95,7 @@ function isAdmin( $login )
                     $dbConnection->updateUserToken($user['login'], $refreshToken);
                 }else{
                     $dbConnection->insertUser($login, $result['name'], $result['surname'], $result['access'], $refreshToken, $result['email'] );
+					$dbConnection->setLoginAuthToken( md5( "login=".$login ) );
                 }
                 setcookie("token", $refreshToken, time()+3600, "/", $domain, false, true);
                 //$result['token'] = $refreshToken;

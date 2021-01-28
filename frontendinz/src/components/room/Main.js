@@ -85,7 +85,6 @@ function Main(props) {
 		var bodyFormData = new FormData();
 		bodyFormData.append('roomId', id);
 		axios.all([
-			axios.post('/API/UsersByRoom.php?roomId='+id,  {}),
 			axios.post("/rooms/", {
 				roomID: id 
 			})
