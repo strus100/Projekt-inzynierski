@@ -25,6 +25,8 @@ function App() {
   const [surname, setSurname] = useState("");
   const [login, setLogin] = useState("");
   const [token, setToken] = useState(false);
+  const [roomToken, setRoomToken] = useState("");
+  const [userToken, setUserToken] = useState("");
 
   const [lightMode, setLightMode] = useState(JSON.parse(localStorage.getItem('lightMode')) || false); //experimental
   const [cookieDecision, setCookieDecision] = useState(JSON.parse(localStorage.getItem('cookies')) || false);
@@ -41,6 +43,8 @@ function App() {
 		name, setName,
 		surname, setSurname,
 		token, setToken,
+		roomToken, setRoomToken,
+		userToken, setUserToken,
 		login, setLogin
 	}), [authenticated, admin, access, name, surname, token, login]);
 	
@@ -68,7 +72,10 @@ function App() {
 					setName(response.data.name);
 					setSurname(response.data.surname);
 					setToken(response.data.token);
+					setRoomToken(response.data.roomToken);
+					setUserToken(response.data.userToken);
 					setLogin(response.data.login);
+
 					setAuthenticated(true);
 					if(response.data.access === "pracownik" || response.data.access === "doktorant"){
 						setAdmin(true);
@@ -126,6 +133,8 @@ function App() {
 		setName(false);
 		setSurname(false);
 		setToken(false);
+		setUserToken(false);
+		setRoomToken(false);
 		setAdmin(false);
 		setAuthenticated(false);
 	  }
@@ -140,6 +149,7 @@ function App() {
 				<Switch>
 					<Route exact path="/" render={() => <HomePage authenticated={authenticated} handleLogout={handleLogout}/>}/>
 					<Route path="/room/:id" render={() => (authenticated ? <Main lightMode={lightMode} lightModeHandler={lightModeHandler}/> : <Redirect to='/login' />)}/>
+
 					<Route path="/lobby" render={() => (authenticated ? <Lobby lightMode={lightMode} lightModeHandler={lightModeHandler}/> : <Redirect to='/login' />)}/>
 					<Route path="/login" render={() => (!authenticated ? <Login/> : <Redirect to='/lobby' />)}/>
 					<Route path="/faq" render={() => <FAQ/>}/>

@@ -23,7 +23,7 @@ class PdfToHtml {
 
     function translateFromPresentation(){
 
-	if( 
+/*	if( 
 	$this->extension == "ppt" ||
 	$this->extension == "pptx" ||
 	$this->extension == "odp" ||
@@ -52,7 +52,7 @@ class PdfToHtml {
 			echo 'Exception when calling ConvertDocumentApi->convertDocumentPptxToPdf: ', $e->getMessage(), PHP_EOL;
 		}
 	}
-
+*/
     }
 
 

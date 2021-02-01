@@ -10,7 +10,7 @@ function Footer(props){
     const {login} = useContext(AContext);
     const [linkPawel, setLinkPawel] = useState("https://pomocnikprofesora.herokuapp.com/");
     //https://pomocnikprofesora.herokuapp.com/resultsStudent?login=student1
-    const [postPawel, setPostPawel] = useState(true);
+    const [postPawel, setPostPawel] = useState(false);
 
     useEffect(() => {
         window.addEventListener('click', function(event) {
@@ -37,7 +37,7 @@ function Footer(props){
         ><span className="tooltiptext tooltipfiles" style={{width: 150+"px", marginLeft: -5 + "%"}}>Przeglądaj pliki</span>
         <span aria-labelledby="jsx-a11y/accessible-emoji" role="img"><i className="material-icons">insert_drive_file</i></span></label>
         }
-        {(!admin && !postPawel) && <a href={linkPawel+"resultsStudent?login="+login} target="_blank"><label 
+        {(!admin && !postPawel) && <a href={linkPawel+"resultsStudent?login="+login+"&userAuthToken="+props.userTokenAuth} target="_blank"><label
         htmlFor="tooglepawel"
         className="tooltip footer--span-files"
         ><span className="tooltiptext tooltipfiles" style={{width: 150+"px", marginLeft: -5 + "%"}}>Moje dyżury</span>
@@ -47,7 +47,8 @@ function Footer(props){
         {(!admin && postPawel) &&
             <form method="post" action={linkPawel+"resultsStudent"} target="_blank" style={{width: "60px"}} id="form-consultation">
             <input type="text" style={{display: "none"}} id="login" name="login" value={props.login}/>
-            <a>
+            <input type="text" style={{display: "none"}} id="userAuthtoken" name="userAuthtoken" value={props.userTokenAuth}/>
+                <a>
                 <label 
                     id="form-consultation-a"
                     className="tooltip footer--span-files"
@@ -112,7 +113,7 @@ function Footer(props){
                 <span aria-labelledby="jsx-a11y/accessible-emoji" role="img"><i className="material-icons">http</i></span></label>
             }
             {(!props.roomAdmin && !postPawel) &&
-                <a href={linkPawel+"zapisy?roomId="+props.id+"&login="+props.login} target="_blank"><label
+                <a href={linkPawel+"zapisy?roomId="+props.id+"&login="+props.login+"&userAuthToken="+props.userTokenAuth+"&roomAuthToken="+props.roomTokenAuth} target="_blank"><label
                     className="tooltip footer--span-consultation"
                 >
                 <span className="tooltiptext tooltiptext--long">Umów się na konsultację z prowadzącym ten wykład</span>
@@ -126,7 +127,10 @@ function Footer(props){
                 <form method="post" action={linkPawel+"zapisy"} target="_blank" style={{width: "60px"}} id="form-consultation">
                 <input type="text" style={{display: "none"}} id="roomId" name="roomId" value={props.id}/>
                 <input type="text" style={{display: "none"}} id="login" name="login" value={props.login}/>
-                <a>
+                <input type="text" style={{display: "none"}} id="roomAuthtoken" name="roomAuthtoken" value={props.roomTokenAuth}/>
+                <input type="text" style={{display: "none"}} id="userAuthtoken" name="userAuthtoken" value={props.userTokenAuth}/>
+
+                    <a>
                 <label
                     id="form-consultation-a"
                     className="tooltip footer--span-consultation"
@@ -139,7 +143,7 @@ function Footer(props){
             }
 
             {(props.roomAdmin && !postPawel)&&
-                <a href={linkPawel+"dashboardTeacher?roomId="+props.id} target="_blank"><label
+                <a href={linkPawel+"dashboardTeacher?roomId="+props.id+"&roomAuthToken="+props.roomTokenAuth} target="_blank"><label
                     className="tooltip footer--span-consultation"
                 >
                 <span className="tooltiptext tooltiptext--long">Moje konsultacje</span>
@@ -152,6 +156,7 @@ function Footer(props){
             {(props.roomAdmin && postPawel) &&
                 <form method="post" action={linkPawel+"dashboardTeacher"} target="_blank" style={{width: "60px"}} id="form-consultation">
                     <input type="text" style={{display: "none"}} id="roomId" name="roomId" value={props.id}/>
+                    <input type="text" style={{display: "none"}} id="roomAuthtoken" name="roomAuthtoken" value={props.roomTokenAuth}/>
                     <a>
                     <label
                         id="form-consultation-a"

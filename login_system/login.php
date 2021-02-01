@@ -71,7 +71,8 @@ function isAdmin( $login )
                         "access" => "student",
                         "name" => "Student",
                         "surname" => "Student",
-						"email" => $login."@test.pl"
+						"email" => $login."@test.pl",
+                        "userToken" => $dbConnection->getLoginAuthToken( $login )
                     ];
                 }
                 elseif( !(isAdmin( $login ) === false) )

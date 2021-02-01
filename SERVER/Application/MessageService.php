@@ -56,15 +56,6 @@
             return $msg;
         }
 
-        public function createHandRaiseMessage(bool $state){
-            $data = [
-                "type" => "handraise",
-                "state" => $state
-            ];
-            $msg = new Message(OPCODE::TEXT, null, null, $data);
-            return $msg;
-        }
-
         private function addMessageToHistory(Message $msg){
             $client = $msg->getAuthor();
             if($client){
