@@ -46,7 +46,7 @@ function App() {
 		roomToken, setRoomToken,
 		userToken, setUserToken,
 		login, setLogin
-	}), [authenticated, admin, access, name, surname, token, login]);
+  }), [authenticated, admin, access, name, surname, token, login, roomToken, userToken]);
 	
 	useEffect(() =>{
 		document.title = TITLE;
