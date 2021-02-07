@@ -130,7 +130,8 @@
 					"roomName" => $row['roomName'],
 					"name" => $row['name'],
 					"surname" => $row['surname'],
-					"login" => $row['admin']
+					"login" => $row['admin'],
+					"roomAuthToken" => $row['authToken']
 				];
 				$rooms[] = $room;
 			}
