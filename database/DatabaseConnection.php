@@ -143,8 +143,10 @@
 			$login = $user['login'];
 
             $sql = "SELECT id FROM rooms ORDER BY id DESC LIMIT 1";
-            $roomId = $this->conn->query($sql);
-
+            $result = $this->conn->query($sql);
+			$roomId = $result->fetch_assoc()["id"];
+		
+			
             $authToken = md5( "roomId=".$roomId );
 
 
@@ -365,10 +367,12 @@
 	
 	function setLoginAuthToken( $login ){
 	//TODO
+		echo "im here";
 		$authToken = md5( "login=".$login );
 		
-		$sql = "UPDATE usertable SET authToken = $authToken WHERE login = $login";
-	
+		$sql = "UPDATE usertable SET authToken = '$authToken' WHERE login = '$login'";
+		echo $sql;
+		print_r($this->conn->query($sql));
 		return $this->conn->query($sql);
 	}
 	

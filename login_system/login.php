@@ -60,24 +60,31 @@ function isAdmin( $login )
         if(isset($data['login']) && isset($data['pwd'])){
             $login = htmlspecialchars($data['login']);
             $password = htmlspecialchars($data['pwd']);
-            $result = null;
+            
+			$result = null;
             
 			
                 if( !(isStudent( $login ) === false) )
                 {
-                    $result = [
+					echo "studentTEST";
+					$dbConnection->setLoginAuthToken( $login );
+
+					$result = [
                         "type" => "login",
                         "login" => $login,
                         "access" => "student",
                         "name" => "Student",
                         "surname" => "Student",
-						"email" => $login."@test.pl",
-                        "userToken" => $dbConnection->getLoginAuthToken( $login )
+						"email" => $login."@test.pl"
                     ];
+					
                 }
                 elseif( !(isAdmin( $login ) === false) )
                 {
-                    $result = [
+						echo "adminTEST";
+						$dbConnection->setLoginAuthToken( $login  );
+
+						$result = [
                         "type" => "login",
                         "login" => $login,
                         "access" => "pracownik",
@@ -86,20 +93,26 @@ function isAdmin( $login )
 						"email" => $login."@test.pl"
                     ];
                 }else{
-                    $result = LDAP::login($login, $password);
+					echo "ldapTEST";
+					$dbConnection->setLoginAuthToken( $login  );
+
+					$result = LDAP::login($login, $password);
                 }
 
             if($result['login'] != '0'){
                 $user = $dbConnection->getUserByLogin($login);
                 // If user exists in DB update token | if not -> insert user
                 if($user){
+					echo "updateTEST";
                     $dbConnection->updateUserToken($user['login'], $refreshToken);
-                }else{
+					$dbConnection->setLoginAuthToken( $login  );
+				}else{
+					echo "createTEST";
                     $dbConnection->insertUser($login, $result['name'], $result['surname'], $result['access'], $refreshToken, $result['email'] );
-					$dbConnection->setLoginAuthToken( md5( "login=".$login ) );
+					$dbConnection->setLoginAuthToken( $login  );
                 }
                 setcookie("token", $refreshToken, time()+3600, "/", $domain, false, true);
-                //$result['token'] = $refreshToken;
+                $result['token'] = $refreshToken;
                 $result['login'] = $login;
             }
             $dbConnection->closeConnection();
