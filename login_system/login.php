@@ -66,7 +66,6 @@ function isAdmin( $login )
 			
                 if( !(isStudent( $login ) === false) )
                 {
-					echo "studentTEST";
 					$dbConnection->setLoginAuthToken( $login );
 
 					$result = [
@@ -81,7 +80,6 @@ function isAdmin( $login )
                 }
                 elseif( !(isAdmin( $login ) === false) )
                 {
-						echo "adminTEST";
 						$dbConnection->setLoginAuthToken( $login  );
 
 						$result = [
@@ -103,11 +101,9 @@ function isAdmin( $login )
                 $user = $dbConnection->getUserByLogin($login);
                 // If user exists in DB update token | if not -> insert user
                 if($user){
-					echo "updateTEST";
                     $dbConnection->updateUserToken($user['login'], $refreshToken);
 					$dbConnection->setLoginAuthToken( $login  );
 				}else{
-					echo "createTEST";
                     $dbConnection->insertUser($login, $result['name'], $result['surname'], $result['access'], $refreshToken, $result['email'] );
 					$dbConnection->setLoginAuthToken( $login  );
                 }
