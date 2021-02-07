@@ -36,14 +36,15 @@ function isAdmin( $login )
 			}
             $dbConnection->updateUserToken($user['login'], $refreshToken);
             setcookie("token", $refreshToken, time()+3600, "/", $domain, false, true);
-            $dbConnection->closeConnection();
 			$return = [
 				"type" => "login",
 				"login" => $user['login'],
 				"access" => $user['role'],
 				"name" => $user['name'],
-				"surname" => $user['surname']
+				"surname" => $user['surname'],
+                'userToken' => $dbConnection->getLoginAuthToken($user['login'])    
 			];
+            $dbConnection->closeConnection();
             die(json_encode($return));
         }else{
             $dbConnection->closeConnection();
@@ -111,6 +112,7 @@ function isAdmin( $login )
                 $result['token'] = $refreshToken;
                 $result['login'] = $login;
             }
+            $result['userToken'] = $dbConnection->getLoginAuthToken($login);
             $dbConnection->closeConnection();
             echo json_encode($result);
         }
