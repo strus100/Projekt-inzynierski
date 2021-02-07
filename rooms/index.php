@@ -29,9 +29,11 @@
                 $room = $dbConnection->getRoom($roomID);
                 if($room){
                     $roomName = $room['roomName'];
+					$roomAuth = $room['authToken'];
                     $json = [
                         "name" => $roomName,
-                        "admin" => canManipulate($dbConnection, $roomID)
+                        "admin" => canManipulate($dbConnection, $roomID),
+						"roomAuthToken" => $roomAuth
                     ];
                     echo json_encode($json);
                     /*if(canManipulate($dbConnection, $roomID)){
