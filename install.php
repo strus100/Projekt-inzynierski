@@ -63,6 +63,7 @@
                     `token` VARCHAR(255) NOT NULL,
                     `room` INT NOT NULL,
                     `email` VARCHAR(255) NOT NULL,
+					`authToken` VARCHAR(255),
                     PRIMARY KEY (`login`)
                 ) ENGINE = InnoDB CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;");
             
@@ -77,7 +78,8 @@
                     `id` INT NOT NULL AUTO_INCREMENT,
                     `roomName` VARCHAR(255) NOT NULL,
                     `admin` VARCHAR(255) NOT NULL,
-                    PRIMARY KEY (`id`),
+                    `authToken` VARCHAR(255),
+					PRIMARY KEY (`id`),
                     FOREIGN KEY (`admin`) REFERENCES `usertable`(`login`) ON DELETE CASCADE
                 ) ENGINE = InnoDB CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;");
             
