@@ -136,6 +136,7 @@ function App() {
 		setRoomToken(false);
 		setAdmin(false);
 		setAuthenticated(false);
+		setLogin(false);
 	  }
   
     return (

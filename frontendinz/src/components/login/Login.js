@@ -16,7 +16,10 @@ function Login(props){
     const {setName} = useContext(AContext);
     const {setSurname} = useContext(AContext);
     const {setToken} = useContext(AContext);
-	  //const {setLoaded} = useContext(AContext);
+    const {setLogin} = useContext(AContext);
+    const {setUserToken} = useContext(AContext);
+
+    //const {setLoaded} = useContext(AContext);
 
     useEffect(() => {
         if (username.trim() && password.trim()) {
@@ -38,7 +41,9 @@ function Login(props){
 				setName(response.data.name);
 				setSurname(response.data.surname);
 				setToken(response.data.token);
-				setAuthenticated(true);
+                setLogin(response.data.login);
+                setUserToken(response.data.userToken);
+                setAuthenticated(true);
 				if(response.data.access === "pracownik" || response.data.access === "doktorant"){
 					setAdmin(true);
 				}else{

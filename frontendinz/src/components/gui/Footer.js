@@ -41,7 +41,7 @@ function Footer(props){
         {(!admin && !postPawel) && <a href={linkPawel+"resultsStudent?login="+login+"&userAuthToken="+userToken} target="_blank"><label
         htmlFor="tooglepawel"
         className="tooltip footer--span-files"
-        ><span className="tooltiptext tooltipfiles" style={{width: 150+"px", marginLeft: -5 + "%"}}>Moje dyżury2</span>
+        ><span className="tooltiptext tooltipfiles" style={{width: 150+"px", marginLeft: -5 + "%"}}>Moje dyżury</span>
         <span aria-labelledby="jsx-a11y/accessible-emoji" role="img"><i className="material-icons">question_answer</i></span></label></a>
         }
 
@@ -54,7 +54,7 @@ function Footer(props){
                     id="form-consultation-a"
                     className="tooltip footer--span-files"
                 >
-                    <span className="tooltiptext tooltipfiles" style={{width: 150+"px", marginLeft: -5 + "%"}}>Moje dyżury2</span>
+                    <span className="tooltiptext tooltipfiles" style={{width: 150+"px", marginLeft: -5 + "%"}}>Moje dyżury</span>
                     <span aria-labelledby="jsx-a11y/accessible-emoji" role="img"><i className="material-icons" id="form-consultation-a--icon">question_answer</i></span>
                 </label>
             </a>

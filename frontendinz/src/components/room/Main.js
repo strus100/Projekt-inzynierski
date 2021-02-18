@@ -29,6 +29,7 @@ function Main(props) {
   const [blockChat, setBlockChat] = useState(false);
   const [handCounter, setHandCouter] = useState(0);
 
+
   const[isHandRaised, setIsHandRaised] = useState(false);
 
   let history = useHistory();
@@ -43,18 +44,18 @@ function Main(props) {
   const {setAuthenticated} = useContext(AContext);
   const {setAdmin} = useContext(AContext);
   
-  const {login} = useContext(AContext);
+  const {login, setLogin} = useContext(AContext);
   const {name, setName} = useContext(AContext);
   const {surname, setSurname} = useContext(AContext);
   const {setAccess} = useContext(AContext);
   const {setToken} = useContext(AContext);
   const {roomToken, setRoomToken} = useContext(AContext);
-  const {userToken} = useContext(AContext);
+  const {userToken, setUserToken} = useContext(AContext);
 
   const [iframeURLadmin, setIframeURLadmin] = useState(""); 
-  //const URL = 'wss://s153070.projektstudencki.pl:3000';
+//  const URL = 'wss://s153070.projektstudencki.pl:3000';
   const URL = 'ws://localhost:1111';
-  //const proxy = 'https://s153070.projektstudencki.pl/proxy/index.php?url=';
+//  const proxy = 'https://s153070.projektstudencki.pl/proxy/index.php?url=';
   const proxy = 'http://localhost/proxy/index.php?url=';
 
   const { id } = useParams();
@@ -62,7 +63,7 @@ function Main(props) {
 
   const [roomName, setRoomName] = useState("");
   const [roomAdmin, setRoomAdmin] = useState(false); //zmienić na false
-  const [loadingMain, setLoadingMain] = useState(true); //zmienić na false
+  const [loadingMain, setLoadingMain] = useState(false); //zmienić na false
 
 //   useEffect(() => {
 	// axios.post('/rooms/', {
@@ -443,6 +444,9 @@ function Main(props) {
 	setToken(false);
 	setAdmin(false);
 	setAuthenticated(false);
+	setLogin(false);
+	setUserToken(false);
+	setRoomToken(false);
   }
 
   function handleChangeURL(e, url){
