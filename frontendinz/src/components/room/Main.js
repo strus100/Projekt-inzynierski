@@ -48,7 +48,7 @@ function Main(props) {
   const {surname, setSurname} = useContext(AContext);
   const {setAccess} = useContext(AContext);
   const {setToken} = useContext(AContext);
-  const {roomToken} = useContext(AContext);
+  const {roomToken, setRoomToken} = useContext(AContext);
   const {userToken} = useContext(AContext);
 
   const [iframeURLadmin, setIframeURLadmin] = useState(""); 
@@ -61,7 +61,7 @@ function Main(props) {
   const [adminName, setAdminName] = useState("");
 
   const [roomName, setRoomName] = useState("");
-  const [roomAdmin, setRoomAdmin] = useState(true); //zmienić na false
+  const [roomAdmin, setRoomAdmin] = useState(false); //zmienić na false
   const [loadingMain, setLoadingMain] = useState(true); //zmienić na false
 
 //   useEffect(() => {
@@ -91,15 +91,17 @@ function Main(props) {
 				roomID: id 
 			})
 		])
-		.then(axios.spread((usersByRoomAPI, roomsAPI) => {
-			if(usersByRoomAPI.data && roomsAPI.data){
+		.then(axios.spread((roomsAPI) => {
+			if(roomsAPI.data){
 				if(roomsAPI.data.admin){ // do poprawy back
 					setRoomAdmin(true);
 				}
 				setRoomName(roomsAPI.data.name);
+				setRoomToken(roomsAPI.data.roomAuthToken); //dodane
+				console.log(roomsAPI.data);
 				addMessage({ type: "chat", chat: "Witaj na kanale " + roomsAPI.data.name + " wpisz /help, aby uzyskać pomoc dotyczącą chatu.", name: "SERVER", messagetype: "chat" });
 				if(roomsAPI) setLoadingMain(true);
-				if(usersByRoomAPI) setAdminName(usersByRoomAPI.data.name + " " + usersByRoomAPI.data.surname);
+//				if(usersByRoomAPI) setAdminName(usersByRoomAPI.data.name + " " + usersByRoomAPI.data.surname);
 				//document.title = id + " WykładyWebowe";
 			}
 		}))
@@ -594,7 +596,7 @@ function Main(props) {
 				id={id}
 				login={login}
 				adminName={adminName}
-				userTokenAuth={roomToken}
+				userTokenAuth={userToken}
 				roomTokenAuth={roomToken}
 			/>
 			</div>

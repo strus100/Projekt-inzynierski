@@ -72,7 +72,6 @@ function App() {
 					setName(response.data.name);
 					setSurname(response.data.surname);
 					setToken(response.data.token);
-					setRoomToken(response.data.roomToken);
 					setUserToken(response.data.userToken);
 					setLogin(response.data.login);
 

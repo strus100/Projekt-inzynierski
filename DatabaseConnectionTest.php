@@ -4,6 +4,7 @@ require_once __DIR__."/database/DatabaseConnection.php";
 
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\assertEquals;
 
 class DatabaseConnectionTest extends TestCase
 {
@@ -13,11 +14,11 @@ class DatabaseConnectionTest extends TestCase
         $dbConnection->connect();
         $user = $dbConnection->getUserByToken("");
 
-        \PHPUnit\Framework\assertEquals("Andrzej", $user["name"] );
-        \PHPUnit\Framework\assertEquals("Polak", $user["surname"] );
-        \PHPUnit\Framework\assertEquals("0", $user["room"] );
-        \PHPUnit\Framework\assertEquals("student", $user["role"] );
-        \PHPUnit\Framework\assertEquals("test1@test.pl", $user["email"] );
+        assertEquals("Andrzej", $user["name"] );
+        assertEquals("Polak", $user["surname"] );
+        assertEquals("0", $user["room"] );
+        assertEquals("student", $user["role"] );
+        assertEquals("test1@test.pl", $user["email"] );
     }
 
     public function testRenameRoom()
